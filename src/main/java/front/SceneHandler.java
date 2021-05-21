@@ -10,6 +10,9 @@ import javafx.stage.Stage;
 import java.util.HashMap;
 import java.util.Map;
 
+import static front.panels.menu.body.MainMenuFrame.HEIGHT;
+import static front.panels.menu.body.MainMenuFrame.WIDTH;
+
 public class SceneHandler {
     private static Map<String, Scene> scenes;
     private static Stage stage;
@@ -28,29 +31,33 @@ public class SceneHandler {
 
     public static void initMenuScene() {
         BorderPane pane = new MainMenuFrame(stage);
-        stage.setMinHeight(940);
-        stage.setMinWidth(640);
+        stage.setMinHeight(HEIGHT);
+        stage.setMinWidth(WIDTH + 40);
 
-        scenes.put("menu", new Scene(pane, 900, 500));
+        scenes.put("menu", new Scene(pane, WIDTH, HEIGHT));
     }
 
     public static void initRegisterScene() {
         BorderPane pane = new MainRegisterFrame(stage);
-        stage.setMinHeight(940);
-        stage.setMinWidth(640);
+        stage.setMinHeight(HEIGHT);
+        stage.setMinWidth(WIDTH + 40);
 
-        scenes.put("register", new Scene(pane, 900, 500));
+        scenes.put("register", new Scene(pane, WIDTH, HEIGHT));
     }
 
     public static void initLoginScene() {
         BorderPane pane = new MainLoginFrame(stage);
-        stage.setMinHeight(940);
-        stage.setMinWidth(640);
+        stage.setMinHeight(HEIGHT);
+        stage.setMinWidth(WIDTH + 40);
 
-        scenes.put("login", new Scene(pane, 900, 500));
+        scenes.put("login", new Scene(pane, WIDTH, HEIGHT));
     }
 
     public static Scene getScene(String name) {
         return scenes.get(name);
+    }
+
+    public static void changeScene(String name) {
+        stage.setScene(getScene(name));
     }
 }

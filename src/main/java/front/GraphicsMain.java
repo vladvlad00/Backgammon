@@ -1,5 +1,6 @@
 package front;
 
+import front.utils.Cookies;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -10,10 +11,11 @@ public class GraphicsMain extends Application {
 
     @Override
     public void start(Stage stage) {
+        Cookies.init();
         SceneHandler.init(stage);
 
         stage.setTitle("Backgammon");
-        stage.setScene(SceneHandler.getScene("menu"));
+        SceneHandler.changeScene("menu");
         stage.show();
     }
 }

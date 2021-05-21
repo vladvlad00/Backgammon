@@ -2,63 +2,55 @@ package front.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
 
 public class Cookies {
     private static final String path = "/preferences.bkgmn";
 
-    private static Map<String, List<String>> preferences;
+    private static Map<String, String> preferences;
 
     private Cookies() {}
 
     public static void init() {
+        preferences = new HashMap<>();
+        readCookies();
+    }
 
+    public static String getValue(String string) {
+        return preferences.getOrDefault(string, "notExist");
     }
 
     public static void readCookies() {
         try {
             File file = new File(path);
             Scanner reader = new Scanner(file);
-            StringBuilder readStrings = new StringBuilder();
-
-            while (reader.hasNextLine()) {
-                readStrings.append(reader.nextLine());
-            }
-            reader.close();
-
-            String cookies = decrypt(readStrings.toString()).replace("{", "").replace("}", "");
-
-            String[] cookiesArray = cookies.split(",\n");
-
-            for(String c : cookiesArray) {
-                List<String> arr = new ArrayList<>();
-                String[] line = c.split(":");
-                if(line[1].contains("[") && line[1].contains("]")) {
-                    String[] arrElements = line[1].replace("[", "").replace("]", "").split(", ");
-                    for(String arrElem : arrElements) {
-                        arr.add(arrElem.replace("\"", ""));
-                    }
-                }
-                else {
-                    arr.add(line[1].replace("\"", ""));
-                }
-                preferences.put(line[0].replace("\"", ""), arr);
-            }
+            String token = decrypt(reader.nextLine());
+            preferences.put("token", token);
         }
         catch (FileNotFoundException e) {
             System.err.println("Cookies file does not exist");
         }
     }
 
-    public static void modifyCookie(String cookie, List<String> value) {
+    public static void modifyCookie(String cookie, String value) {
         preferences.put(cookie, value);
     }
 
     public static void saveCookies() {
-
+        try {
+            File file = new File(path);
+            if (file.createNewFile()) {
+                System.out.println("Preferences file created");
+            }
+            FileWriter fileWriter = new FileWriter(path);
+            fileWriter.write(encrypt(preferences.get("token")));
+            fileWriter.close();
+        }
+        catch (IOException e) {
+            System.err.println("IO exception");
+        }
     }
 
     private static String encrypt(String string) {

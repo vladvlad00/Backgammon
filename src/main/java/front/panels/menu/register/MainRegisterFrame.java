@@ -1,10 +1,18 @@
 package front.panels.menu.register;
 
+import front.panels.menu.GoBackPanel;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainRegisterFrame extends BorderPane {
+    public static final int WIDTH = 600;
+    public static final int HEIGHT = 500;
+
     private Stage stage;
+
+    private RegisterBodyPanel registerBodyPanel;
+    private RegisterResponsePanel registerResponsePanel;
+    private GoBackPanel goBackPanel;
 
     public MainRegisterFrame(Stage stage) {
         this.stage = stage;
@@ -12,6 +20,12 @@ public class MainRegisterFrame extends BorderPane {
     }
 
     private void init() {
+        registerBodyPanel = new RegisterBodyPanel(this);
+        this.setCenter(registerBodyPanel);
+        registerResponsePanel = new RegisterResponsePanel(this);
+        this.setBottom(registerResponsePanel);
+        goBackPanel = new GoBackPanel(this, "menu");
+        this.setTop(goBackPanel);
     }
 
     public Stage getStage() {
