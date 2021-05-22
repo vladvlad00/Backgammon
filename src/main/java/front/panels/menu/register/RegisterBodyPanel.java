@@ -1,5 +1,6 @@
 package front.panels.menu.register;
 
+import front.utils.NetworkManager;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -8,6 +9,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static front.panels.menu.register.MainRegisterFrame.HEIGHT;
 import static front.panels.menu.register.MainRegisterFrame.WIDTH;
@@ -59,8 +63,7 @@ public class RegisterBodyPanel extends GridPane {
         registerButton = new Button("Register");
         registerButton.setStyle("-fx-font: 20 arial;");
         registerButton.setOnAction((e) -> {
-            //TODO: try register
-            //SceneHandler.changeScene("menu");
+            String response = NetworkManager.register(usernameField.getText(), passwordField.getText());
         });
         registerButton.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(registerButton, HPos.CENTER);
@@ -85,5 +88,15 @@ public class RegisterBodyPanel extends GridPane {
 
         this.getRowConstraints().addAll(fill, normal, normal, normal, normal, normal, normal, normal, fill);
         this.getColumnConstraints().addAll(fillC, normalC, normalC, fillC);
+    }
+
+    private Boolean validatePassword(String pass, String passC) {
+        if(!pass.equals(passC)) {
+            return false;
+        }
+        Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{4,20}$");
+        Matcher matcher = pattern.matcher(pass);
+
+        return matcher.matches();
     }
 }

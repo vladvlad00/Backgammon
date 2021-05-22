@@ -2,6 +2,7 @@ package front.panels.menu.login;
 
 
 import front.SceneHandler;
+import front.utils.NetworkManager;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -51,8 +52,7 @@ public class LoginBodyPanel extends GridPane {
         loginButton = new Button("Log in");
         loginButton.setStyle("-fx-font: 20 arial;");
         loginButton.setOnAction((e) -> {
-            //TODO: try login
-            //SceneHandler.changeScene("menu");
+            String response = NetworkManager.login(usernameField.getText(), passwordField.getText());
         });
         loginButton.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(loginButton, HPos.CENTER);
