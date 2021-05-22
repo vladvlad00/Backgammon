@@ -1,6 +1,8 @@
 package front.panels.menu.register;
 
+import front.SceneHandler;
 import front.utils.NetworkManager;
+import front.utils.VoidOperator;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,6 +28,8 @@ public class RegisterBodyPanel extends GridPane {
     private Label confirmPassword;
     private PasswordField confirmPasswordField;
     private Button registerButton;
+
+    public VoidOperator refresh;
 
     public RegisterBodyPanel(MainRegisterFrame frame) {
         this.frame = frame;
@@ -63,7 +67,21 @@ public class RegisterBodyPanel extends GridPane {
         registerButton = new Button("Register");
         registerButton.setStyle("-fx-font: 20 arial;");
         registerButton.setOnAction((e) -> {
+            if(!passwordField.getText().equals(confirmPasswordField.getText())) {
+                frame.getRegisterResponsePanel().createNegative("Passwords do not match", 2L);
+                return;
+            }
+            if(!validatePassword(passwordField.getText())) {
+                frame.getRegisterResponsePanel().createNegative("Password is invalid", 2L);
+                return;
+            }
             String response = NetworkManager.register(usernameField.getText(), passwordField.getText());
+            if(response.equals("ok")) {
+                frame.getRegisterResponsePanel().createPositive("Register successful", 1L);
+            }
+            else {
+                frame.getRegisterResponsePanel().createNegative("Register failed", 2L);
+            }
         });
         registerButton.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(registerButton, HPos.CENTER);
@@ -88,12 +106,20 @@ public class RegisterBodyPanel extends GridPane {
 
         this.getRowConstraints().addAll(fill, normal, normal, normal, normal, normal, normal, normal, fill);
         this.getColumnConstraints().addAll(fillC, normalC, normalC, fillC);
+
+        refresh = () -> {
+            usernameField.setText("");
+            usernameField.setPromptText("Username");
+
+            passwordField.setText("");
+            passwordField.setPromptText("Password");
+
+            confirmPasswordField.setText("");
+            confirmPasswordField.setPromptText("Confirm password");
+        };
     }
 
-    private Boolean validatePassword(String pass, String passC) {
-        if(!pass.equals(passC)) {
-            return false;
-        }
+    private Boolean validatePassword(String pass) {
         Pattern pattern = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{4,20}$");
         Matcher matcher = pattern.matcher(pass);
 

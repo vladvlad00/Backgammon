@@ -24,7 +24,7 @@ public class MainLoginFrame extends BorderPane {
         this.setCenter(loginBodyPanel);
         loginResponsePanel = new LoginResponsePanel(this);
         this.setBottom(loginResponsePanel);
-        goBackPanel = new GoBackPanel(this, "menu");
+        goBackPanel = new GoBackPanel(this, "menu", loginBodyPanel.refresh);
         this.setTop(goBackPanel);
     }
 
@@ -34,5 +34,13 @@ public class MainLoginFrame extends BorderPane {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public LoginResponsePanel getLoginResponsePanel() {
+        return loginResponsePanel;
+    }
+
+    public LoginBodyPanel getLoginBodyPanel() {
+        return loginBodyPanel;
     }
 }

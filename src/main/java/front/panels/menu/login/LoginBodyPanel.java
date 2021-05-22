@@ -2,7 +2,9 @@ package front.panels.menu.login;
 
 
 import front.SceneHandler;
+import front.client.User;
 import front.utils.NetworkManager;
+import front.utils.VoidOperator;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,6 +26,8 @@ public class LoginBodyPanel extends GridPane {
     private Label password;
     private PasswordField passwordField;
     private Button loginButton;
+
+    public VoidOperator refresh;
 
     public LoginBodyPanel(MainLoginFrame frame) {
         this.frame = frame;
@@ -53,6 +57,13 @@ public class LoginBodyPanel extends GridPane {
         loginButton.setStyle("-fx-font: 20 arial;");
         loginButton.setOnAction((e) -> {
             String response = NetworkManager.login(usernameField.getText(), passwordField.getText());
+            if(response.startsWith("ok")) {
+                frame.getLoginResponsePanel().createPositive("Login successful", 1L);
+                User.init(usernameField.getText(), response.split(" ")[1]);
+            }
+            else {
+                frame.getLoginResponsePanel().createNegative("Login failed", 2L);
+            }
         });
         loginButton.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(loginButton, HPos.CENTER);
@@ -75,5 +86,13 @@ public class LoginBodyPanel extends GridPane {
 
         this.getRowConstraints().addAll(fill, normal, normal, normal, normal, normal, fill);
         this.getColumnConstraints().addAll(fillC, normalC, normalC, fillC);
+
+        refresh = () -> {
+            usernameField.setText("");
+            usernameField.setPromptText("Username");
+
+            passwordField.setText("");
+            passwordField.setPromptText("Password");
+        };
     }
 }
