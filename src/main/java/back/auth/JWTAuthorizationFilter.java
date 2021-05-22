@@ -16,10 +16,6 @@ import java.util.ArrayList;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter
 {
-    //TODO de facut o clasa comuna cu constante
-    private static final long EXPIRATION_TIME = 3600_000;
-    private static final String SECRET = "%C*F-JaNdRgUkXp2r5u8x/A?D(G+KbPeShVmYq3t6v9y$B&E)H@McQfTjWnZr4u7";
-
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager)
     {
         super(authenticationManager);
@@ -49,7 +45,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter
 
         if (token != null)
         {
-            String user = JWT.require(Algorithm.HMAC512(SECRET))
+            String user = JWT.require(Algorithm.HMAC512(AuthConstants.SECRET))
                     .build()
                     .verify(token.replace("Bearer ", ""))
                     .getSubject();

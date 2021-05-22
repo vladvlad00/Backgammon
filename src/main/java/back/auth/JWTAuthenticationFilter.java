@@ -21,8 +21,6 @@ import java.util.Date;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter
 {
-    private static final long EXPIRATION_TIME = 3600_000;
-    private static final String SECRET = "%C*F-JaNdRgUkXp2r5u8x/A?D(G+KbPeShVmYq3t6v9y$B&E)H@McQfTjWnZr4u7";
     private AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager)
@@ -59,12 +57,10 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     {
         String token = JWT.create()
                 .withSubject(((User) auth.getPrincipal()).getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(Algorithm.HMAC512(SECRET));
+                .withExpiresAt(new Date(System.currentTimeMillis() + AuthConstants.EXPIRATION_TIME))
+                .sign(Algorithm.HMAC512(AuthConstants.SECRET));
 
-        String body = token;
-
-        response.getWriter().write(body);
+        response.getWriter().write(token);
         response.getWriter().flush();
     }
 }
