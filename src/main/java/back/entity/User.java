@@ -1,11 +1,13 @@
 package back.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -17,6 +19,14 @@ public class User implements UserDetails
 
     @Column(nullable = false)
     String password;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "player1")
+    GameRoom gameRoom1;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "player2")
+    GameRoom gameRoom2;
 
     public String getUsername()
     {
