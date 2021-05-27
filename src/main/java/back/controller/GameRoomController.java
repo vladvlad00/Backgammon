@@ -33,6 +33,13 @@ public class GameRoomController
     private ResponseEntity<Iterable<GameRoom>> listAllRooms()
     {
         var allRooms = roomRepository.findAll();
+        for (var room : allRooms)
+        {
+            for (var user : room.getUsers())
+            {
+                user.setPassword(null);
+            }
+        }
         return ResponseEntity.ok(allRooms);
     }
 

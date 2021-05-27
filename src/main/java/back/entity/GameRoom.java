@@ -1,6 +1,7 @@
 package back.entity;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class GameRoom
@@ -11,13 +12,8 @@ public class GameRoom
 
     String name;
 
-    @OneToOne
-    @JoinColumn(name = "player1")
-    User player1;
-
-    @OneToOne
-    @JoinColumn(name = "player2")
-    User player2;
+    @OneToMany(mappedBy = "gameRoom")
+    Set<User> users;
 
     public Long getId()
     {
@@ -39,23 +35,13 @@ public class GameRoom
         this.name = name;
     }
 
-    public User getPlayer1()
+    public Set<User> getUsers()
     {
-        return player1;
+        return users;
     }
 
-    public void setPlayer1(User player1)
+    public void setUsers(Set<User> users)
     {
-        this.player1 = player1;
-    }
-
-    public User getPlayer2()
-    {
-        return player2;
-    }
-
-    public void setPlayer2(User player2)
-    {
-        this.player2 = player2;
+        this.users = users;
     }
 }
