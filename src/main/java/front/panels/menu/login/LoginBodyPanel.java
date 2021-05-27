@@ -1,6 +1,7 @@
 package front.panels.menu.login;
 
 
+import front.FrameHandler;
 import front.entities.User;
 import front.utils.NetworkManager;
 import front.utils.VoidOperator;
@@ -59,6 +60,7 @@ public class LoginBodyPanel extends GridPane {
             if(response.startsWith("ok")) {
                 frame.getLoginResponsePanel().createPositive("Login successful", 1L);
                 User.init(usernameField.getText(), response.split(" ")[1]);
+                FrameHandler.getMainMenuFrame().changeLogin();
             }
             else {
                 frame.getLoginResponsePanel().createNegative("Login failed\n" +

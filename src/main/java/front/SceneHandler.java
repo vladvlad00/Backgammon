@@ -24,13 +24,15 @@ public class SceneHandler {
 
         scenes = new HashMap<>();
 
+        FrameHandler.init(stage);
+
         initMenuScene();
         initLoginScene();
         initRegisterScene();
     }
 
     public static void initMenuScene() {
-        BorderPane pane = new MainMenuFrame(stage);
+        BorderPane pane = FrameHandler.getMainMenuFrame();
         stage.setMinHeight(HEIGHT);
         stage.setMinWidth(WIDTH + 40);
 
@@ -38,7 +40,7 @@ public class SceneHandler {
     }
 
     public static void initRegisterScene() {
-        BorderPane pane = new MainRegisterFrame(stage);
+        BorderPane pane = FrameHandler.getMainRegisterFrame();
         stage.setMinHeight(HEIGHT);
         stage.setMinWidth(WIDTH + 40);
 
@@ -46,7 +48,7 @@ public class SceneHandler {
     }
 
     public static void initLoginScene() {
-        BorderPane pane = new MainLoginFrame(stage);
+        BorderPane pane = FrameHandler.getMainLoginFrame();
         stage.setMinHeight(HEIGHT);
         stage.setMinWidth(WIDTH + 40);
 
