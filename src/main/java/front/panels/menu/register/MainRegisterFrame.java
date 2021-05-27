@@ -24,7 +24,7 @@ public class MainRegisterFrame extends BorderPane {
         this.setCenter(registerBodyPanel);
         registerResponsePanel = new RegisterResponsePanel(this);
         this.setBottom(registerResponsePanel);
-        goBackPanel = new GoBackPanel(this, "menu");
+        goBackPanel = new GoBackPanel(this, "menu", registerBodyPanel.refresh);
         this.setTop(goBackPanel);
     }
 
@@ -34,5 +34,13 @@ public class MainRegisterFrame extends BorderPane {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public RegisterResponsePanel getRegisterResponsePanel() {
+        return registerResponsePanel;
+    }
+
+    public RegisterBodyPanel getRegisterBodyPanel() {
+        return registerBodyPanel;
     }
 }
