@@ -1,8 +1,7 @@
 package front.panels.menu.login;
 
 
-import front.SceneHandler;
-import front.client.User;
+import front.entities.User;
 import front.utils.NetworkManager;
 import front.utils.VoidOperator;
 import javafx.geometry.HPos;
@@ -62,7 +61,9 @@ public class LoginBodyPanel extends GridPane {
                 User.init(usernameField.getText(), response.split(" ")[1]);
             }
             else {
-                frame.getLoginResponsePanel().createNegative("Login failed", 2L);
+                frame.getLoginResponsePanel().createNegative("Login failed\n" +
+                        (response.contains("403") ? "Account does not exist" : "Exception")
+                        , 2L);
             }
         });
         loginButton.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);

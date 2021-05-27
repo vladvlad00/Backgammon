@@ -22,7 +22,6 @@ public class LoginRegisterPanel extends GridPane {
     }
 
     private void init() {
-        //TODO: Login and register buttons
         login = new Button("Log in");
         register = new Button("Register");
 
@@ -33,12 +32,10 @@ public class LoginRegisterPanel extends GridPane {
             SceneHandler.changeScene("register");
         });
 
-        login.setMaxSize(0.4 * WIDTH, 0.05 * HEIGHT);
-        login.setMinSize(0.4 * WIDTH, 0.05 * HEIGHT);
+        login.setPrefSize(0.4 * WIDTH, 0.05 * HEIGHT);
         login.setStyle("-fx-font: 20 arial;");
         GridPane.setHalignment(login, HPos.LEFT);
-        register.setMaxSize(0.4 * WIDTH, 0.05 * HEIGHT);
-        register.setMinSize(0.4 * WIDTH, 0.05 * HEIGHT);
+        register.setPrefSize(0.4 * WIDTH, 0.05 * HEIGHT);
         register.setStyle("-fx-font: 20 arial;");
         GridPane.setHalignment(register, HPos.RIGHT);
 

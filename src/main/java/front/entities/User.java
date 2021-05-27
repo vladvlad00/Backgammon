@@ -1,4 +1,4 @@
-package front.client;
+package front.entities;
 
 public class User {
     private static String name;
@@ -9,6 +9,11 @@ public class User {
     public static void init(String nameArg, String tokenArg) {
         name = nameArg;
         token = tokenArg;
+    }
+
+    public static void logout() {
+        name = "";
+        token = "";
     }
 
     public static String getName() {
