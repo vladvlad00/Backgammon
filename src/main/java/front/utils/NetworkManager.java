@@ -1,10 +1,14 @@
 package front.utils;
 
+import front.entities.Lobby;
+import front.entities.UserRole;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 public class NetworkManager {
     private static final String URL = "http://localhost:8081";
@@ -38,5 +42,20 @@ public class NetworkManager {
         if (response.getStatusCode().is2xxSuccessful())
             return "ok";
         return "err";
+    }
+
+    public static List<Lobby> getAllLobbies() {
+        //TODO: Get all lobbies
+        return null;
+    }
+
+    public static String joinThroughID(Long roomID, UserRole role) {
+        //TODO: join room
+        return null;
+    }
+
+    public static Lobby createRoom(String roomName) {
+        //TODO: create room
+        return null;
     }
 }

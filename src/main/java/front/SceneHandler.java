@@ -62,4 +62,8 @@ public class SceneHandler {
     public static void changeScene(String name) {
         stage.setScene(getScene(name));
     }
+
+    public static Stage getStage() {
+        return stage;
+    }
 }
