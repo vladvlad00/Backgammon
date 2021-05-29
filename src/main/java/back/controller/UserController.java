@@ -6,6 +6,8 @@ import back.repository.GameRoomRepository;
 import back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +38,10 @@ public class UserController
     public ResponseEntity<String> joinRoom(@RequestBody Map<String, String> roomJson)
     {
         long roomId;
-        String username; //momentan va fi in body, dar facem sa fie pus din token in header
+        String username = SecurityContextHolder.getContext().getAuthentication().getName(); // userul autentificat
         String role;
         try
         {
-            username = roomJson.get("username");
             roomId = Long.parseLong(roomJson.get("roomId"));
             role = roomJson.get("role");
         }
@@ -75,10 +76,10 @@ public class UserController
         return ResponseEntity.ok("User joined room as " + role);
     }
 
-    //username nu va mai fi in path, ci va fi intr-un header automat dupa token
-    @DeleteMapping("/user/{username}/room")
-    public ResponseEntity<String> leaveRoom(@PathVariable String username)
+    @DeleteMapping("/user/room")
+    public ResponseEntity<String> leaveRoom()
     {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
         user.setRole(null);
         if (user.getGameRoom() != null)

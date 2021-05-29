@@ -6,8 +6,7 @@ import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 
 import java.lang.reflect.Type;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import java.util.HashMap;
 
 public class StompSessionHandler extends StompSessionHandlerAdapter
 {
@@ -15,9 +14,9 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
     public void afterConnected(StompSession session, StompHeaders connectedHeaders)
     {
         System.out.println("New session " + session.getSessionId());
-        session.subscribe("/game/vlad", this);
-        System.out.println("Subscribed to /game/vlad");
-        session.send("/app/hello", getSampleMessage());
+        session.subscribe("/game_info/2", this);
+        System.out.println("Subscribed");
+        session.send("/app/game/2", getSampleMessage());
         System.out.println("Message sent");
     }
 
@@ -38,11 +37,14 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
     public void handleFrame(StompHeaders headers, Object payload)
     {
         Message message = (Message) payload;
-        System.out.println("Received " + message.getContent());
+        System.out.println("Received " + message.toString());
     }
 
     private Message getSampleMessage()
     {
-        return new Message("Vlad a trimis asta");
+        HashMap<String, String> options = new HashMap<>();
+        options.put("test_param1", "aaa");
+        options.put("test_param2", "bbb");
+        return new Message("test_command", options);
     }
 }

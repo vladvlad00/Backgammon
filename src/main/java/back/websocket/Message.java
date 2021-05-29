@@ -1,25 +1,48 @@
 package back.websocket;
 
+import java.util.Map;
+
 public class Message
 {
-    private String content;
+    private String command;
+    private Map<String, String> options;
 
     public Message()
     {
     }
 
-    public Message(String content)
+    public Message(String command, Map<String, String> options)
     {
-        this.content = content;
+        this.command = command;
+        this.options = options;
     }
 
-    public String getContent()
+    public String getCommand()
     {
-        return content;
+        return command;
     }
 
-    public void setContent(String content)
+    public void setCommand(String command)
     {
-        this.content = content;
+        this.command = command;
+    }
+
+    public Map<String, String> getOptions()
+    {
+        return options;
+    }
+
+    public void setOptions(Map<String, String> options)
+    {
+        this.options = options;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Message{" +
+                "command='" + command + '\'' +
+                ", options=" + options +
+                '}';
     }
 }
