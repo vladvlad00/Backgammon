@@ -2,6 +2,7 @@ package front.panels.menu.body;
 
 import front.SceneHandler;
 import front.entities.User;
+import front.utils.NetworkManager;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;
@@ -31,6 +32,9 @@ public class AccountPanel extends GridPane {
         separator = new Separator(Orientation.HORIZONTAL);
 
         logout.setOnAction((e) -> {
+            if(User.getInstance().getInRoom()) {
+                NetworkManager.leaveRoom();
+            }
             User.getInstance().logout();
             frame.changeLogin();
         });

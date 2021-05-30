@@ -1,6 +1,8 @@
 package front;
 
+import front.entities.User;
 import front.utils.Cookies;
+import front.utils.NetworkManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -20,5 +22,12 @@ public class GraphicsMain extends Application {
         stage.setTitle("Backgammon");
         SceneHandler.changeScene("menu");
         stage.show();
+    }
+
+    @Override
+    public void stop() {
+        if(User.getInstance().getInRoom()) {
+            NetworkManager.leaveRoom();
+        }
     }
 }

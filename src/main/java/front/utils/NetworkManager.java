@@ -72,7 +72,9 @@ public class NetworkManager {
         ObjectMapper objectMapper = new ObjectMapper();
         try
         {
-            return objectMapper.readValue(response.getBody(), new TypeReference<Lobby>(){});
+            Lobby lobby = objectMapper.readValue(response.getBody(), new TypeReference<Lobby>(){});
+            lobby.separateUsers();
+            return lobby;
         } catch (JsonProcessingException e)
         {
             e.printStackTrace();
@@ -106,6 +108,7 @@ public class NetworkManager {
     }
 
     public static void leaveRoom() {
+        User.getInstance().setInRoom(false);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
         HttpEntity entity = new HttpEntity(headers);

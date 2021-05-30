@@ -9,6 +9,7 @@ import front.utils.NetworkManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -47,12 +48,28 @@ public class PopUpHandler {
         button.setOnAction(e -> {
             Lobby lobby = NetworkManager.createRoom(textField.getText());
             if(lobby == null) {
-                //TODO: Null = bad
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("Could not create lobby");
+                a.setTitle("Error");
+                a.show();
             }
             else {
-                //TODO: Interpret response
-                frame.goToCreate(lobby);
-                dialog.close();
+                String response = NetworkManager.joinThroughID(lobby.getId(), lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
+                if(response == null) {
+                    throw new NullPointerException();
+                }
+                else {
+                    if(response.contains("PLAYER") || response.contains("SPECTATOR")) {
+                        FrameHandler.getMainMenuFrame().goToCreate(NetworkManager.getLobby(lobby.getId()));
+                        dialog.close();
+                    }
+                    else {
+                        Alert a = new Alert(Alert.AlertType.ERROR);
+                        a.setContentText("Could not join lobby");
+                        a.setTitle("Error");
+                        a.show();
+                    }
+                }
             }
         });
 
@@ -86,30 +103,27 @@ public class PopUpHandler {
         Button button = new Button("Join lobby");
         button.setOnAction(e -> {
             Long id;
-            Lobby lobby;
             try {
                 id = Long.parseLong(textField.getText());
-                lobby = LobbyHandler.getById(id);
-                if(lobby == null) {
-                    throw new NullPointerException();
+                String response = LobbyHandler.joinThroughID(id);
+                if(response.equals("succ")) {
+                    dialog.close();
+                }
+                else {
+                    Alert a = new Alert(Alert.AlertType.ERROR);
+                    a.setContentText("Could not join lobby");
+                    a.setTitle("Error");
+                    a.show();
                 }
             }
             catch (Exception ex) {
-                textField.setText("Please input a valid id");
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("Please input a valid ID");
+                a.setTitle("Error");
+                a.show();
                 return;
             }
-            Lobby response = NetworkManager.joinThroughID(id, lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
-            if(response == null) {
-                //TODO: Null = bad
-            }
-            else {
-                //TODO: Interpret response
-                if(false) {
-                    //TODO: change false to good response
-                    frame.goToCreate(lobby);
-                    dialog.close();
-                }
-            }
+
         });
         dialogVbox.getChildren().add(label);
         dialogVbox.getChildren().add(textField);
