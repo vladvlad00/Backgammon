@@ -38,13 +38,13 @@ public class LobbyHandler {
             throw new NullPointerException();
         }
 
-        String response = NetworkManager.joinThroughID(id, lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
+        Lobby response = NetworkManager.joinThroughID(id, lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
         if(response == null) {
             throw new NullPointerException();
         }
         else {
-            if(response.contains("PLAYER") || response.contains("SPECTATOR")) {
-                FrameHandler.getMainMenuFrame().goToCreate(NetworkManager.getLobby(id));
+            if (true) {
+                FrameHandler.getMainMenuFrame().goToCreate(response);
                 return "succ";
             }
             else {

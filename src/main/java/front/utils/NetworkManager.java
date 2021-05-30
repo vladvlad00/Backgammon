@@ -92,7 +92,12 @@ public class NetworkManager {
         ResponseEntity<Lobby> response = restTemplate.exchange(URL + "/user/room", HttpMethod.PUT, request, Lobby.class);
         if (!response.getStatusCode().is2xxSuccessful())
             return null;
-        return response.getBody();
+        Lobby lobby = response.getBody();
+        lobby.separateUsers();
+        System.out.println("Thread ID: " + Thread.currentThread().getId());
+        System.out.println("Player num: " + lobby.getPlayerNum());
+        System.out.println("Lobby pointer " + lobby);
+        return lobby;
     }
 
     public static Lobby createRoom(String roomName) {

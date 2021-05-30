@@ -54,13 +54,13 @@ public class PopUpHandler {
                 a.show();
             }
             else {
-                String response = NetworkManager.joinThroughID(lobby.getId(), lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
+                Lobby response = NetworkManager.joinThroughID(lobby.getId(), lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
                 if(response == null) {
                     throw new NullPointerException();
                 }
                 else {
-                    if(response.contains("PLAYER") || response.contains("SPECTATOR")) {
-                        FrameHandler.getMainMenuFrame().goToCreate(NetworkManager.getLobby(lobby.getId()));
+                    if (true) {
+                        FrameHandler.getMainMenuFrame().goToCreate(response);
                         dialog.close();
                     }
                     else {
