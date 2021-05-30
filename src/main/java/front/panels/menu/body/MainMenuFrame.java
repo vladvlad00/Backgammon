@@ -62,9 +62,6 @@ public class MainMenuFrame extends BorderPane {
     }
 
     public void goToCreate(Lobby lobby) {
-        System.out.println("Thread ID: " + Thread.currentThread().getId());
-        System.out.println("Player num: " + lobby.getPlayerNum());
-        System.out.println("Lobby pointer " + lobby);
         User.getInstance().setInRoom(true);
         lobbyCreationPanel.setLobby(lobby);
         lobbyCreationPanel.init();

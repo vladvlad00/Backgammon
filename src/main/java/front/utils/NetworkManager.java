@@ -15,10 +15,10 @@ import java.util.Map;
 
 public class NetworkManager {
     private static final String URL = "http://localhost:8081";
+    private static final RestTemplate restTemplate = new RestTemplate();
 
     public static String login(User user) {
         try {
-            RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<User> request = new HttpEntity<>(user, headers);
@@ -33,7 +33,6 @@ public class NetworkManager {
     }
 
     public static String register(User user) {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<User> request = new HttpEntity<>(user, headers);
@@ -44,7 +43,6 @@ public class NetworkManager {
     }
 
     public static List<Lobby> getAllLobbies() {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
         HttpEntity entity = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(URL + "/room", HttpMethod.GET, entity, String.class);
@@ -63,7 +61,6 @@ public class NetworkManager {
 
     public static Lobby getLobby(Long id)
     {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
         HttpEntity entity = new HttpEntity(headers);
         ResponseEntity<String> response = restTemplate.exchange(URL + "/room/" + id, HttpMethod.GET, entity, String.class);
@@ -83,7 +80,6 @@ public class NetworkManager {
     }
 
     public static Lobby joinThroughID(Long roomId, UserRole role) {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
         Map<String, String> requestJson = new HashMap<>();
         requestJson.put("roomId", roomId.toString());
@@ -94,14 +90,10 @@ public class NetworkManager {
             return null;
         Lobby lobby = response.getBody();
         lobby.separateUsers();
-        System.out.println("Thread ID: " + Thread.currentThread().getId());
-        System.out.println("Player num: " + lobby.getPlayerNum());
-        System.out.println("Lobby pointer " + lobby);
         return lobby;
     }
 
     public static Lobby createRoom(String roomName) {
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
         Map<String, String> requestJson = new HashMap<>();
         requestJson.put("name", roomName);
@@ -114,7 +106,6 @@ public class NetworkManager {
 
     public static void leaveRoom() {
         User.getInstance().setInRoom(false);
-        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
         HttpEntity entity = new HttpEntity(headers);
         restTemplate.exchange(URL + "/user/room", HttpMethod.DELETE, entity, String.class);

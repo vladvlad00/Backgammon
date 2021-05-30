@@ -51,7 +51,6 @@ public class PlayersListItem extends GridPane {
                 if(lobbyUser == null) {
                     join = new Button("Join");
                     join.setOnAction(e -> {
-                        NetworkManager.leaveRoom();
                         var lobby2 = NetworkManager.joinThroughID(lobby.getId(), userRole.equals(UserRole.HOST_SPECTATOR) ? UserRole.HOST : UserRole.PLAYER);
                         FrameHandler.getMainMenuFrame().goToCreate(lobby2);
                     });

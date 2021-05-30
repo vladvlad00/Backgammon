@@ -37,6 +37,9 @@ public class UserController
     @PutMapping("/user/room")
     public ResponseEntity<GameRoom> joinRoom(@RequestBody Map<String, String> roomJson)
     {
+        long dbTime = 0;
+        long startPut = System.currentTimeMillis();
+
         long roomId;
         String username = SecurityContextHolder.getContext().getAuthentication().getName(); // userul autentificat
         String role;
@@ -53,12 +56,19 @@ public class UserController
         if (role == null)
             return ResponseEntity.badRequest().build();
 
+        long strt = System.currentTimeMillis();
         Optional<GameRoom> gameRoomOpt = gameRoomRepository.findById(roomId);
+        long en = System.currentTimeMillis();
+        dbTime += en - strt;
         if (gameRoomOpt.isEmpty())
             return ResponseEntity.notFound().build();
 
         GameRoom gameRoom = gameRoomOpt.get();
+        strt = System.currentTimeMillis();
         User user = userRepository.findByUsername(username);
+        en = System.currentTimeMillis();
+
+        dbTime += en-strt;
         GameRoom oldGameRoom = user.getGameRoom();
 
         if (oldGameRoom != null)
@@ -68,10 +78,21 @@ public class UserController
         user.setGameRoom(gameRoom);
         gameRoom.getUsers().add(user);
 
+        strt = System.currentTimeMillis();
         gameRoom = gameRoomRepository.save(gameRoom);
         if (oldGameRoom != null)
             gameRoomRepository.save(oldGameRoom);
         userRepository.save(user);
+
+
+        en = System.currentTimeMillis();
+
+        dbTime += en-strt;
+
+        long finishPut = System.currentTimeMillis();
+
+        System.out.println("Function time: " + (finishPut-startPut));
+        System.out.println("DB time: " + dbTime);
 
         return ResponseEntity.ok(gameRoom);
     }
