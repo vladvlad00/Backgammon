@@ -72,6 +72,25 @@ public class GameRoomController
         return ResponseEntity.ok(room);
     }
 
+    @DeleteMapping("/{id}")
+    private ResponseEntity<GameRoom> deleteRoom(@PathVariable Long id)
+    {
+        var roomOpt = roomRepository.findById(id);
+        if (roomOpt.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        var room = roomOpt.get();
+
+        for (var user : room.getUsers())
+        {
+            user.setGameRoom(null);
+            userRepository.save(user);
+        }
+
+        roomRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @PostMapping("/{id}/ai/{difficulty}")
     private ResponseEntity<User> addAi(@PathVariable Long id, @PathVariable String difficulty)
     {
