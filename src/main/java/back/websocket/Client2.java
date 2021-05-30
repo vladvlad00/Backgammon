@@ -18,7 +18,7 @@ public class Client2
 
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
 
-        StompSessionHandler sessionHandler = new StompSessionHandler();
+        StompSessionHandler sessionHandler = new StompSessionHandler(2L);
         stompClient.connect(URL, sessionHandler);
 
         new Scanner(System.in).nextLine();

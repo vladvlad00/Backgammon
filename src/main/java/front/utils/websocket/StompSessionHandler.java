@@ -11,14 +11,22 @@ import java.util.HashMap;
 
 public class StompSessionHandler extends StompSessionHandlerAdapter
 {
+    private Long roomId;
+    private String sendUrl;
+    private String subscribeUrl;
+
+    public StompSessionHandler(Long roomId)
+    {
+        this.roomId = roomId;
+        this.sendUrl = "/game/" + roomId;
+        this.subscribeUrl = "/game_info/" + roomId;
+    }
+
     @Override
     public void afterConnected(StompSession session, StompHeaders connectedHeaders)
     {
-        System.out.println("New session " + session.getSessionId());
-        session.subscribe("/game_info/2", this);
-        System.out.println("Subscribed");
-        session.send("/app/game/2", getSampleMessage());
-        System.out.println("Message sent");
+        session.subscribe(subscribeUrl, this);
+        session.send(sendUrl, getSampleMessage());
     }
 
     @Override
@@ -47,5 +55,20 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
         options.put("test_param1", "aaa");
         options.put("test_param2", "bbb");
         return new Message("test_command", options);
+    }
+
+    public Long getRoomId()
+    {
+        return roomId;
+    }
+
+    public String getSendUrl()
+    {
+        return sendUrl;
+    }
+
+    public String getSubscribeUrl()
+    {
+        return subscribeUrl;
     }
 }
