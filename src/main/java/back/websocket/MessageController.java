@@ -2,10 +2,7 @@ package back.websocket;
 
 import back.service.GameManager;
 import back.service.InvalidMoveException;
-import back.websocket.command.DiceCommand;
-import back.websocket.command.ErrorCommand;
-import back.websocket.command.MoveCommand;
-import back.websocket.command.StartCommand;
+import back.websocket.command.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -42,6 +39,11 @@ public class MessageController
                     options.put("message", "Invalid move command");
                     return new ErrorCommand(options).runCommand();
                 }
+            case "ai":
+                // TODO call catre API-ul de AI, conform dificultatii alese
+                return null;
+            case "refresh":
+                return new RefreshCommand().runCommand();
             default:
                 Map<String, String> options = new HashMap<>();
                 options.put("message", "Unknown command " + m.getCommand());

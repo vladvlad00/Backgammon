@@ -2,7 +2,6 @@ package front.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import front.entities.Lobby;
 import front.entities.User;
@@ -54,8 +53,7 @@ public class NetworkManager {
         ObjectMapper objectMapper = new ObjectMapper();
         try
         {
-            List<Lobby> body = objectMapper.readValue(response.getBody(), new TypeReference<List<Lobby>>(){});
-            return body;
+            return objectMapper.readValue(response.getBody(), new TypeReference<List<Lobby>>(){});
         } catch (JsonProcessingException e)
         {
             e.printStackTrace();
