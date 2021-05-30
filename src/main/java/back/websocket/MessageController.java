@@ -1,7 +1,7 @@
 package back.websocket;
 
-import back.service.GameManager;
-import back.service.InvalidMoveException;
+import back.service.game.GameManager;
+import back.service.game.InvalidMoveException;
 import back.websocket.command.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

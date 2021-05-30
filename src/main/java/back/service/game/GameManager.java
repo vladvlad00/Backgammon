@@ -1,6 +1,5 @@
-package back.service;
+package back.service.game;
 
-import back.service.Game;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;

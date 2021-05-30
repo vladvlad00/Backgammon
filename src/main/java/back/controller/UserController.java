@@ -35,7 +35,7 @@ public class UserController
     }
 
     @PutMapping("/user/room")
-    public ResponseEntity<String> joinRoom(@RequestBody Map<String, String> roomJson)
+    public ResponseEntity<GameRoom> joinRoom(@RequestBody Map<String, String> roomJson)
     {
         long roomId;
         String username = SecurityContextHolder.getContext().getAuthentication().getName(); // userul autentificat
@@ -68,12 +68,12 @@ public class UserController
         user.setGameRoom(gameRoom);
         gameRoom.getUsers().add(user);
 
-        gameRoomRepository.save(gameRoom);
+        gameRoom = gameRoomRepository.save(gameRoom);
         if (oldGameRoom != null)
             gameRoomRepository.save(oldGameRoom);
         userRepository.save(user);
 
-        return ResponseEntity.ok("User joined room as " + role);
+        return ResponseEntity.ok(gameRoom);
     }
 
     @DeleteMapping("/user/room")

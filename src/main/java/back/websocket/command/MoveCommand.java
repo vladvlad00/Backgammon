@@ -1,9 +1,9 @@
 package back.websocket.command;
 
-import back.service.Game;
-import back.service.GameState;
-import back.service.InvalidMoveException;
-import back.service.PlayerColor;
+import back.service.game.Game;
+import back.service.game.GameState;
+import back.service.game.InvalidMoveException;
+import back.service.game.PlayerColor;
 import back.websocket.Message;
 
 import java.util.HashMap;

@@ -1,8 +1,6 @@
-package back.service;
+package back.service.game;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Board
 {
@@ -25,6 +23,11 @@ public class Board
         blackCheckers[13] = 5;
         blackCheckers[24] = 2;
         blackCheckersNum = 15;
+    }
+
+    public Board(String representation)
+    {
+
     }
 
     public GameState makeMove(PlayerColor color, int initialPosition, int die) throws InvalidMoveException

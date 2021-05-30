@@ -1,4 +1,4 @@
-package back.service;
+package back.service.game;
 
 public class Game
 {

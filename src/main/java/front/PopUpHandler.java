@@ -98,7 +98,7 @@ public class PopUpHandler {
                 textField.setText("Please input a valid id");
                 return;
             }
-            String response = NetworkManager.joinThroughID(id, lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
+            Lobby response = NetworkManager.joinThroughID(id, lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
             if(response == null) {
                 //TODO: Null = bad
             }

@@ -1,6 +1,5 @@
 package back.websocket.command;
 
-import back.service.InvalidMoveException;
 import back.websocket.Message;
 
 import java.util.Map;

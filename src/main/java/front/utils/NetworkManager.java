@@ -80,14 +80,14 @@ public class NetworkManager {
         }
     }
 
-    public static String joinThroughID(Long roomId, UserRole role) {
+    public static Lobby joinThroughID(Long roomId, UserRole role) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
         Map<String, String> requestJson = new HashMap<>();
         requestJson.put("roomId", roomId.toString());
         requestJson.put("role", role.name());
         HttpEntity<Map<String, String>> request = new HttpEntity<>(requestJson, headers);
-        ResponseEntity<String> response = restTemplate.exchange(URL + "/user/room", HttpMethod.PUT, request, String.class);
+        ResponseEntity<Lobby> response = restTemplate.exchange(URL + "/user/room", HttpMethod.PUT, request, Lobby.class);
         if (!response.getStatusCode().is2xxSuccessful())
             return null;
         return response.getBody();
