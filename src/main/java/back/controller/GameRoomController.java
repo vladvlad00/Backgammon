@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
@@ -71,8 +72,8 @@ public class GameRoomController
         return ResponseEntity.ok(room);
     }
 
-    @PostMapping("/{id}/ai")
-    private ResponseEntity<User> addAi(@PathVariable Long id)
+    @PostMapping("/{id}/ai/{difficulty}")
+    private ResponseEntity<User> addAi(@PathVariable Long id, @PathVariable String difficulty)
     {
         Optional<GameRoom> gameRoomOpt = roomRepository.findById(id);
         if (gameRoomOpt.isEmpty())
@@ -93,7 +94,7 @@ public class GameRoomController
             user.setUsername(username);
 
             user.setGameRoom(gameRoom);
-            user.setRole("ai");
+            user.setRole("AI_" + difficulty.toUpperCase());
             gameRoom.getUsers().add(user);
 
             userRepository.save(user);
