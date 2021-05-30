@@ -31,7 +31,7 @@ public class AccountPanel extends GridPane {
         separator = new Separator(Orientation.HORIZONTAL);
 
         logout.setOnAction((e) -> {
-            User.logout();
+            User.getInstance().logout();
             frame.changeLogin();
         });
 
@@ -58,6 +58,6 @@ public class AccountPanel extends GridPane {
     }
 
     public void refresh() {
-        name.setText(User.getName());
+        name.setText(User.getInstance().getUsername());
     }
 }

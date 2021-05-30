@@ -9,6 +9,10 @@ public class Lobby {
     private Integer spectatorNum;
     private List<LobbyUser> users;
 
+    public Lobby()
+    {
+    }
+
     public Lobby(String name, Long id, List<LobbyUser> users) {
         this.name = name;
         this.users = users;
@@ -16,7 +20,7 @@ public class Lobby {
         this.separateUsers();
     }
 
-    private void separateUsers() {
+    public void separateUsers() {
         playerNum = users.size();
         spectatorNum = 0;
         users.forEach(u -> {
@@ -50,5 +54,30 @@ public class Lobby {
 
     public List<LobbyUser> getUsers() {
         return users;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
+
+    public void setPlayerNum(Integer playerNum)
+    {
+        this.playerNum = playerNum;
+    }
+
+    public void setSpectatorNum(Integer spectatorNum)
+    {
+        this.spectatorNum = spectatorNum;
+    }
+
+    public void setUsers(List<LobbyUser> users)
+    {
+        this.users = users;
     }
 }

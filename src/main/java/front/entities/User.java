@@ -1,26 +1,54 @@
 package front.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+// TODO -> de facut singleton
 public class User {
-    private static String name;
-    private static String token;
+    private String username;
+    private String password;
+    @JsonIgnore
+
+    private String token;
+
+    private static User instance = null;
 
     private User() {}
 
-    public static void init(String nameArg, String tokenArg) {
-        name = nameArg;
-        token = tokenArg;
-    }
-
-    public static void logout() {
-        name = "";
+    public void logout() {
+        username = "";
+        password = "";
         token = "";
     }
 
-    public static String getName() {
-        return name;
+    public static User getInstance()
+    {
+        if (instance == null)
+            instance = new User();
+        return instance;
     }
 
-    public static String getToken() {
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() { return password; }
+
+    public String getToken() {
         return token;
+    }
+
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
+    public void setToken(String token)
+    {
+        this.token = token;
     }
 }

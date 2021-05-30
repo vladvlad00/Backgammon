@@ -1,6 +1,7 @@
 package front.panels.menu.register;
 
 import front.SceneHandler;
+import front.entities.User;
 import front.utils.NetworkManager;
 import front.utils.VoidOperator;
 import javafx.geometry.HPos;
@@ -75,7 +76,10 @@ public class RegisterBodyPanel extends GridPane {
                 frame.getRegisterResponsePanel().createNegative("Password is invalid", 2L);
                 return;
             }
-            String response = NetworkManager.register(usernameField.getText(), passwordField.getText());
+            User user = User.getInstance();
+            user.setUsername(usernameField.getText());
+            user.setPassword(passwordField.getText());
+            String response = NetworkManager.register(user);
             if(response.equals("ok")) {
                 frame.getRegisterResponsePanel().createPositive("Register successful", 1L);
             }

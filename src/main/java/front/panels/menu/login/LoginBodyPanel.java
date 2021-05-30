@@ -56,10 +56,13 @@ public class LoginBodyPanel extends GridPane {
         loginButton = new Button("Log in");
         loginButton.setStyle("-fx-font: 20 arial;");
         loginButton.setOnAction((e) -> {
-            String response = NetworkManager.login(usernameField.getText(), passwordField.getText());
+            User user = User.getInstance();
+            user.setUsername(usernameField.getText());
+            user.setPassword(passwordField.getText());
+            String response = NetworkManager.login(user);
             if(response.startsWith("ok")) {
                 frame.getLoginResponsePanel().createPositive("Login successful", 1L);
-                User.init(usernameField.getText(), response.split(" ")[1]);
+                user.setToken(response.split(" ")[1]);
                 FrameHandler.getMainMenuFrame().changeLogin();
             }
             else {

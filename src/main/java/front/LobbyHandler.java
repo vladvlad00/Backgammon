@@ -12,6 +12,7 @@ public class LobbyHandler {
 
     public static void init(List<Lobby> lobbiesArg) {
         lobbies = lobbiesArg;
+        lobbies.forEach(Lobby::separateUsers);
     }
 
     public static Lobby getById(Long id) {

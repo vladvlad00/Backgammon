@@ -41,7 +41,7 @@ public class MainMenuFrame extends BorderPane {
     }
 
     public void changeLogin() {
-        if(User.getToken() == null || User.getToken().isEmpty()) {
+        if(User.getInstance().getToken() == null || User.getInstance().getToken().isEmpty()) {
             this.setTop(loginRegisterPanel);
             this.setCenter(pleaseLoginPanel);
         }
