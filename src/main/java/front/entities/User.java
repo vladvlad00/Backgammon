@@ -7,8 +7,10 @@ public class User {
     private String username;
     private String password;
     @JsonIgnore
-
     private String token;
+
+    @JsonIgnore
+    private Boolean inRoom;
 
     private static User instance = null;
 
@@ -50,5 +52,17 @@ public class User {
     public void setToken(String token)
     {
         this.token = token;
+    }
+
+    public Boolean getInRoom() {
+        return inRoom;
+    }
+
+    public void setInRoom(Boolean inRoom) {
+        this.inRoom = inRoom;
+    }
+
+    public static void setInstance(User instance) {
+        User.instance = instance;
     }
 }

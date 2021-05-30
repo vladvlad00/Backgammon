@@ -1,8 +1,11 @@
 package front.panels.menu.body;
 
+import front.LobbyHandler;
 import front.entities.Lobby;
 import front.entities.User;
+import front.panels.menu.body.creation.LobbyCreationPanel;
 import front.utils.Cookies;
+import front.utils.NetworkManager;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -53,12 +56,21 @@ public class MainMenuFrame extends BorderPane {
     }
 
     public void goToSearch() {
+        User.getInstance().setInRoom(false);
+        lobbySearcherPanel.refresh();
         this.setCenter(lobbySearcherPanel);
     }
 
     public void goToCreate(Lobby lobby) {
+        User.getInstance().setInRoom(true);
         lobbyCreationPanel.setLobby(lobby);
+        lobbyCreationPanel.init();
         this.setCenter(lobbyCreationPanel);
+    }
+
+    public void goToMenu() {
+        User.getInstance().setInRoom(false);
+        this.setCenter(menuBodyPanel);
     }
 
     public Stage getStage() {

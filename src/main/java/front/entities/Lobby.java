@@ -1,5 +1,6 @@
 package front.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Lobby {
@@ -24,7 +25,7 @@ public class Lobby {
         playerNum = users.size();
         spectatorNum = 0;
         users.forEach(u -> {
-            if(u.getRole().equals(UserRole.SPECTATOR)) {
+            if(u.getRole().equals(UserRole.SPECTATOR) || u.getRole().equals(UserRole.HOST_SPECTATOR)) {
                 ++spectatorNum;
                 --playerNum;
             }
@@ -36,6 +37,15 @@ public class Lobby {
         this.separateUsers();
     }
 
+    public UserRole getRoleOfUser(String name) {
+        for(LobbyUser lobbyUser : users) {
+            if(lobbyUser.getUsername().equals(name)) {
+                return lobbyUser.getRole();
+            }
+        }
+        return UserRole.UNDEFINED;
+    }
+
     public String getName() {
         return name;
     }
@@ -45,15 +55,15 @@ public class Lobby {
     }
 
     public Integer getPlayerNum() {
-        return playerNum;
+        return playerNum == null ? 0 : playerNum;
     }
 
     public Integer getSpectatorNum() {
-        return spectatorNum;
+        return spectatorNum == null ? 0 : spectatorNum;
     }
 
     public List<LobbyUser> getUsers() {
-        return users;
+        return users == null ? new ArrayList<>() : users;
     }
 
     public void setName(String name)
