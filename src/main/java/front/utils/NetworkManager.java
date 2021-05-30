@@ -61,6 +61,25 @@ public class NetworkManager {
         }
     }
 
+    public static Lobby getLobby(Long id)
+    {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = getHeaders();
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<String> response = restTemplate.exchange(URL + "/room/" + id, HttpMethod.GET, entity, String.class);
+        if (!response.getStatusCode().is2xxSuccessful())
+            return null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        try
+        {
+            return objectMapper.readValue(response.getBody(), new TypeReference<Lobby>(){});
+        } catch (JsonProcessingException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static String joinThroughID(Long roomId, UserRole role) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = getHeaders();
