@@ -86,6 +86,13 @@ public class NetworkManager {
         return response.getBody();
     }
 
+    public static void leaveRoom() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = getHeaders();
+        HttpEntity entity = new HttpEntity(headers);
+        restTemplate.exchange(URL + "/user/room", HttpMethod.DELETE, entity, String.class);
+    }
+
     private static HttpHeaders getHeaders()
     {
         HttpHeaders headers = new HttpHeaders();
