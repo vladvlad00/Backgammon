@@ -54,7 +54,7 @@ public class PopUpHandler {
                 a.show();
             }
             else {
-                Lobby response = NetworkManager.joinThroughID(lobby.getId(), lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
+                Lobby response = NetworkManager.joinThroughID(lobby.getId(), UserRole.HOST);
                 if(response == null) {
                     throw new NullPointerException();
                 }
@@ -129,6 +129,51 @@ public class PopUpHandler {
         dialogVbox.getChildren().add(textField);
         dialogVbox.getChildren().add(button);
         Scene dialogScene = new Scene(dialogVbox, 300, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    public static void createAIDiffPopUp() {
+        Stage mainStage = SceneHandler.getStage();
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(mainStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setAlignment(Pos.CENTER);
+        dialog.setMinHeight(200);
+        dialog.setMaxHeight(200);
+        dialog.setMinWidth(300);
+        dialog.setMaxWidth(300);
+        dialog.setWidth(300);
+        dialog.setHeight(200);
+        dialog.setTitle("Choose AI difficulty");
+
+        Label label = new Label("Choose AI difficulty");
+        label.setPadding(new Insets(10, 10, -10, 10));
+
+        Button easy = new Button("Easy");
+        easy.setOnAction(e -> {
+            //Add easy AI
+            dialog.close();
+        });
+
+        Button medium = new Button("Medium");
+        medium.setOnAction(e -> {
+            //Add medium AI
+            dialog.close();
+        });
+
+        Button hard = new Button("Hard");
+        hard.setOnAction(e -> {
+            //Add hard AI
+            dialog.close();
+        });
+
+        dialogVbox.getChildren().add(label);
+        dialogVbox.getChildren().add(easy);
+        dialogVbox.getChildren().add(medium);
+        dialogVbox.getChildren().add(hard);
+        Scene dialogScene = new Scene(dialogVbox, 200, 300);
         dialog.setScene(dialogScene);
         dialog.show();
     }

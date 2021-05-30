@@ -1,4 +1,4 @@
-package back.websocket;
+package front.utils.websocket;
 
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.web.socket.client.WebSocketClient;

@@ -1,5 +1,6 @@
-package back.websocket;
+package front.utils.websocket;
 
+import back.websocket.Message;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;

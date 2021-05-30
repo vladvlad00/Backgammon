@@ -69,6 +69,7 @@ public class LoginBodyPanel extends GridPane {
                 frame.getLoginResponsePanel().createNegative("Login failed\n" +
                         (response.contains("403") ? "Account does not exist" : "Exception")
                         , 2L);
+                System.err.println(response);
             }
         });
         loginButton.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);

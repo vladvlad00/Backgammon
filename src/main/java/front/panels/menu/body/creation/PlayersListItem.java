@@ -1,6 +1,7 @@
 package front.panels.menu.body.creation;
 
 import front.FrameHandler;
+import front.PopUpHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.User;
@@ -10,11 +11,13 @@ import front.utils.NetworkManager;
 import front.utils.VoidOperator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -25,8 +28,7 @@ import java.util.Objects;
 public class PlayersListItem extends GridPane {
     private Label userName;
     private Button join;
-    private ObservableList<Button> ais;
-    private ComboBox<Button> addAI;
+    private Button addAI;
     private Lobby lobby;
     private LobbyUser lobbyUser;
 
@@ -37,13 +39,15 @@ public class PlayersListItem extends GridPane {
     }
 
     private void init() {
-        initAI();
+        this.setPrefWidth(MainMenuFrame.WIDTH / 2f);
         UserRole userRole = lobby.getRoleOfUser(User.getInstance().getUsername());
         switch (userRole) {
             case HOST_SPECTATOR:
                 if(lobbyUser == null) {
+                    addAI = new Button("Add AI");
+                    addAI.setOnAction(e -> PopUpHandler.createAIDiffPopUp());
                     addAI.setPadding(new Insets(10, 10, 10, 10));
-                    GridPane.setHalignment(addAI, HPos.RIGHT);
+                    GridPane.setHalignment(addAI, HPos.CENTER);
 
                     this.add(addAI, 1, 0);
                 }
@@ -55,11 +59,19 @@ public class PlayersListItem extends GridPane {
                         FrameHandler.getMainMenuFrame().goToCreate(lobby2);
                     });
                     join.setPadding(new Insets(10, 10, 10, 10));
-                    GridPane.setHalignment(join, HPos.RIGHT);
+                    GridPane.setHalignment(join, HPos.CENTER);
 
                     this.add(join, 2, 0);
                 }
             case HOST:
+                if(!userRole.equals(UserRole.HOST_SPECTATOR) && !userRole.equals(UserRole.SPECTATOR) && lobbyUser == null) {
+                    addAI = new Button("Add AI");
+                    addAI.setOnAction(e -> PopUpHandler.createAIDiffPopUp());
+                    addAI.setPadding(new Insets(10, 10, 10, 10));
+                    GridPane.setHalignment(addAI, HPos.CENTER);
+
+                    this.add(addAI, 1, 0);
+                }
             case PLAYER:
                 if(lobbyUser != null) {
                     userName = new Label(lobbyUser.getUsername());
@@ -83,27 +95,5 @@ public class PlayersListItem extends GridPane {
 
         this.getColumnConstraints().addAll(name, buttons, buttons);
         this.getRowConstraints().addAll(full);
-    }
-
-    private void initAI() {
-        ais = FXCollections.observableArrayList();
-        addAI = new ComboBox<>();
-
-        Button easy = new Button("Easy");
-        easy.setOnAction(e -> {
-            //SEND REQUEST TO ADD AI
-        });
-        Button medium = new Button("Medium");
-        medium.setOnAction(e -> {
-            //SEND REQUEST TO ADD AI
-        });
-        Button hard = new Button("Hard");
-        hard.setOnAction(e -> {
-            //SEND REQUEST TO ADD AI
-        });
-
-        ais.addAll(easy, medium, hard);
-        addAI.setItems(ais);
-        addAI.setPromptText("Add AI");
     }
 }

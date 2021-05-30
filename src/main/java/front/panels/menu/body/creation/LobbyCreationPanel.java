@@ -84,8 +84,6 @@ public class LobbyCreationPanel extends GridPane {
             }
         }
 
-
-
         spectatorListItems.add(new SpectatorListItem(lobby, null));
 
         for(int i = 0; i < 2 - lobby.getPlayerNum(); ++i) {
@@ -99,5 +97,6 @@ public class LobbyCreationPanel extends GridPane {
 
         lobbyName = new Label(lobby.getName());
         GridPane.setHalignment(lobbyName, HPos.CENTER);
+        lobbyName.setStyle("-fx-font: 28 arial;");
     }
 }
