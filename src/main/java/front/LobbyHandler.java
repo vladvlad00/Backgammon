@@ -38,7 +38,7 @@ public class LobbyHandler {
             throw new NullPointerException();
         }
 
-        Lobby response = NetworkManager.joinThroughID(id, lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR);
+        Lobby response = NetworkManager.joinThroughID(id, (lobby.getPlayerNum() - lobby.getAINum() == 0 && lobby.getSpectatorNum() == 0) ? (lobby.getAINum() == 2 ? UserRole.HOST_SPECTATOR : UserRole.HOST) : (lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR));
         if(response == null) {
             throw new NullPointerException();
         }

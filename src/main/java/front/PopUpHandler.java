@@ -3,6 +3,8 @@ package front;
 import front.LobbyHandler;
 import front.SceneHandler;
 import front.entities.Lobby;
+import front.entities.LobbyUser;
+import front.entities.User;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
 import front.utils.NetworkManager;
@@ -133,7 +135,7 @@ public class PopUpHandler {
         dialog.show();
     }
 
-    public static void createAIDiffPopUp() {
+    public static void createAIDiffPopUp(Long lobbyID) {
         Stage mainStage = SceneHandler.getStage();
         final Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
@@ -153,21 +155,46 @@ public class PopUpHandler {
 
         Button easy = new Button("Easy");
         easy.setOnAction(e -> {
-            //Add easy AI
+            LobbyUser user = NetworkManager.addAI(lobbyID, UserRole.AI_EASY);
+            if(user == null) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("Could not add AI");
+                a.setTitle("Error");
+                a.show();
+            }
+            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID);
             dialog.close();
         });
+
+        easy.setPrefWidth(100);
 
         Button medium = new Button("Medium");
         medium.setOnAction(e -> {
-            //Add medium AI
+            LobbyUser user = NetworkManager.addAI(lobbyID, UserRole.AI_MEDIUM);
+            if(user == null) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("Could not add AI");
+                a.setTitle("Error");
+                a.show();
+            }
+            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID);
             dialog.close();
         });
+        medium.setPrefWidth(100);
 
         Button hard = new Button("Hard");
         hard.setOnAction(e -> {
-            //Add hard AI
+            LobbyUser user = NetworkManager.addAI(lobbyID, UserRole.AI_HARD);
+            if(user == null) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("Could not add AI");
+                a.setTitle("Error");
+                a.show();
+            }
+            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID);
             dialog.close();
         });
+        hard.setPrefWidth(100);
 
         dialogVbox.getChildren().add(label);
         dialogVbox.getChildren().add(easy);

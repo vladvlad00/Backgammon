@@ -1,5 +1,6 @@
 package front.panels.menu.body.creation;
 
+import front.SceneHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.UserRole;
@@ -16,6 +17,9 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import static front.panels.menu.login.MainLoginFrame.HEIGHT;
+import static front.panels.menu.login.MainLoginFrame.WIDTH;
+
 public class LobbyCreationPanel extends GridPane {
     private final MainMenuFrame frame;
     private Lobby lobby;
@@ -27,6 +31,8 @@ public class LobbyCreationPanel extends GridPane {
     private ListView<PlayersListItem> players;
     private ListView<SpectatorListItem> spectators;
     private Button back;
+    private Button start;
+    private Button delete;
 
     public LobbyCreationPanel(MainMenuFrame frame) {
         this.frame = frame;
@@ -53,10 +59,24 @@ public class LobbyCreationPanel extends GridPane {
         });
         GridPane.setValignment(back, VPos.CENTER);
 
+        start = new Button("Start");
+        start.setOnAction(e -> SceneHandler.changeScene("game"));
+        start.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
+        GridPane.setHalignment(start, HPos.LEFT);
+
+        delete = new Button("Delete");
+        delete.setOnAction(e -> {
+            //TODO: DELETE ROOM FOR ALL
+        });
+        delete.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
+        GridPane.setHalignment(delete, HPos.RIGHT);
+
         this.add(back, 0, 0);
         this.add(lobbyName, 0, 1, 2, 1);
         this.add(players, 0, 2);
         this.add(spectators, 1, 2);
+        this.add(start, 0, 3);
+        this.add(delete, 1, 3);
 
         ColumnConstraints half = new ColumnConstraints();
         half.setPercentWidth(50);
@@ -65,10 +85,12 @@ public class LobbyCreationPanel extends GridPane {
         RowConstraints small = new RowConstraints();
         small.setPercentHeight(10);
         RowConstraints big = new RowConstraints();
-        big.setPercentHeight(85);
+        big.setPercentHeight(75);
+        RowConstraints buttons = new RowConstraints();
+        buttons.setPercentHeight(10);
 
         this.getColumnConstraints().addAll(half, half);
-        this.getRowConstraints().addAll(backC, small, big);
+        this.getRowConstraints().addAll(backC, small, big, buttons);
     }
 
     public void refresh() {

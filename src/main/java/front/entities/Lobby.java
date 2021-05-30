@@ -6,8 +6,9 @@ import java.util.List;
 public class Lobby {
     private String name;
     private Long id;
-    private Integer playerNum;
-    private Integer spectatorNum;
+    private Long playerNum;
+    private Long spectatorNum;
+    private Long aiNum;
     private List<LobbyUser> users;
 
     public Lobby()
@@ -22,14 +23,9 @@ public class Lobby {
     }
 
     public void separateUsers() {
-        playerNum = users.size();
-        spectatorNum = 0;
-        users.forEach(u -> {
-            if(u.getRole().equals(UserRole.SPECTATOR) || u.getRole().equals(UserRole.HOST_SPECTATOR)) {
-                ++spectatorNum;
-                --playerNum;
-            }
-        });
+        aiNum = users.stream().filter(u -> u.getRole().equals(UserRole.AI_HARD) || u.getRole().equals(UserRole.AI_MEDIUM) || u.getRole().equals(UserRole.AI_EASY)).count();
+        playerNum = users.stream().filter(u -> u.getRole().equals(UserRole.PLAYER) || u.getRole().equals(UserRole.HOST)).count() + aiNum;
+        spectatorNum = users.stream().filter(u -> u.getRole().equals(UserRole.SPECTATOR) || u.getRole().equals(UserRole.HOST_SPECTATOR)).count();
     }
 
     public void updateUsers(List<LobbyUser> users) {
@@ -54,12 +50,16 @@ public class Lobby {
         return id;
     }
 
-    public Integer getPlayerNum() {
+    public Long getPlayerNum() {
         return playerNum == null ? 0 : playerNum;
     }
 
-    public Integer getSpectatorNum() {
+    public Long getSpectatorNum() {
         return spectatorNum == null ? 0 : spectatorNum;
+    }
+
+    public Long getAINum() {
+        return aiNum == null ? 0 : aiNum;
     }
 
     public List<LobbyUser> getUsers() {
@@ -74,16 +74,6 @@ public class Lobby {
     public void setId(Long id)
     {
         this.id = id;
-    }
-
-    public void setPlayerNum(Integer playerNum)
-    {
-        this.playerNum = playerNum;
-    }
-
-    public void setSpectatorNum(Integer spectatorNum)
-    {
-        this.spectatorNum = spectatorNum;
     }
 
     public void setUsers(List<LobbyUser> users)

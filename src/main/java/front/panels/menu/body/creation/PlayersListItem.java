@@ -29,6 +29,7 @@ public class PlayersListItem extends GridPane {
     private Label userName;
     private Button join;
     private Button addAI;
+    private Button removeAI;
     private Lobby lobby;
     private LobbyUser lobbyUser;
 
@@ -39,17 +40,28 @@ public class PlayersListItem extends GridPane {
     }
 
     private void init() {
-        this.setPrefWidth(MainMenuFrame.WIDTH / 2f);
+        //this.setPrefWidth(MainMenuFrame.WIDTH / 2f);
         UserRole userRole = lobby.getRoleOfUser(User.getInstance().getUsername());
         switch (userRole) {
             case HOST_SPECTATOR:
                 if(lobbyUser == null) {
                     addAI = new Button("Add AI");
-                    addAI.setOnAction(e -> PopUpHandler.createAIDiffPopUp());
+                    addAI.setOnAction(e -> PopUpHandler.createAIDiffPopUp(lobby.getId()));
                     addAI.setPadding(new Insets(10, 10, 10, 10));
                     GridPane.setHalignment(addAI, HPos.CENTER);
 
                     this.add(addAI, 1, 0);
+                }
+                else if(lobbyUser.getRole().equals(UserRole.AI_EASY) || lobbyUser.getRole().equals(UserRole.AI_MEDIUM) || lobbyUser.getRole().equals(UserRole.AI_HARD)) {
+                    removeAI = new Button("Remove AI");
+                    removeAI.setOnAction(e -> {
+                        NetworkManager.removeAI(lobby.getId(), lobbyUser.getUsername());
+                        FrameHandler.getMainMenuFrame().refreshLobby(lobby.getId());
+                    });
+                    removeAI.setPadding(new Insets(10, 10, 10, 10));
+                    GridPane.setHalignment(removeAI, HPos.CENTER);
+
+                    this.add(removeAI, 1, 0, 2, 1);
                 }
             case SPECTATOR:
                 if(lobbyUser == null) {
@@ -66,11 +78,22 @@ public class PlayersListItem extends GridPane {
             case HOST:
                 if(!userRole.equals(UserRole.HOST_SPECTATOR) && !userRole.equals(UserRole.SPECTATOR) && lobbyUser == null) {
                     addAI = new Button("Add AI");
-                    addAI.setOnAction(e -> PopUpHandler.createAIDiffPopUp());
+                    addAI.setOnAction(e -> PopUpHandler.createAIDiffPopUp(lobby.getId()));
                     addAI.setPadding(new Insets(10, 10, 10, 10));
                     GridPane.setHalignment(addAI, HPos.CENTER);
 
                     this.add(addAI, 1, 0);
+                }
+                if(!userRole.equals(UserRole.HOST_SPECTATOR) && !userRole.equals(UserRole.SPECTATOR) && lobbyUser != null && (lobbyUser.getRole().equals(UserRole.AI_EASY) || lobbyUser.getRole().equals(UserRole.AI_MEDIUM) || lobbyUser.getRole().equals(UserRole.AI_HARD))) {
+                    removeAI = new Button("Remove AI");
+                    removeAI.setOnAction(e -> {
+                        NetworkManager.removeAI(lobby.getId(), lobbyUser.getUsername());
+                        FrameHandler.getMainMenuFrame().refreshLobby(lobby.getId());
+                    });
+                    removeAI.setPadding(new Insets(10, 10, 10, 10));
+                    GridPane.setHalignment(removeAI, HPos.CENTER);
+
+                    this.add(removeAI, 1, 0, 2, 1);
                 }
             case PLAYER:
                 if(lobbyUser != null) {

@@ -73,6 +73,11 @@ public class MainMenuFrame extends BorderPane {
         this.setCenter(menuBodyPanel);
     }
 
+    public void refreshLobby(Long id) {
+        lobbyCreationPanel.setLobby(NetworkManager.getLobby(id));
+        lobbyCreationPanel.init();
+    }
+
     public Stage getStage() {
         return stage;
     }

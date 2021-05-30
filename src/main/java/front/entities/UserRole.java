@@ -12,13 +12,13 @@ public enum UserRole {
 
     public static UserRole convert(String role) {
         switch (role) {
-            case "player": return PLAYER;
-            case "spectator": return SPECTATOR;
-            case "host": return HOST;
-            case "host_spectator": return HOST_SPECTATOR;
-            case "ai_easy": return AI_EASY;
-            case "ai_medium": return AI_MEDIUM;
-            case "ai_hard": return AI_HARD;
+            case "PLAYER": return PLAYER;
+            case "SPECTATOR": return SPECTATOR;
+            case "HOST": return HOST;
+            case "HOST_SPECTATOR": return HOST_SPECTATOR;
+            case "AI_EASY": return AI_EASY;
+            case "AI_MEDIUM": return AI_MEDIUM;
+            case "AI_HARD": return AI_HARD;
             default: return UNDEFINED;
         }
     }

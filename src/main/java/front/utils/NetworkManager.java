@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import front.entities.Lobby;
+import front.entities.LobbyUser;
 import front.entities.User;
 import front.entities.UserRole;
 import org.springframework.http.*;
@@ -109,6 +110,28 @@ public class NetworkManager {
         HttpHeaders headers = getHeaders();
         HttpEntity entity = new HttpEntity(headers);
         restTemplate.exchange(URL + "/user/room", HttpMethod.DELETE, entity, String.class);
+    }
+
+    public static LobbyUser addAI(Long id, UserRole dif) {
+        HttpHeaders headers = getHeaders();
+        HttpEntity entity = new HttpEntity(headers);
+        ResponseEntity<LobbyUser> response = restTemplate.exchange(URL + "/room/" + id + "/ai/" + dif.toString().split("_")[1].toLowerCase(), HttpMethod.POST, entity, LobbyUser.class);
+        if (response.getStatusCode().is2xxSuccessful())
+            return response.getBody();
+        return null;
+    }
+
+    public static void removeAI(Long id, String name) {
+        HttpHeaders headers = getHeaders();
+        HttpEntity entity = new HttpEntity(headers);
+        restTemplate.exchange(URL + "/room/" + id + "/ai/" + name, HttpMethod.DELETE, entity, LobbyUser.class);
+    }
+
+    public static void deleteRoom(Long id) {
+        User.getInstance().setInRoom(false);
+        HttpHeaders headers = getHeaders();
+        HttpEntity entity = new HttpEntity(headers);
+        restTemplate.exchange(URL + "/room/" + id, HttpMethod.DELETE, entity, String.class);
     }
 
     private static HttpHeaders getHeaders()

@@ -114,11 +114,12 @@ public class GameRoomController
 
             user.setGameRoom(gameRoom);
             user.setRole("AI_" + difficulty.toUpperCase());
+            user.setPassword("\uD83D\uDC41");
             gameRoom.getUsers().add(user);
 
             userRepository.save(user);
             roomRepository.save(gameRoom);
-            return null;
+            return ResponseEntity.ok(user);
         }
         catch (Exception e)
         {
