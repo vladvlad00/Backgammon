@@ -87,6 +87,7 @@ public class UserController
             GameRoom gameRoom = user.getGameRoom();
             gameRoom.getUsers().remove(user);
             user.setGameRoom(null);
+            user.setRole(null);
 
             gameRoomRepository.save(gameRoom);
             userRepository.save(user);
