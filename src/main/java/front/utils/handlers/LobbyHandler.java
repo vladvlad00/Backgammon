@@ -2,8 +2,10 @@ package front.utils.handlers;
 
 import front.entities.Lobby;
 import front.entities.UserRole;
+import front.utils.websocket.WSClient;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class LobbyHandler {
     private static List<Lobby> lobbies;
@@ -40,13 +42,13 @@ public class LobbyHandler {
             throw new NullPointerException();
         }
         else {
-            if (true) {
-                FrameHandler.getMainMenuFrame().goToCreate(response);
-                return "succ";
+            try {
+                WSClient.getInstance().connect(id);
+            } catch (ExecutionException | InterruptedException executionException) {
+                executionException.printStackTrace();
             }
-            else {
-                return "err";
-            }
+            FrameHandler.getMainMenuFrame().goToCreate(response);
+            return "succ";
         }
     }
 }

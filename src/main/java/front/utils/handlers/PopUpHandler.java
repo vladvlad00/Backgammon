@@ -102,7 +102,6 @@ public class PopUpHandler {
                 id = Long.parseLong(textField.getText());
                 String response = LobbyHandler.joinThroughID(id);
                 if(response.equals("succ")) {
-                    WSClient.getInstance().connect(id);
                     dialog.close();
                 }
                 else {
@@ -117,7 +116,6 @@ public class PopUpHandler {
                 a.setContentText("Please input a valid ID");
                 a.setTitle("Error");
                 a.show();
-                return;
             }
 
         });
@@ -156,7 +154,7 @@ public class PopUpHandler {
                 a.setTitle("Error");
                 a.show();
             }
-            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID);
+            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID, true);
             dialog.close();
         });
 
@@ -171,7 +169,7 @@ public class PopUpHandler {
                 a.setTitle("Error");
                 a.show();
             }
-            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID);
+            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID, true);
             dialog.close();
         });
         medium.setPrefWidth(100);
@@ -185,7 +183,7 @@ public class PopUpHandler {
                 a.setTitle("Error");
                 a.show();
             }
-            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID);
+            FrameHandler.getMainMenuFrame().refreshLobby(lobbyID, true);
             dialog.close();
         });
         hard.setPrefWidth(100);

@@ -46,7 +46,7 @@ public class PlayersListItem extends GridPane {
                     removeAI = new Button("Remove AI");
                     removeAI.setOnAction(e -> {
                         NetworkManager.removeAI(lobby.getId(), lobbyUser.getUsername());
-                        FrameHandler.getMainMenuFrame().refreshLobby(lobby.getId());
+                        FrameHandler.getMainMenuFrame().refreshLobby(lobby.getId(), true);
                     });
                     removeAI.setPadding(new Insets(10, 10, 10, 10));
                     GridPane.setHalignment(removeAI, HPos.CENTER);
@@ -78,7 +78,7 @@ public class PlayersListItem extends GridPane {
                     removeAI = new Button("Remove AI");
                     removeAI.setOnAction(e -> {
                         NetworkManager.removeAI(lobby.getId(), lobbyUser.getUsername());
-                        FrameHandler.getMainMenuFrame().refreshLobby(lobby.getId());
+                        FrameHandler.getMainMenuFrame().refreshLobby(lobby.getId(), true);
                     });
                     removeAI.setPadding(new Insets(10, 10, 10, 10));
                     GridPane.setHalignment(removeAI, HPos.CENTER);

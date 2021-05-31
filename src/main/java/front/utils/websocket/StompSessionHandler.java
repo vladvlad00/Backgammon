@@ -3,6 +3,7 @@ package front.utils.websocket;
 import back.websocket.Message;
 import front.utils.handlers.BackgammonEvent;
 import front.utils.handlers.FrameHandler;
+import javafx.application.Platform;
 import javafx.event.Event;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
@@ -21,7 +22,7 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
     public StompSessionHandler(Long roomId)
     {
         this.roomId = roomId;
-        this.sendUrl = "/game/" + roomId;
+        this.sendUrl = "/app/game/" + roomId;
         this.subscribeUrl = "/game_info/" + roomId;
     }
 
@@ -29,7 +30,7 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
     public void afterConnected(StompSession session, StompHeaders connectedHeaders)
     {
         session.subscribe(subscribeUrl, this);
-        session.send(sendUrl, getSampleMessage());
+        System.out.println("Subscribed to " + subscribeUrl);
     }
 
     @Override
@@ -49,10 +50,17 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
     public void handleFrame(StompHeaders headers, Object payload)
     {
         Message message = (Message) payload;
+        if (message == null)
+        {
+            // probabil inseamna ca s-a dat disconnect - e bine
+            return;
+        }
         if (message.getCommand().equals("refresh"))
         {
-            Event.fireEvent(FrameHandler.getMainMenuFrame().getLobbyCreationPanel(),
-                    new BackgammonEvent(BackgammonEvent.REFRESH_LOBBY, null));
+            Platform.runLater(
+                    () -> Event.fireEvent(FrameHandler.getMainMenuFrame().getLobbyCreationPanel(),
+                            new BackgammonEvent(BackgammonEvent.REFRESH_LOBBY, null))
+            );
         }
         System.out.println("Received " + message.toString());
     }

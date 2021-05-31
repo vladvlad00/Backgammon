@@ -29,6 +29,8 @@ public class WSClient
 
     public void connect(Long roomId) throws ExecutionException, InterruptedException
     {
+        if (sessionHandler != null)
+            return;
         sessionHandler = new StompSessionHandler(roomId);
         session = stompClient.connect(URL, sessionHandler).get();
     }
@@ -42,6 +44,7 @@ public class WSClient
 
     public void sendMessage(Message message)
     {
+        System.out.println("Message sent to " + sessionHandler.getSendUrl());
         session.send(sessionHandler.getSendUrl(), message);
     }
 

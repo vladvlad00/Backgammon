@@ -61,13 +61,6 @@ public class LobbyListItemPanel extends GridPane {
                 a.setTitle("Error");
                 a.show();
             }
-            else {
-                try {
-                    WSClient.getInstance().connect(lobbyID);
-                } catch (ExecutionException | InterruptedException executionException) {
-                    executionException.printStackTrace();
-                }
-            }
         });
 
         this.add(this.name, 0, 0, 2, 1);

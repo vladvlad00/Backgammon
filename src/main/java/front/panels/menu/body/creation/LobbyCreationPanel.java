@@ -39,9 +39,9 @@ public class LobbyCreationPanel extends GridPane {
     public LobbyCreationPanel(MainMenuFrame frame) {
         this.frame = frame;
         this.addEventHandler(BackgammonEvent.REFRESH_LOBBY, e -> {
-            System.out.println(e.getSource().toString());
+            System.out.println("JONATHAN JOESTAR");
+            frame.refreshLobby(lobby.getId(), false);
         });
-        //init();
     }
 
     public void setLobby(Lobby lobby) {

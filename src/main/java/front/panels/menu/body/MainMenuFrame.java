@@ -75,10 +75,11 @@ public class MainMenuFrame extends BorderPane {
         this.setCenter(menuBodyPanel);
     }
 
-    public void refreshLobby(Long id) {
+    public void refreshLobby(Long id, boolean shouldBroadcast) {
         lobbyCreationPanel.setLobby(NetworkManager.getLobby(id));
         lobbyCreationPanel.init();
-        WSClient.getInstance().sendMessage(new Message("refresh", null));
+        if (shouldBroadcast)
+            WSClient.getInstance().sendMessage(new Message("refresh", null));
     }
 
     public Stage getStage() {
