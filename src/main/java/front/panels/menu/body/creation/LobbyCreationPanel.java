@@ -1,11 +1,13 @@
 package front.panels.menu.body.creation;
 
+import front.utils.handlers.BackgammonEvent;
 import front.utils.handlers.SceneHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
 import front.utils.handlers.NetworkManager;
+import front.utils.websocket.WSClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
@@ -36,6 +38,9 @@ public class LobbyCreationPanel extends GridPane {
 
     public LobbyCreationPanel(MainMenuFrame frame) {
         this.frame = frame;
+        this.addEventHandler(BackgammonEvent.REFRESH_LOBBY, e -> {
+            System.out.println(e.getSource().toString());
+        });
         //init();
     }
 

@@ -2,6 +2,7 @@ package front.panels.menu.body;
 
 import front.utils.handlers.LobbyHandler;
 import front.entities.Lobby;
+import front.utils.websocket.WSClient;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
@@ -10,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+
+import java.util.concurrent.ExecutionException;
 
 import static front.panels.menu.login.MainLoginFrame.HEIGHT;
 import static front.panels.menu.login.MainLoginFrame.WIDTH;
@@ -57,6 +60,13 @@ public class LobbyListItemPanel extends GridPane {
                 a.setContentText("Could not join lobby");
                 a.setTitle("Error");
                 a.show();
+            }
+            else {
+                try {
+                    WSClient.getInstance().connect(lobbyID);
+                } catch (ExecutionException | InterruptedException executionException) {
+                    executionException.printStackTrace();
+                }
             }
         });
 

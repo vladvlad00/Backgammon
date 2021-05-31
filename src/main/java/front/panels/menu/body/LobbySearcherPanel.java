@@ -1,5 +1,6 @@
 package front.panels.menu.body;
 
+import front.utils.handlers.BackgammonEvent;
 import front.utils.handlers.LobbyHandler;
 import front.entities.Lobby;
 import javafx.collections.FXCollections;
@@ -44,8 +45,6 @@ public class LobbySearcherPanel extends GridPane {
         backConstraints.setPercentHeight(3);
         this.getColumnConstraints().addAll(columnConstraints);
         this.getRowConstraints().addAll(backConstraints, rowConstraints);
-
-        //this.addEventHandler();
     }
 
     public void refresh() {

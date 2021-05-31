@@ -7,6 +7,7 @@ import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.User;
 import front.entities.UserRole;
+import front.utils.websocket.WSClient;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -110,6 +111,7 @@ public class NetworkManager {
         HttpHeaders headers = getHeaders();
         HttpEntity entity = new HttpEntity(headers);
         restTemplate.exchange(URL + "/user/room", HttpMethod.DELETE, entity, String.class);
+        WSClient.getInstance().disconnect();
     }
 
     public static LobbyUser addAI(Long id, UserRole dif) {

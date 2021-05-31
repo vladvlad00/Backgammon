@@ -1,10 +1,12 @@
 package front.panels.menu.body;
 
+import back.websocket.Message;
 import front.entities.Lobby;
 import front.entities.User;
 import front.panels.menu.body.creation.LobbyCreationPanel;
 import front.utils.Cookies;
 import front.utils.handlers.NetworkManager;
+import front.utils.websocket.WSClient;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -65,6 +67,7 @@ public class MainMenuFrame extends BorderPane {
         lobbyCreationPanel.setLobby(lobby);
         lobbyCreationPanel.init();
         this.setCenter(lobbyCreationPanel);
+        WSClient.getInstance().sendMessage(new Message("refresh", null));
     }
 
     public void goToMenu() {
@@ -75,14 +78,15 @@ public class MainMenuFrame extends BorderPane {
     public void refreshLobby(Long id) {
         lobbyCreationPanel.setLobby(NetworkManager.getLobby(id));
         lobbyCreationPanel.init();
+        WSClient.getInstance().sendMessage(new Message("refresh", null));
     }
 
     public Stage getStage() {
         return stage;
     }
 
-    public LobbySearcherPanel getLobbySearcherPanel() {
-        return lobbySearcherPanel;
+    public LobbyCreationPanel getLobbyCreationPanel() {
+        return lobbyCreationPanel;
     }
 
     public void setStage(Stage stage) {

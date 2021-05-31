@@ -4,6 +4,7 @@ import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
+import front.utils.websocket.WSClient;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +15,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.concurrent.ExecutionException;
 
 public class PopUpHandler {
 
@@ -54,16 +57,13 @@ public class PopUpHandler {
                     throw new NullPointerException();
                 }
                 else {
-                    if (true) {
-                        FrameHandler.getMainMenuFrame().goToCreate(response);
-                        dialog.close();
+                    try {
+                        WSClient.getInstance().connect(lobby.getId());
+                    } catch (ExecutionException | InterruptedException executionException) {
+                        executionException.printStackTrace();
                     }
-                    else {
-                        Alert a = new Alert(Alert.AlertType.ERROR);
-                        a.setContentText("Could not join lobby");
-                        a.setTitle("Error");
-                        a.show();
-                    }
+                    FrameHandler.getMainMenuFrame().goToCreate(response);
+                    dialog.close();
                 }
             }
         });
@@ -102,6 +102,7 @@ public class PopUpHandler {
                 id = Long.parseLong(textField.getText());
                 String response = LobbyHandler.joinThroughID(id);
                 if(response.equals("succ")) {
+                    WSClient.getInstance().connect(id);
                     dialog.close();
                 }
                 else {

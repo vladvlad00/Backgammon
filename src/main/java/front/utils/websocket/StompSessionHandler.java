@@ -51,7 +51,7 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
         Message message = (Message) payload;
         if (message.getCommand().equals("refresh"))
         {
-            Event.fireEvent(FrameHandler.getMainMenuFrame().getLobbySearcherPanel(),
+            Event.fireEvent(FrameHandler.getMainMenuFrame().getLobbyCreationPanel(),
                     new BackgammonEvent(BackgammonEvent.REFRESH_LOBBY, null));
         }
         System.out.println("Received " + message.toString());
