@@ -4,9 +4,10 @@ import back.service.game.Board;
 import back.service.game.PlayerColor;
 import back.websocket.Message;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface AiAlgorithm
 {
-    List<Message> getMove(Board board, PlayerColor color, int die1, int die2);
+    List<Message> getMove(Board board, PlayerColor color, int die1, int die2) throws IOException;
 }

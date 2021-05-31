@@ -1,5 +1,6 @@
 package back.controller;
 
+import back.service.ai.GnuAiAlgorithm;
 import back.service.ai.RandomAiAlgorithm;
 import back.service.game.Board;
 import back.service.game.PlayerColor;
@@ -7,6 +8,7 @@ import back.websocket.Message;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Map;
 
 @RestController
@@ -14,7 +16,7 @@ import java.util.Map;
 public class AiController
 {
     @PostMapping("/{difficulty}")
-    ResponseEntity<Iterable<Message>> getMove(@PathVariable String difficulty, @RequestBody Map<String, String> requestBody)
+    ResponseEntity<Iterable<Message>> getMove(@PathVariable String difficulty, @RequestBody Map<String, String> requestBody) throws IOException
     {
         String boardRepresentation = requestBody.get("board");
         String color = requestBody.get("color");
@@ -44,6 +46,8 @@ public class AiController
         Board board = new Board(boardRepresentation);
         if (difficulty.equals("easy"))
             return ResponseEntity.ok(new RandomAiAlgorithm().getMove(board, playerColor, die1, die2));
+        else if (difficulty.equals("hard"))
+            return ResponseEntity.ok(new GnuAiAlgorithm().getMove(board, playerColor, die1, die2));
         return ResponseEntity.badRequest().build();
     }
 }
