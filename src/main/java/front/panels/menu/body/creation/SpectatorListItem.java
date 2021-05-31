@@ -1,11 +1,11 @@
 package front.panels.menu.body.creation;
 
-import front.FrameHandler;
+import front.utils.handlers.FrameHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.User;
 import front.entities.UserRole;
-import front.utils.NetworkManager;
+import front.utils.handlers.NetworkManager;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

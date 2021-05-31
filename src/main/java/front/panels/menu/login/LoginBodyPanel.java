@@ -1,9 +1,9 @@
 package front.panels.menu.login;
 
 
-import front.FrameHandler;
+import front.utils.handlers.FrameHandler;
 import front.entities.User;
-import front.utils.NetworkManager;
+import front.utils.handlers.NetworkManager;
 import front.utils.VoidOperator;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;

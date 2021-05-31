@@ -1,9 +1,8 @@
 package front.panels.menu.body;
 
-import front.SceneHandler;
+import front.utils.handlers.SceneHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.ColumnConstraints;

@@ -1,8 +1,7 @@
 package front.panels.menu.body;
 
-import front.SceneHandler;
 import front.entities.User;
-import front.utils.NetworkManager;
+import front.utils.handlers.NetworkManager;
 import javafx.geometry.HPos;
 import javafx.geometry.Orientation;
 import javafx.scene.control.Button;

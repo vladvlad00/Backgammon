@@ -1,8 +1,5 @@
-package front;
+package front.utils.handlers;
 
-import front.panels.menu.body.MainMenuFrame;
-import front.panels.menu.login.MainLoginFrame;
-import front.panels.menu.register.MainRegisterFrame;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;

@@ -1,8 +1,8 @@
 package front.panels.menu.body;
 
-import front.LobbyHandler;
-import front.PopUpHandler;
-import front.utils.NetworkManager;
+import front.utils.handlers.LobbyHandler;
+import front.utils.handlers.PopUpHandler;
+import front.utils.handlers.NetworkManager;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;

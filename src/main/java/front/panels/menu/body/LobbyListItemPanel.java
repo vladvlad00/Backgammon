@@ -1,6 +1,6 @@
 package front.panels.menu.body;
 
-import front.LobbyHandler;
+import front.utils.handlers.LobbyHandler;
 import front.entities.Lobby;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;

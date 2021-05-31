@@ -1,11 +1,8 @@
-package front;
+package front.utils.handlers;
 
 import front.entities.Lobby;
 import front.entities.UserRole;
-import front.utils.NetworkManager;
-import javafx.scene.Scene;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LobbyHandler {

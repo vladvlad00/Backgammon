@@ -1,13 +1,10 @@
 package front.panels.menu.register;
 
-import front.SceneHandler;
+import front.utils.handlers.SceneHandler;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
 import javafx.geometry.HPos;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;

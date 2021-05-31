@@ -1,7 +1,6 @@
 package front.panels.menu.login;
 
-import front.SceneHandler;
-import front.panels.menu.register.MainRegisterFrame;
+import front.utils.handlers.SceneHandler;
 import javafx.animation.FadeTransition;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.HPos;

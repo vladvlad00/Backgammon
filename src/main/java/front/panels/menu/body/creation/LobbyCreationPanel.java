@@ -1,11 +1,11 @@
 package front.panels.menu.body.creation;
 
-import front.SceneHandler;
+import front.utils.handlers.SceneHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
-import front.utils.NetworkManager;
+import front.utils.handlers.NetworkManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;

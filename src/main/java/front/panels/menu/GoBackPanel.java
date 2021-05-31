@@ -1,6 +1,6 @@
 package front.panels.menu;
 
-import front.SceneHandler;
+import front.utils.handlers.SceneHandler;
 import front.utils.VoidOperator;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;

@@ -1,4 +1,4 @@
-package front;
+package front.utils.handlers;
 
 import front.panels.menu.body.MainMenuFrame;
 import front.panels.menu.login.MainLoginFrame;

@@ -1,6 +1,6 @@
 package front.panels.menu.body;
 
-import front.LobbyHandler;
+import front.utils.handlers.LobbyHandler;
 import front.entities.Lobby;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,8 +11,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-
-import java.util.Objects;
 
 public class LobbySearcherPanel extends GridPane {
     private final MainMenuFrame frame;
@@ -46,6 +44,8 @@ public class LobbySearcherPanel extends GridPane {
         backConstraints.setPercentHeight(3);
         this.getColumnConstraints().addAll(columnConstraints);
         this.getRowConstraints().addAll(backConstraints, rowConstraints);
+
+        //this.addEventHandler();
     }
 
     public void refresh() {

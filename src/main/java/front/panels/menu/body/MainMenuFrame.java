@@ -1,11 +1,10 @@
 package front.panels.menu.body;
 
-import front.LobbyHandler;
 import front.entities.Lobby;
 import front.entities.User;
 import front.panels.menu.body.creation.LobbyCreationPanel;
 import front.utils.Cookies;
-import front.utils.NetworkManager;
+import front.utils.handlers.NetworkManager;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 

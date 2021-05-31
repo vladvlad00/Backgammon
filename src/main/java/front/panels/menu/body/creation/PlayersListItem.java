@@ -1,29 +1,19 @@
 package front.panels.menu.body.creation;
 
-import front.FrameHandler;
-import front.PopUpHandler;
+import front.utils.handlers.FrameHandler;
+import front.utils.handlers.PopUpHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.User;
 import front.entities.UserRole;
-import front.panels.menu.body.MainMenuFrame;
-import front.utils.NetworkManager;
-import front.utils.VoidOperator;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
+import front.utils.handlers.NetworkManager;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-
-import java.util.Collection;
-import java.util.Objects;
 
 public class PlayersListItem extends GridPane {
     private Label userName;

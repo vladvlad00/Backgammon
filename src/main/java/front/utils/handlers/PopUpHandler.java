@@ -1,13 +1,9 @@
-package front;
+package front.utils.handlers;
 
-import front.LobbyHandler;
-import front.SceneHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
-import front.entities.User;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
-import front.utils.NetworkManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -15,12 +11,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.text.ParseException;
 
 public class PopUpHandler {
 

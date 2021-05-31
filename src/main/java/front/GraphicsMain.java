@@ -2,7 +2,9 @@ package front;
 
 import front.entities.User;
 import front.utils.Cookies;
-import front.utils.NetworkManager;
+import front.utils.handlers.LobbyHandler;
+import front.utils.handlers.NetworkManager;
+import front.utils.handlers.SceneHandler;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
