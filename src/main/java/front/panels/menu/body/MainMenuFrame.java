@@ -1,6 +1,6 @@
 package front.panels.menu.body;
 
-import back.websocket.Message;
+import front.utils.websocket.Message;
 import front.entities.Lobby;
 import front.entities.User;
 import front.panels.menu.body.creation.LobbyCreationPanel;

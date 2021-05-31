@@ -1,6 +1,6 @@
 package front.utils.websocket;
 
-import back.websocket.Message;
+import front.utils.websocket.Message;
 import front.utils.handlers.BackgammonEvent;
 import front.utils.handlers.FrameHandler;
 import javafx.application.Platform;

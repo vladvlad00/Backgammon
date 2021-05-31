@@ -1,6 +1,6 @@
 package front.utils.websocket;
 
-import back.websocket.Message;
+import front.utils.websocket.Message;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.web.socket.client.WebSocketClient;
