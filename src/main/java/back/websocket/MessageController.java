@@ -44,6 +44,8 @@ public class MessageController
                 return null;
             case "refresh":
                 return new RefreshCommand().runCommand();
+            case "delete":
+                return new DeleteCommand().runCommand();
             default:
                 Map<String, String> options = new HashMap<>();
                 options.put("message", "Unknown command " + m.getCommand());

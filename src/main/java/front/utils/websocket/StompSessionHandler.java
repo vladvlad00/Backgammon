@@ -76,6 +76,13 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
                             new BackgammonEvent(BackgammonEvent.START_GAME, null))
             );
         }
+        else if (message.getCommand().equals("delete"))
+        {
+            Platform.runLater(
+                    () -> Event.fireEvent(FrameHandler.getMainMenuFrame().getLobbyCreationPanel(),
+                            new BackgammonEvent(BackgammonEvent.DELETE_LOBBY, null))
+            );
+        }
         System.out.println("Received " + message.toString());
     }
 

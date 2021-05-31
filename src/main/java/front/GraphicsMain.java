@@ -22,7 +22,7 @@ public class GraphicsMain extends Application {
         LobbyHandler.init(new ArrayList<>());
 
         stage.setTitle("Backgammon");
-        SceneHandler.changeScene("game"); //TODO: CHANGE ME BACK TO MENU :(
+        SceneHandler.changeScene("menu"); //TODO: CHANGE ME BACK TO MENU :(
         stage.show();
     }
 
