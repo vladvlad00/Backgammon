@@ -1,5 +1,6 @@
 package front.panels.menu.body.creation;
 
+import front.entities.User;
 import front.utils.handlers.BackgammonEvent;
 import front.utils.handlers.FrameHandler;
 import front.utils.handlers.SceneHandler;
@@ -8,6 +9,7 @@ import front.entities.LobbyUser;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
 import front.utils.handlers.NetworkManager;
+import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,10 +41,9 @@ public class LobbyCreationPanel extends GridPane {
 
     public LobbyCreationPanel(MainMenuFrame frame) {
         this.frame = frame;
-        this.addEventHandler(BackgammonEvent.REFRESH_LOBBY, e -> {
-            System.out.println("JONATHAN JOESTAR");
-            frame.refreshLobby(lobby.getId(), false);
-        });
+        this.addEventHandler(BackgammonEvent.REFRESH_LOBBY, e -> frame.refreshLobby(lobby.getId(), false));
+        this.addEventHandler(BackgammonEvent.START_GAME, e -> startGame());
+        this.addEventHandler(BackgammonEvent.DELETE_LOBBY, e -> leaveRoom());
     }
 
     public void setLobby(Lobby lobby) {
@@ -60,22 +61,21 @@ public class LobbyCreationPanel extends GridPane {
         refresh();
         back = new Button("<-");
         back.setOnAction(e -> {
-            NetworkManager.leaveRoom();
-            frame.goToMenu();
+            leaveRoom();
         });
         GridPane.setValignment(back, VPos.CENTER);
 
         start = new Button("Start");
         start.setOnAction(e -> {
-            FrameHandler.getMainGameFrame().setLobby(lobby);
-            SceneHandler.changeScene("game");
+            WSClient.getInstance().sendMessage(new Message("start", null));
         });
         start.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(start, HPos.LEFT);
 
         delete = new Button("Delete");
         delete.setOnAction(e -> {
-            //TODO: DELETE ROOM FOR ALL
+            WSClient.getInstance().sendMessage(new Message("delete", null));
+            NetworkManager.deleteRoom(lobby.getId());
         });
         delete.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(delete, HPos.RIGHT);
@@ -129,5 +129,15 @@ public class LobbyCreationPanel extends GridPane {
         lobbyName = new Label(lobby.getName());
         GridPane.setHalignment(lobbyName, HPos.CENTER);
         lobbyName.setStyle("-fx-font: 28 arial;");
+    }
+
+    private void startGame() {
+        FrameHandler.getMainGameFrame().setLobby(lobby);
+        SceneHandler.changeScene("game");
+    }
+
+    private void leaveRoom() {
+        NetworkManager.leaveRoom();
+        frame.goToMenu();
     }
 }
