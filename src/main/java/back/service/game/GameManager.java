@@ -2,12 +2,14 @@ package back.service.game;
 
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class GameManager
 {
-    private Map<Long, Game> games;
+    //TODO FOLOSESTE ASTEA !!!
+    private Map<Long, Game> games = new HashMap<>();
 
     public void createGame(Long roomId)
     {

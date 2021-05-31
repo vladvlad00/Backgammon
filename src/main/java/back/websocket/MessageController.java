@@ -25,6 +25,7 @@ public class MessageController
         switch (m.getCommand())
         {
             case "start":
+                gameManager.createGame(id);
                 return new StartCommand().runCommand();
             case "dice":
                 return new DiceCommand().runCommand();
