@@ -1,5 +1,8 @@
 package back.websocket;
 
+import back.service.game.PlayerColor;
+
+import java.util.HashMap;
 import java.util.Map;
 
 public class Message
@@ -15,6 +18,15 @@ public class Message
     {
         this.command = command;
         this.options = options;
+    }
+
+    public static Message getMoveMessage(PlayerColor color, int initialPosition, int die)
+    {
+        Map<String, String> moveOptions = new HashMap<>();
+        moveOptions.put("color", color.toString());
+        moveOptions.put("initialPosition", String.valueOf(initialPosition));
+        moveOptions.put("die", String.valueOf(die));
+        return new Message("move", moveOptions);
     }
 
     public String getCommand()

@@ -27,7 +27,11 @@ public class Board
 
     public Board(String representation)
     {
-
+        String[] parts = representation.split("]\\[");
+        whiteCheckers = Arrays.stream(parts[0].substring(1).split(", "))
+                .mapToInt(Integer::parseInt).toArray();
+        blackCheckers = Arrays.stream(parts[1].substring(0, parts[1].length() - 1).split(", "))
+                .mapToInt(Integer::parseInt).toArray();
     }
 
     public GameState makeMove(PlayerColor color, int initialPosition, int die) throws InvalidMoveException
@@ -49,24 +53,30 @@ public class Board
 
     private void move(int[] playerCheckers, int[] opponentCheckers, int initialPosition, int die) throws InvalidMoveException
     {
+        if (playerCheckers[initialPosition] <= 0)
+            throw new InvalidMoveException();
+
         int targetPosition;
 
         if (initialPosition == 0)
             targetPosition = 25-die;
         else
             targetPosition = initialPosition - die;
-        int opponentPosition = 25-targetPosition;
 
-        if (opponentCheckers[opponentPosition] > 1)
-            throw new InvalidMoveException();
-        if (opponentCheckers[opponentPosition] == 1)
-        {
-            opponentCheckers[die] = 0;
-            opponentCheckers[0]++;
-        }
-        playerCheckers[initialPosition]--;
         if (targetPosition > 0)
+        {
+            int opponentPosition = 25-targetPosition;
+            if (opponentCheckers[opponentPosition] > 1)
+                throw new InvalidMoveException();
+            if (opponentCheckers[opponentPosition] == 1)
+            {
+                opponentCheckers[die] = 0;
+                opponentCheckers[0]++;
+            }
             playerCheckers[targetPosition]++;
+        }
+
+        playerCheckers[initialPosition]--;
     }
 
     private void updateCheckersNum()
@@ -78,6 +88,43 @@ public class Board
             whiteCheckersNum += whiteCheckers[i];
             blackCheckersNum += blackCheckers[i];
         }
+    }
+
+    public boolean canBearoff(PlayerColor color)
+    {
+        var checkers = color == PlayerColor.WHITE ? whiteCheckers : blackCheckers;
+
+        for (int i=7;i<=24;i++)
+            if (checkers[i] > 0)
+                return false;
+        return checkers[0] == 0;
+    }
+
+    public int bearoff(PlayerColor color, int die) throws InvalidMoveException
+    {
+        var checkers = color == PlayerColor.WHITE ? whiteCheckers : blackCheckers;
+
+        if (checkers[die] > 0)
+        {
+            checkers[die]--;
+            return die;
+        }
+
+        var opponentCheckers = color == PlayerColor.BLACK ? whiteCheckers : blackCheckers;
+        for (int i=die+1;i<=6;i++)
+            if (checkers[i] > 0)
+            {
+                move(checkers, opponentCheckers, i, die);
+                return i;
+            }
+
+        for (int i=die-1;i>=1;i--)
+            if (checkers[i] > 0)
+            {
+                checkers[i]--;
+                return i;
+            }
+        throw new InvalidMoveException();
     }
 
     public int[] getWhiteCheckers()
@@ -103,9 +150,6 @@ public class Board
     @Override
     public String toString()
     {
-        return "Board{" +
-                "whiteCheckers=" + Arrays.toString(whiteCheckers) +
-                ", blackCheckers=" + Arrays.toString(blackCheckers) +
-                '}';
+        return Arrays.toString(whiteCheckers) + Arrays.toString(blackCheckers);
     }
 }

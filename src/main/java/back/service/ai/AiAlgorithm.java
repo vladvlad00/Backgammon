@@ -4,7 +4,9 @@ import back.service.game.Board;
 import back.service.game.PlayerColor;
 import back.websocket.Message;
 
+import java.util.List;
+
 public interface AiAlgorithm
 {
-    public Message getMove(Board board, PlayerColor color);
+    List<Message> getMove(Board board, PlayerColor color, int die1, int die2);
 }
