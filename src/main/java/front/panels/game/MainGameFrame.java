@@ -41,4 +41,8 @@ public class MainGameFrame extends BorderPane {
         titlePanel = new TitlePanel(this);
         this.setTop(titlePanel);
     }
+
+    public SidePanel getSidePanel() {
+        return sidePanel;
+    }
 }

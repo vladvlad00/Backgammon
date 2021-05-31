@@ -23,4 +23,8 @@ public class BackgammonEvent extends Event {
         super(o, eventTarget, eventType);
         this.options = options;
     }
+
+    public Map<String, String> getOptions() {
+        return options;
+    }
 }

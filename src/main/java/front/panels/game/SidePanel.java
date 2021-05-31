@@ -1,6 +1,9 @@
 package front.panels.game;
 
 import front.panels.game.board_elements.Dice;
+import front.utils.handlers.BackgammonEvent;
+import front.utils.websocket.Message;
+import front.utils.websocket.WSClient;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
@@ -22,6 +25,9 @@ public class SidePanel extends GridPane {
     public SidePanel(MainGameFrame frame) {
         this.frame = frame;
         init();
+        this.addEventHandler(BackgammonEvent.ROLL_DICE, e -> {
+            getNewDice(Integer.parseInt(e.getOptions().get("die1")), Integer.parseInt(e.getOptions().get("die2")));
+        });
     }
 
     private void init() {
@@ -33,7 +39,7 @@ public class SidePanel extends GridPane {
         secondDice.setSize(100, 100);
         secondDice.setPosition(0, 0);
 
-        rollDiceAction();
+        getNewDice(1, 1);
 
         rollDice = new Button("Roll dice");
         rollDice.setStyle("-fx-font: 20 arial;");
@@ -65,10 +71,20 @@ public class SidePanel extends GridPane {
     }
 
     public void rollDiceAction() {
-        int fst = firstDice.randomDice();
+//        int fst = firstDice.randomDice();
+//        firstDice.removeFromChildren(this);
+//        firstDice.addToChildren(this, 0);
+//        int scd = secondDice.randomDice();
+//        secondDice.removeFromChildren(this);
+//        secondDice.addToChildren(this, 1);
+        WSClient.getInstance().sendMessage(new Message("dice", null));
+    }
+
+    public void getNewDice(int d1, int d2) {
+        firstDice.setDice(d1);
         firstDice.removeFromChildren(this);
         firstDice.addToChildren(this, 0);
-        int scd = secondDice.randomDice();
+        secondDice.setDice(d2);
         secondDice.removeFromChildren(this);
         secondDice.addToChildren(this, 1);
     }
