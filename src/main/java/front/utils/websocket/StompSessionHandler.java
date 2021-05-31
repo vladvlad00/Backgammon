@@ -1,6 +1,9 @@
 package front.utils.websocket;
 
 import back.websocket.Message;
+import front.utils.handlers.BackgammonEvent;
+import front.utils.handlers.FrameHandler;
+import javafx.event.Event;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
@@ -46,6 +49,11 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
     public void handleFrame(StompHeaders headers, Object payload)
     {
         Message message = (Message) payload;
+        if (message.getCommand().equals("refresh"))
+        {
+            Event.fireEvent(FrameHandler.getMainMenuFrame().getLobbySearcherPanel(),
+                    new BackgammonEvent(BackgammonEvent.REFRESH_LOBBY, null));
+        }
         System.out.println("Received " + message.toString());
     }
 
