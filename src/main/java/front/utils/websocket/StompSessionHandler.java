@@ -62,6 +62,13 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
                             new BackgammonEvent(BackgammonEvent.REFRESH_LOBBY, null))
             );
         }
+        else if (message.getCommand().equals("dice"))
+        {
+            Platform.runLater(
+                    () -> Event.fireEvent(FrameHandler.getMainGameFrame().getSidePanel(),
+                            new BackgammonEvent(BackgammonEvent.ROLL_DICE, message.getOptions()))
+            );
+        }
         System.out.println("Received " + message.toString());
     }
 
