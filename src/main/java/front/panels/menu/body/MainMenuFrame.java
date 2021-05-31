@@ -81,6 +81,10 @@ public class MainMenuFrame extends BorderPane {
         return stage;
     }
 
+    public LobbySearcherPanel getLobbySearcherPanel() {
+        return lobbySearcherPanel;
+    }
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
