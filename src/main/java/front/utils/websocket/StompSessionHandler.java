@@ -83,15 +83,14 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
                             new BackgammonEvent(BackgammonEvent.DELETE_LOBBY, null))
             );
         }
+        else if (message.getCommand().equals("move"))
+        {
+            Platform.runLater(
+                    () -> Event.fireEvent(FrameHandler.getMainGameFrame(),
+                            new BackgammonEvent(BackgammonEvent.MAKE_MOVE, message.getOptions()))
+            );
+        }
         System.out.println("Received " + message.toString());
-    }
-
-    private Message getSampleMessage()
-    {
-        HashMap<String, String> options = new HashMap<>();
-        options.put("test_param1", "aaa");
-        options.put("test_param2", "bbb");
-        return new Message("test_command", options);
     }
 
     public Long getRoomId()
