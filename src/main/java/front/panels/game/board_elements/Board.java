@@ -67,6 +67,7 @@ public class Board {
     }
 
     public void setBoard(String board) {
+        removePieces();
         addPieces(board);
         generateClickable();
     }
@@ -236,78 +237,130 @@ public class Board {
         removePredictions();
         if(User.getInstance().getInRoom() && User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
             if(piece.getWhite().equals(GameHandler.getCurrentUser().getWhite())) {
-                int d1 = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice(); //Move using first dice
-                int d2 = FrameHandler.getMainGameFrame().getSidePanel().getSecondDice(); //Move using second dice
-                boolean dblCondition = d1 == d2;
-                int sum = d1 + d2; //Move using both dice
-                int dbl = d1 * 4; //Move using 4 dice, if you double
+                Integer d1 = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice(); //Move using first dice
+                if(d1 == null) {
+                    d1 = -1;
+                }
+                Integer d2 = FrameHandler.getMainGameFrame().getSidePanel().getSecondDice(); //Move using second dice
+                if(d2 == null) {
+                    d2 = -1;
+                }
+                boolean dblCondition = d1.equals(d2) && !d1.equals(-1);
+                int maxCount = FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount();
+                Integer sum = (d1 == -1 ? 0 : d1) + (d2 == -1 ? 0 : d2); //Move using both dice
+                Integer dbl = d1 * 4; //Move using 4 dice, if you double
                 if(dblCondition) {
                     d2 = d1 * 2; //Move using 2 dice, if you double
                     sum = d1 * 3; //Move using 3 dice, if you double
+                    if(maxCount < 4) {
+                        dbl = -1;
+                    }
+                    if(maxCount < 3) {
+                        sum = -1;
+                    }
+                    if(maxCount < 2) {
+                        d2 = -1;
+                    }
+                    if(maxCount < 1) {
+                        d1 = -1;
+                    }
                 }
+
                 int crtPos = piece.getPosition();
                 int p1;
                 int p2;
                 int p3;
                 int p4;
                 if(piece.getWhite()) {
-                    p1 = normalToWhite.get(crtPos) - d1;
-                    if(p1 > 0 && p1 < 25) {
-                        p1 = whiteToNormal.get(p1);
+                    if(d1 < 0) {
+                        p1 = -100;
                     }
                     else {
-                        p1 = -2;
+                        p1 = normalToWhite.get(crtPos) - d1;
+                        if (p1 > 0 && p1 < 25) {
+                            p1 = whiteToNormal.get(p1);
+                        } else {
+                            p1 = -2;
+                        }
                     }
-                    p2 = normalToWhite.get(crtPos) - d2;
-                    if(p2 > 0 && p2 < 25) {
-                        p2 = whiteToNormal.get(p2);
-                    }
-                    else {
-                        p2 = -2;
-                    }
-                    p3 = normalToWhite.get(crtPos) - sum;
-                    if(p3 > 0 && p3 < 25) {
-                        p3 = whiteToNormal.get(p3);
+                    if(d2 < 0) {
+                        p2 = -100;
                     }
                     else {
-                        p3 = -2;
+                        p2 = normalToWhite.get(crtPos) - d2;
+                        if (p2 > 0 && p2 < 25) {
+                            p2 = whiteToNormal.get(p2);
+                        } else {
+                            p2 = -2;
+                        }
                     }
-                    p4 = normalToWhite.get(crtPos) - dbl;
-                    if(p4 > 0 && p4 < 25) {
-                        p4 = whiteToNormal.get(p4);
+                    if(sum < 0) {
+                        p3 = -100;
                     }
                     else {
-                        p4 = -2;
+                        p3 = normalToWhite.get(crtPos) - sum;
+                        if (p3 > 0 && p3 < 25) {
+                            p3 = whiteToNormal.get(p3);
+                        } else {
+                            p3 = -2;
+                        }
+                    }
+                    if(dbl < 0) {
+                        p4 = -100;
+                    }
+                    else {
+                        p4 = normalToWhite.get(crtPos) - dbl;
+                        if (p4 > 0 && p4 < 25) {
+                            p4 = whiteToNormal.get(p4);
+                        } else {
+                            p4 = -2;
+                        }
                     }
                 }
                 else {
-                    p1 = normalToBlack.get(crtPos) - d1;
-                    if(p1 > 0 && p1 < 25) {
-                        p1 = blackToNormal.get(p1);
+                    if(d1 < 0) {
+                        p1 = -100;
                     }
                     else {
-                        p1 = -2;
+                        p1 = normalToBlack.get(crtPos) - d1;
+                        if (p1 > 0 && p1 < 25) {
+                            p1 = blackToNormal.get(p1);
+                        } else {
+                            p1 = -2;
+                        }
                     }
-                    p2 = normalToBlack.get(crtPos) - d2;
-                    if(p2 > 0 && p2 < 25) {
-                        p2 = blackToNormal.get(p2);
-                    }
-                    else {
-                        p2 = -2;
-                    }
-                    p3 = normalToBlack.get(crtPos) - sum;
-                    if(p3 > 0 && p3 < 25) {
-                        p3 = blackToNormal.get(p3);
+                    if(d2 < 0) {
+                        p2 = -100;
                     }
                     else {
-                        p3 = -2;
+                        p2 = normalToBlack.get(crtPos) - d2;
+                        if (p2 > 0 && p2 < 25) {
+                            p2 = blackToNormal.get(p2);
+                        } else {
+                            p2 = -2;
+                        }
                     }
-                    p4 = normalToBlack.get(crtPos) - dbl;
-                    if(p4 > 0 && p4 < 25) {
-                        p4 = blackToNormal.get(p4);
+                    if(sum < 0) {
+                        p3 = -100;
                     }
                     else {
-                        p4 = -2;
+                        p3 = normalToBlack.get(crtPos) - sum;
+                        if (p3 > 0 && p3 < 25) {
+                            p3 = blackToNormal.get(p3);
+                        } else {
+                            p3 = -2;
+                        }
+                    }
+                    if(dbl < 0) {
+                        p4 = -100;
+                    }
+                    else {
+                        p4 = normalToBlack.get(crtPos) - dbl;
+                        if (p4 > 0 && p4 < 25) {
+                            p4 = blackToNormal.get(p4);
+                        } else {
+                            p4 = -2;
+                        }
                     }
                 }
                 boolean ok;
@@ -352,14 +405,15 @@ public class Board {
                         Piece finalCapturablePiece = capturablePiece;
                         if(dblCondition) {
                             show1.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece.getPosition(), 1)) {
+                                if(makeMove(piece, 1)) {
                                     capturePiece(finalCapturablePiece);
                                 }
                             }); //User double, and he moved 3
                         }
                         else {
+                            Integer finalD1 = d1;
                             show1.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece.getPosition(), d1, -1)) {
+                                if(makeMove(piece, finalD1, -1)) {
                                     capturePiece(finalCapturablePiece);
                                 }
                             });
@@ -405,14 +459,15 @@ public class Board {
                         Piece finalCapturablePiece = capturablePiece;
                         if(dblCondition) {
                             show2.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece.getPosition(), 2)) {
+                                if(makeMove(piece, 2)) {
                                     capturePiece(finalCapturablePiece);
                                 }
                             }); //User double, and he moved 3
                         }
                         else {
+                            Integer finalD2 = d2;
                             show2.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece.getPosition(), -1, FrameHandler.getMainGameFrame().getSidePanel().getSecondDice())) {
+                                if(makeMove(piece, -1, finalD2)) {
                                     capturePiece(finalCapturablePiece);
                                 }
                             });
@@ -459,14 +514,16 @@ public class Board {
                             Piece finalCapturablePiece = capturablePiece;
                             if(dblCondition) {
                                 show3.getDrawable().setOnMouseClicked(e -> {
-                                    if(makeMove(piece.getPosition(), 3)) {
+                                    if(makeMove(piece, 3)) {
                                         capturePiece(finalCapturablePiece);
                                     }
                                 });
                             }
                             else {
+                                Integer finalD1 = d1;
+                                Integer finalD2 = d2;
                                 show3.getDrawable().setOnMouseClicked(e -> {
-                                    if(makeMove(piece.getPosition(), d1, FrameHandler.getMainGameFrame().getSidePanel().getSecondDice())) {
+                                    if(makeMove(piece, finalD1, finalD2)) {
                                         capturePiece(finalCapturablePiece);
                                     }
                                 });
@@ -513,7 +570,7 @@ public class Board {
                             show4 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p4 <= 11, elevation, positions.get(p4)), p4, elevation, false, d1, d1);
                             Piece finalCapturablePiece1 = capturablePiece;
                             show4.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece.getPosition(), 4)) {
+                                if(makeMove(piece, 4)) {
                                     capturePiece(finalCapturablePiece1);
                                 }
                             });
@@ -525,7 +582,13 @@ public class Board {
         }
     }
 
-    private boolean makeMove(int pos, int d1, int d2) {
+    private void removePieces() {
+        for(Piece piece : pieces) {
+            node.getChildren().remove(piece.getDrawable());
+        }
+    }
+
+    private boolean makeMove(Piece pos, int d1, int d2) {
         removePredictions();
         int move = 0;
         if(d1 != -1) {
@@ -542,26 +605,32 @@ public class Board {
             FrameHandler.getMainGameFrame().getSidePanel().disableSecondDice();
             move += d2;
         }
-        sendMove(pos, move);
+        sendMove(pos.getPosition(), move);
         return true;
     }
 
-    private boolean makeMove(int pos, int count) {
+    private boolean makeMove(Piece pos, int count) {
         removePredictions();
         if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() < count) {
             return false;
         }
         FrameHandler.getMainGameFrame().getSidePanel().decreaseDoubleCount(count);
 
-        int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice();
-        sendMove(pos, move);
+        int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice() * count;
+        sendMove(pos.getPosition(), move);
         return true;
     }
 
     private void sendMove(int pos, int count) {
         Map<String, String> options = new HashMap<>();
-        options.put("color", GameHandler.getCurrentUser().getWhite() ? "white" : "black");
-        options.put("initialPosition", String.valueOf(pos));
+        if(GameHandler.getCurrentUser().getWhite()) {
+            options.put("color", "white");
+            options.put("initialPosition", String.valueOf(normalToWhite.get(pos)));
+        }
+        else {
+            options.put("color", "black");
+            options.put("initialPosition", String.valueOf(normalToBlack.get(pos)));
+        }
         options.put("die", String.valueOf(count));
         WSClient.getInstance().sendMessage(new Message("move", options));
     }
