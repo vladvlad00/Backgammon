@@ -3,6 +3,7 @@ package front.entities;
 public class LobbyUser {
     private String username;
     private UserRole role;
+    private Boolean white;
 
     public LobbyUser()
     {
@@ -15,6 +16,14 @@ public class LobbyUser {
 
     public void changeRole(String role) {
         this.role = UserRole.convert(role);
+    }
+
+    public Boolean getWhite() {
+        return white;
+    }
+
+    public void setWhite(Boolean white) {
+        this.white = white;
     }
 
     public String getUsername() {

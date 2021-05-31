@@ -21,6 +21,7 @@ public class SidePanel extends GridPane {
     private Button leaveGame;
     private Dice firstDice;
     private Dice secondDice;
+    private Integer doubleCount;
 
     public SidePanel(MainGameFrame frame) {
         this.frame = frame;
@@ -84,8 +85,65 @@ public class SidePanel extends GridPane {
         firstDice.setDice(d1);
         firstDice.removeFromChildren(this);
         firstDice.addToChildren(this, 0);
+        firstDice.setAvailable(true);
         secondDice.setDice(d2);
         secondDice.removeFromChildren(this);
         secondDice.addToChildren(this, 1);
+        secondDice.setAvailable(true);
+        if(d1 == d2) {
+            doubleCount = 4;
+        }
+        else {
+            doubleCount = 0;
+        }
+    }
+
+    public Integer getFirstDice() {
+        if(firstDice.isAvailable()) {
+            return firstDice.getNumber();
+        }
+        else {
+            return null;
+        }
+    }
+    public Integer getSecondDice() {
+        if(secondDice.isAvailable()) {
+            return secondDice.getNumber();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public void disableFirstDice() {
+        firstDice.setAvailable(false);
+    }
+
+    public void disableSecondDice() {
+        secondDice.setAvailable(false);
+    }
+
+    public void decreaseDoubleCount(int count) {
+        if(count > 4) {
+            System.exit(0);
+        }
+        else {
+            if(doubleCount < count) {
+                System.err.println("User hacked the game");
+            }
+            doubleCount -= count;
+        }
+    }
+
+    public Integer getDoubleCount() {
+        return doubleCount;
+    }
+
+    public Boolean getFirstDiceAvailable() {
+        return firstDice.isAvailable();
+    }
+
+    public Boolean getSecondDiceAvailable() {
+        return secondDice.isAvailable();
     }
 }

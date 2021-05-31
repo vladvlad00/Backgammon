@@ -1,6 +1,7 @@
 package front.panels.game;
 
 import front.entities.Lobby;
+import front.utils.handlers.BackgammonEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class MainGameFrame extends BorderPane {
     public static final int WIDTH = 1600;
-    public static final int HEIGHT = 900;
+    public static final int HEIGHT = 1000;
 
     private Stage stage;
 
@@ -20,6 +21,15 @@ public class MainGameFrame extends BorderPane {
     public MainGameFrame(Stage stage) {
         this.stage = stage;
         init();
+        this.addEventHandler(BackgammonEvent.MAKE_MOVE, e -> {
+            String gameState = e.getOptions().get("state");
+            if(gameState.equals("finished")) {
+                //TODO: e gata
+            }
+            else {
+                boardPanel.getBoard().setBoard(e.getOptions().get("board"));
+            }
+        });
     }
 
     public void setLobby(Lobby lobby) {

@@ -19,6 +19,7 @@ public class Dice {
     private Rectangle body;
     private List<Circle> dots;
     private int number;
+    private boolean available;
 
     public Dice(int number) {
         group = new Group();
@@ -233,5 +234,17 @@ public class Dice {
 
     public void removeFromChildren(GridPane gridPane) {
         gridPane.getChildren().remove(group);
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

@@ -28,4 +28,8 @@ public class BoardPanel extends GridPane {
         this.getColumnConstraints().addAll(columnConstraints);
         this.getRowConstraints().addAll(rowConstraints);
     }
+
+    public Board getBoard() {
+        return board;
+    }
 }

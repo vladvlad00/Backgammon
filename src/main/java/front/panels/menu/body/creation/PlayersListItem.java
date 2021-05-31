@@ -109,4 +109,8 @@ public class PlayersListItem extends GridPane {
         this.getColumnConstraints().addAll(name, buttons, buttons);
         this.getRowConstraints().addAll(full);
     }
+
+    public LobbyUser getLobbyUser() {
+        return lobbyUser;
+    }
 }

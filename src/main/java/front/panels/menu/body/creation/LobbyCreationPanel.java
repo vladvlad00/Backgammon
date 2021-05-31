@@ -1,20 +1,18 @@
 package front.panels.menu.body.creation;
 
 import front.entities.User;
-import front.utils.handlers.BackgammonEvent;
-import front.utils.handlers.FrameHandler;
-import front.utils.handlers.SceneHandler;
+import front.utils.handlers.*;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
-import front.utils.handlers.NetworkManager;
 import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -67,10 +65,19 @@ public class LobbyCreationPanel extends GridPane {
 
         start = new Button("Start");
         start.setOnAction(e -> {
-            WSClient.getInstance().sendMessage(new Message("start", null));
+            if(lobby.getPlayerNum() != 2) {
+                Alert a = new Alert(Alert.AlertType.ERROR);
+                a.setContentText("You need two players to start the game!");
+                a.setTitle("Error");
+                a.show();
+            }
+            else {
+                WSClient.getInstance().sendMessage(new Message("start", null));
+            }
         });
         start.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(start, HPos.LEFT);
+        start.setDisable(true);
 
         delete = new Button("Delete");
         delete.setOnAction(e -> {
@@ -79,6 +86,15 @@ public class LobbyCreationPanel extends GridPane {
         });
         delete.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(delete, HPos.RIGHT);
+        delete.setDisable(true);
+
+        for(LobbyUser lobbyUser : lobby.getUsers()) {
+            if((lobbyUser.getRole().equals(UserRole.HOST) || lobbyUser.getRole().equals(UserRole.HOST_SPECTATOR)) && User.getInstance().getUsername().equals(lobbyUser.getUsername())) {
+                start.setDisable(false);
+                delete.setDisable(false);
+                break;
+            }
+        }
 
         this.add(back, 0, 0);
         this.add(lobbyName, 0, 1, 2, 1);
@@ -132,6 +148,7 @@ public class LobbyCreationPanel extends GridPane {
     }
 
     private void startGame() {
+        GameHandler.init(players.getItems().get(0).getLobbyUser(), players.getItems().get(1).getLobbyUser());
         FrameHandler.getMainGameFrame().setLobby(lobby);
         SceneHandler.changeScene("game");
     }

@@ -1,5 +1,11 @@
 package front.panels.game.board_elements;
 
+import back.service.game.GameManager;
+import front.entities.User;
+import front.utils.handlers.FrameHandler;
+import front.utils.handlers.GameHandler;
+import front.utils.websocket.Message;
+import front.utils.websocket.WSClient;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
@@ -10,13 +16,11 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Board {
     public static final Long WIDTH = 1280L;
-    public static final Long HEIGHT = 720L;
+    public static final Long HEIGHT = 820L;
     public static final Long CENTER_WIDTH = 40L;
     public static final Long BORDER_SIZE = 10L;
     public static final Long TRIANGLES_ROW = 12L;
@@ -50,6 +54,8 @@ public class Board {
     private Integer whitesOutside;
     private Integer blackOutside;
 
+    private PredictionPiece show1, show2, show3, show4;
+
     public Board() {
         node = new Group();
         generateBackground();
@@ -57,6 +63,11 @@ public class Board {
         generatePositions();
         generateTriangles();
         addPieces(STARTING_BOARD);
+        generateClickable();
+    }
+
+    public void setBoard(String board) {
+        addPieces(board);
         generateClickable();
     }
 
@@ -140,6 +151,7 @@ public class Board {
         blacks = convertBtoN(convertString(parts[1]));
         generatePieces(whites, true);
         generatePieces(blacks, false);
+        pieces.forEach(p -> node.getChildren().add(p.getDrawable()));
     }
 
     private List<Integer> convertWtoN(List<Integer> items) {
@@ -168,7 +180,6 @@ public class Board {
     }
 
     private void generatePieces(List<Integer> items, boolean white) {
-        pieces = new ArrayList<>();
         for(int i = 0; i < 12; ++i) {
             for(int j = 0; j < items.get(i); ++j) {
                 pieces.add(new Piece(PieceGenerator.getPiece(white, true, j, positions.get(i)), i, j, white));
@@ -180,23 +191,22 @@ public class Board {
                 pieces.add(new Piece(PieceGenerator.getPiece(white, false, j, positions.get(i + 12)), i + 12, j, white));
             }
         }
-
-        pieces.forEach(p -> node.getChildren().add(p.getDrawable()));
     }
 
     private void generateClickable() {
         for(Piece piece : pieces) {
+            if(piece instanceof PredictionPiece) {
+                continue;
+            }
             boolean ok = true;
             for(Piece compared : pieces) {
-                if(!compared.equals(piece) && compared.getElevation() > piece.getElevation()) {
+                if(!compared.equals(piece) && (compared.getElevation() > piece.getElevation() && compared.getPosition().equals(piece.getPosition()))) {
                     ok = false;
                     break;
                 }
             }
             if(ok) {
-                piece.getDrawable().setOnMouseClicked(e -> {
-
-                });
+                piece.getDrawable().setOnMouseClicked(e -> showOptions(piece));
             }
         }
     }
@@ -205,5 +215,358 @@ public class Board {
         GridPane.setHalignment(node, HPos.CENTER);
         GridPane.setValignment(node, VPos.CENTER);
         gridPane.add(node, 0, 0);
+    }
+
+    private void removePredictions() {
+        if(show1 != null) {
+            node.getChildren().remove(show1.getDrawable());
+        }
+        if(show2 != null) {
+            node.getChildren().remove(show2.getDrawable());
+        }
+        if(show3 != null) {
+            node.getChildren().remove(show3.getDrawable());
+        }
+        if(show4 != null) {
+            node.getChildren().remove(show4.getDrawable());
+        }
+    }
+
+    private void showOptions(Piece piece) {
+        removePredictions();
+        if(User.getInstance().getInRoom() && User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
+            if(piece.getWhite().equals(GameHandler.getCurrentUser().getWhite())) {
+                int d1 = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice(); //Move using first dice
+                int d2 = FrameHandler.getMainGameFrame().getSidePanel().getSecondDice(); //Move using second dice
+                boolean dblCondition = d1 == d2;
+                int sum = d1 + d2; //Move using both dice
+                int dbl = d1 * 4; //Move using 4 dice, if you double
+                if(dblCondition) {
+                    d2 = d1 * 2; //Move using 2 dice, if you double
+                    sum = d1 * 3; //Move using 3 dice, if you double
+                }
+                int crtPos = piece.getPosition();
+                int p1;
+                int p2;
+                int p3;
+                int p4;
+                if(piece.getWhite()) {
+                    p1 = normalToWhite.get(crtPos) - d1;
+                    if(p1 > 0 && p1 < 25) {
+                        p1 = whiteToNormal.get(p1);
+                    }
+                    else {
+                        p1 = -2;
+                    }
+                    p2 = normalToWhite.get(crtPos) - d2;
+                    if(p2 > 0 && p2 < 25) {
+                        p2 = whiteToNormal.get(p2);
+                    }
+                    else {
+                        p2 = -2;
+                    }
+                    p3 = normalToWhite.get(crtPos) - sum;
+                    if(p3 > 0 && p3 < 25) {
+                        p3 = whiteToNormal.get(p3);
+                    }
+                    else {
+                        p3 = -2;
+                    }
+                    p4 = normalToWhite.get(crtPos) - dbl;
+                    if(p4 > 0 && p4 < 25) {
+                        p4 = whiteToNormal.get(p4);
+                    }
+                    else {
+                        p4 = -2;
+                    }
+                }
+                else {
+                    p1 = normalToBlack.get(crtPos) - d1;
+                    if(p1 > 0 && p1 < 25) {
+                        p1 = blackToNormal.get(p1);
+                    }
+                    else {
+                        p1 = -2;
+                    }
+                    p2 = normalToBlack.get(crtPos) - d2;
+                    if(p2 > 0 && p2 < 25) {
+                        p2 = blackToNormal.get(p2);
+                    }
+                    else {
+                        p2 = -2;
+                    }
+                    p3 = normalToBlack.get(crtPos) - sum;
+                    if(p3 > 0 && p3 < 25) {
+                        p3 = blackToNormal.get(p3);
+                    }
+                    else {
+                        p3 = -2;
+                    }
+                    p4 = normalToBlack.get(crtPos) - dbl;
+                    if(p4 > 0 && p4 < 25) {
+                        p4 = blackToNormal.get(p4);
+                    }
+                    else {
+                        p4 = -2;
+                    }
+                }
+                boolean ok;
+                int largerOk = 2;
+                int elevation;
+                Piece capturablePiece;
+                if(p1 > -1 && p1 < 24) {
+                    ok = true;
+                    elevation = 0;
+                    capturablePiece = null;
+                    for (Piece verify : pieces) {
+                        if (verify.getPosition().equals(p1)) {
+                            if(!verify.getWhite().equals(piece.getWhite())) {
+                                int enemyElevation = verify.getElevation();
+                                for(Piece getElev : pieces) {
+                                    if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > enemyElevation) {
+                                        enemyElevation = getElev.getElevation();
+                                    }
+                                }
+                                if(enemyElevation < 1) {
+                                    capturablePiece = verify;
+                                }
+                                else {
+                                    ok = false;
+                                    --largerOk;
+                                }
+                            }
+                            else {
+                                elevation = verify.getElevation();
+                                for(Piece getElev : pieces) {
+                                    if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > elevation) {
+                                        elevation = getElev.getElevation();
+                                    }
+                                }
+                                ++elevation;
+                            }
+                            break;
+                        }
+                    }
+                    if(ok) {
+                        show1 = new PredictionPiece(PieceGenerator.getOptionPiece(true, p1 <= 11, elevation, positions.get(p1)), p1, elevation, false, d1, -1);
+                        Piece finalCapturablePiece = capturablePiece;
+                        if(dblCondition) {
+                            show1.getDrawable().setOnMouseClicked(e -> {
+                                if(makeMove(piece.getPosition(), 1)) {
+                                    capturePiece(finalCapturablePiece);
+                                }
+                            }); //User double, and he moved 3
+                        }
+                        else {
+                            show1.getDrawable().setOnMouseClicked(e -> {
+                                if(makeMove(piece.getPosition(), d1, -1)) {
+                                    capturePiece(finalCapturablePiece);
+                                }
+                            });
+                        }
+                        node.getChildren().add(show1.getDrawable());
+                    }
+                }
+                if(p2 > -1 && p2 < 24 && (!dblCondition || largerOk == 2)) {
+                    capturablePiece = null;
+                    ok = true;
+                    elevation = 0;
+                    for (Piece verify : pieces) {
+                        if (verify.getPosition().equals(p2)) {
+                            if(!verify.getWhite().equals(piece.getWhite())) {
+                                int enemyElevation = verify.getElevation();
+                                for(Piece getElev : pieces) {
+                                    if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > enemyElevation) {
+                                        enemyElevation = getElev.getElevation();
+                                    }
+                                }
+                                if(enemyElevation < 1) {
+                                    capturablePiece = verify;
+                                }
+                                else {
+                                    ok = false;
+                                    --largerOk;
+                                }
+                            }
+                            else {
+                                elevation = verify.getElevation();
+                                for(Piece getElev : pieces) {
+                                    if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > elevation) {
+                                        elevation = getElev.getElevation();
+                                    }
+                                }
+                                ++elevation;
+                            }
+                            break;
+                        }
+                    }
+                    if(ok) {
+                        show2 = new PredictionPiece(PieceGenerator.getOptionPiece(true, p2 <= 11, elevation, positions.get(p2)), p2, elevation, false, -1, d2);
+                        Piece finalCapturablePiece = capturablePiece;
+                        if(dblCondition) {
+                            show2.getDrawable().setOnMouseClicked(e -> {
+                                if(makeMove(piece.getPosition(), 2)) {
+                                    capturePiece(finalCapturablePiece);
+                                }
+                            }); //User double, and he moved 3
+                        }
+                        else {
+                            show2.getDrawable().setOnMouseClicked(e -> {
+                                if(makeMove(piece.getPosition(), -1, FrameHandler.getMainGameFrame().getSidePanel().getSecondDice())) {
+                                    capturePiece(finalCapturablePiece);
+                                }
+                            });
+                        }
+                        node.getChildren().add(show2.getDrawable());
+                    }
+                }
+                if(largerOk > 0 && (!dblCondition || largerOk == 2)) {
+                    if(p3 > -1 && p3 < 24) {
+                        capturablePiece = null;
+                        ok = true;
+                        elevation = 0;
+                        for (Piece verify : pieces) {
+                            if (verify.getPosition().equals(p3)) {
+                                if(!verify.getWhite().equals(piece.getWhite())) {
+                                    int enemyElevation = verify.getElevation();
+                                    for(Piece getElev : pieces) {
+                                        if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > enemyElevation) {
+                                            enemyElevation = getElev.getElevation();
+                                        }
+                                    }
+                                    if(enemyElevation < 1) {
+                                        capturablePiece = verify;
+                                    }
+                                    else {
+                                        ok = false;
+                                        --largerOk;
+                                    }
+                                }
+                                else {
+                                    elevation = verify.getElevation();
+                                    for(Piece getElev : pieces) {
+                                        if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > elevation) {
+                                            elevation = getElev.getElevation();
+                                        }
+                                    }
+                                    ++elevation;
+                                }
+                                break;
+                            }
+                        }
+                        if(ok) {
+                            show3 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p3 <= 11, elevation, positions.get(p3)), p3, elevation, false, d1, d2);
+                            Piece finalCapturablePiece = capturablePiece;
+                            if(dblCondition) {
+                                show3.getDrawable().setOnMouseClicked(e -> {
+                                    if(makeMove(piece.getPosition(), 3)) {
+                                        capturePiece(finalCapturablePiece);
+                                    }
+                                });
+                            }
+                            else {
+                                show3.getDrawable().setOnMouseClicked(e -> {
+                                    if(makeMove(piece.getPosition(), d1, FrameHandler.getMainGameFrame().getSidePanel().getSecondDice())) {
+                                        capturePiece(finalCapturablePiece);
+                                    }
+                                });
+                            }
+                            node.getChildren().add(show3.getDrawable());
+                        }
+                    }
+                }
+                if(largerOk == 2 && dblCondition) {
+                    if(p4 > -1 && p4 < 24) {
+                        capturablePiece = null;
+                        ok = true;
+                        elevation = 0;
+                        for (Piece verify : pieces) {
+                            if (verify.getPosition().equals(p4)) {
+                                if(!verify.getWhite().equals(piece.getWhite())) {
+                                    int enemyElevation = verify.getElevation();
+                                    for(Piece getElev : pieces) {
+                                        if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > enemyElevation) {
+                                            enemyElevation = getElev.getElevation();
+                                        }
+                                    }
+                                    if(enemyElevation < 1) {
+                                        capturablePiece = verify;
+                                    }
+                                    else {
+                                        ok = false;
+                                        --largerOk;
+                                    }
+                                }
+                                else {
+                                    elevation = verify.getElevation();
+                                    for(Piece getElev : pieces) {
+                                        if(getElev.getPosition().equals(verify.getPosition()) && getElev.getElevation() > elevation) {
+                                            elevation = getElev.getElevation();
+                                        }
+                                    }
+                                    ++elevation;
+                                }
+                                break;
+                            }
+                        }
+                        if(ok) {
+                            show4 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p4 <= 11, elevation, positions.get(p4)), p4, elevation, false, d1, d1);
+                            Piece finalCapturablePiece1 = capturablePiece;
+                            show4.getDrawable().setOnMouseClicked(e -> {
+                                if(makeMove(piece.getPosition(), 4)) {
+                                    capturePiece(finalCapturablePiece1);
+                                }
+                            });
+                            node.getChildren().add(show4.getDrawable());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean makeMove(int pos, int d1, int d2) {
+        removePredictions();
+        int move = 0;
+        if(d1 != -1) {
+            if(!FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
+                return false;
+            }
+            FrameHandler.getMainGameFrame().getSidePanel().disableFirstDice();
+            move += d1;
+        }
+        if(d2 != -1) {
+            if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable()) {
+                return false;
+            }
+            FrameHandler.getMainGameFrame().getSidePanel().disableSecondDice();
+            move += d2;
+        }
+        sendMove(pos, move);
+        return true;
+    }
+
+    private boolean makeMove(int pos, int count) {
+        removePredictions();
+        if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() < count) {
+            return false;
+        }
+        FrameHandler.getMainGameFrame().getSidePanel().decreaseDoubleCount(count);
+
+        int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice();
+        sendMove(pos, move);
+        return true;
+    }
+
+    private void sendMove(int pos, int count) {
+        Map<String, String> options = new HashMap<>();
+        options.put("color", GameHandler.getCurrentUser().getWhite() ? "white" : "black");
+        options.put("initialPosition", String.valueOf(pos));
+        options.put("die", String.valueOf(count));
+        WSClient.getInstance().sendMessage(new Message("move", options));
+    }
+
+    private void capturePiece(Piece piece) {
+        //Capture piece
     }
 }
