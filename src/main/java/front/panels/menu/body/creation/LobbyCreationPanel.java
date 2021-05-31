@@ -1,6 +1,7 @@
 package front.panels.menu.body.creation;
 
 import front.utils.handlers.BackgammonEvent;
+import front.utils.handlers.FrameHandler;
 import front.utils.handlers.SceneHandler;
 import front.entities.Lobby;
 import front.entities.LobbyUser;
@@ -65,7 +66,10 @@ public class LobbyCreationPanel extends GridPane {
         GridPane.setValignment(back, VPos.CENTER);
 
         start = new Button("Start");
-        start.setOnAction(e -> SceneHandler.changeScene("game"));
+        start.setOnAction(e -> {
+            FrameHandler.getMainGameFrame().setLobby(lobby);
+            SceneHandler.changeScene("game");
+        });
         start.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
         GridPane.setHalignment(start, HPos.LEFT);
 

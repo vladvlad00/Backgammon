@@ -42,6 +42,16 @@ public class Lobby {
         return UserRole.UNDEFINED;
     }
 
+    public List<String> getPlayers() {
+        List<String> names = new ArrayList<>();
+        for(LobbyUser u : users) {
+            if(u.getRole().equals(UserRole.AI_HARD) || u.getRole().equals(UserRole.AI_MEDIUM) || u.getRole().equals(UserRole.AI_EASY) || u.getRole().equals(UserRole.PLAYER) || u.getRole().equals(UserRole.HOST)) {
+                names.add(u.getUsername());
+            }
+        }
+        return names;
+    }
+
     public String getName() {
         return name;
     }

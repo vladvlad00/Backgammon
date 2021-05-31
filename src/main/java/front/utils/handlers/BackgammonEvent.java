@@ -10,6 +10,7 @@ public class BackgammonEvent extends Event {
     public static final EventType<BackgammonEvent> START_GAME = new EventType<>("START_GAME"); //LobbySearcherPanel
     public static final EventType<BackgammonEvent> ROLL_DICE = new EventType<>("ROLL_DICE"); //Nu avem lol
     public static final EventType<BackgammonEvent> MAKE_MOVE = new EventType<>("MAKE_MOVE"); //Nu avem lol
+    public static final EventType<BackgammonEvent> UPDATE_SPECTATORS = new EventType<>("UPDATE_SPECTATORS"); //Nu avem lol
 
     private Map<String, String> options;
 

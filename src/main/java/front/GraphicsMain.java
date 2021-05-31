@@ -22,13 +22,13 @@ public class GraphicsMain extends Application {
         LobbyHandler.init(new ArrayList<>());
 
         stage.setTitle("Backgammon");
-        SceneHandler.changeScene("menu");
+        SceneHandler.changeScene("game"); //TODO: CHANGE ME BACK TO MENU :(
         stage.show();
     }
 
     @Override
     public void stop() {
-        if(User.getInstance().getInRoom()) {
+        if(User.getInstance().getInRoom() != null && User.getInstance().getInRoom()) {
             NetworkManager.leaveRoom();
         }
     }

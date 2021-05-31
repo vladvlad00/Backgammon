@@ -1,5 +1,6 @@
 package front.utils.handlers;
 
+import front.panels.game.MainGameFrame;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -26,30 +27,32 @@ public class SceneHandler {
         initMenuScene();
         initLoginScene();
         initRegisterScene();
+        initGameScene();
     }
 
     public static void initMenuScene() {
         BorderPane pane = FrameHandler.getMainMenuFrame();
-        stage.setMinHeight(HEIGHT);
-        stage.setMinWidth(WIDTH + 40);
 
         scenes.put("menu", new Scene(pane, WIDTH, HEIGHT));
     }
 
     public static void initRegisterScene() {
         BorderPane pane = FrameHandler.getMainRegisterFrame();
-        stage.setMinHeight(HEIGHT);
-        stage.setMinWidth(WIDTH + 40);
 
         scenes.put("register", new Scene(pane, WIDTH, HEIGHT));
     }
 
     public static void initLoginScene() {
         BorderPane pane = FrameHandler.getMainLoginFrame();
-        stage.setMinHeight(HEIGHT);
-        stage.setMinWidth(WIDTH + 40);
 
         scenes.put("login", new Scene(pane, WIDTH, HEIGHT));
+    }
+
+    public static void initGameScene() {
+        BorderPane pane = FrameHandler.getMainGameFrame();
+
+
+        scenes.put("game", new Scene(pane, MainGameFrame.WIDTH, MainGameFrame.HEIGHT));
     }
 
     public static Scene getScene(String name) {
@@ -57,6 +60,18 @@ public class SceneHandler {
     }
 
     public static void changeScene(String name) {
+        if(name.equals("game")) {
+            stage.setMinHeight(MainGameFrame.HEIGHT);
+            stage.setMaxHeight(MainGameFrame.HEIGHT);
+            stage.setMinWidth(MainGameFrame.WIDTH + 40);
+            stage.setMaxWidth(MainGameFrame.WIDTH + 40);
+        }
+        else {
+            stage.setMinHeight(HEIGHT);
+            stage.setMaxHeight(HEIGHT);
+            stage.setMinWidth(WIDTH + 40);
+            stage.setMaxWidth(WIDTH + 40);
+        }
         stage.setScene(getScene(name));
     }
 
