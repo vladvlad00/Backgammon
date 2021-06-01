@@ -119,12 +119,12 @@ public class SidePanel extends GridPane {
         GridPane.setHalignment(leaveGame, HPos.CENTER);
 
         turn = new Label();
-        turn.setStyle("-fx-font: 20 arial;");
+        turn.setStyle("-fx-font: 18 arial;");
         GridPane.setHalignment(turn, HPos.CENTER);
 
-        this.add(turn, 0, 0, 2, 1);
-        this.add(rollDice, 0, 1, 2, 1);
-        this.add(leaveGame, 0, 3, 2, 1);
+        this.add(turn, 1, 0, 2, 1);
+        this.add(rollDice, 1, 1, 2, 1);
+        this.add(leaveGame, 1, 3, 2, 1);
 
         RowConstraints small = new RowConstraints();
         small.setPercentHeight(10);
@@ -132,9 +132,11 @@ public class SidePanel extends GridPane {
         big.setPercentHeight(70);
 
         ColumnConstraints eq = new ColumnConstraints();
-        eq.setPercentWidth(50);
+        eq.setPercentWidth(45);
+        ColumnConstraints sml = new ColumnConstraints();
+        sml.setPercentWidth(5);
 
-        this.getColumnConstraints().addAll(eq, eq);
+        this.getColumnConstraints().addAll(sml, eq, eq, sml);
         this.getRowConstraints().addAll(small, small, big, small);
     }
 
@@ -157,11 +159,11 @@ public class SidePanel extends GridPane {
         GameHandler.setRolledDice(true);
         firstDice.setDice(d1);
         firstDice.removeFromChildren(this);
-        firstDice.addToChildren(this, 0);
+        firstDice.addToChildren(this, 1);
         firstDice.setAvailable(true);
         secondDice.setDice(d2);
         secondDice.removeFromChildren(this);
-        secondDice.addToChildren(this, 1);
+        secondDice.addToChildren(this, 2);
         secondDice.setAvailable(true);
         if(d1 == d2) {
             doubleCount = 4;

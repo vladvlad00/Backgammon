@@ -247,6 +247,7 @@ public class PopUpHandler {
 
         Label label = new Label(username + "(" + won + ") won!\nCongratulations!");
         label.setPadding(new Insets(10, 10, 10, 10));
+        label.setStyle("-fx-font: 20 arial;");
 
         Button ok = new Button("Back to menu");
         ok.setOnAction(e -> {
@@ -289,6 +290,7 @@ public class PopUpHandler {
 
         Label label = new Label(username + "(" + won + ") won, \n" + left + " left the game.\nCongratulations!");
         label.setPadding(new Insets(10, 10, 10, 10));
+        label.setStyle("-fx-font: 20 arial;");
 
         Button ok = new Button("Back to menu");
         ok.setOnAction(e -> {
