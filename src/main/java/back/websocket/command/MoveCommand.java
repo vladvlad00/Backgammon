@@ -60,17 +60,56 @@ public class MoveCommand extends Command
 
         GameState state = GameState.NOT_FINISHED;
 
-        for (int die : dice)
+        if (dice.length == 2)
         {
-            state = game.makeMove(playerColor, initialPosition, die);
-            if (initialPosition == 0)
-                initialPosition = 25-die;
-            else
-                initialPosition -= die;
-            if (initialPosition < 0)
-                throw new InvalidMoveException();
-            if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
-                break;
+            try
+            {
+                for (int die : dice)
+                {
+                    state = game.makeMove(playerColor, initialPosition, die);
+                    if (initialPosition == 0)
+                        initialPosition = 25-die;
+                    else
+                        initialPosition -= die;
+                    if (initialPosition < 0)
+                        throw new InvalidMoveException();
+                    if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
+                        break;
+                }
+            }
+            catch (InvalidMoveException e)
+            {
+                int aux = dice[0];
+                dice[0] = dice[1];
+                dice[1] = aux;
+                for (int die : dice)
+                {
+                    state = game.makeMove(playerColor, initialPosition, die);
+                    if (initialPosition == 0)
+                        initialPosition = 25-die;
+                    else
+                        initialPosition -= die;
+                    if (initialPosition < 0)
+                        throw new InvalidMoveException();
+                    if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
+                        break;
+                }
+            }
+        }
+        else
+        {
+            for (int die : dice)
+            {
+                state = game.makeMove(playerColor, initialPosition, die);
+                if (initialPosition == 0)
+                    initialPosition = 25-die;
+                else
+                    initialPosition -= die;
+                if (initialPosition < 0)
+                    throw new InvalidMoveException();
+                if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
+                    break;
+            }
         }
 
         Map<String, String> responseOptions = new HashMap<>();
