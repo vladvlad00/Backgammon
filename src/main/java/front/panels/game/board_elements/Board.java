@@ -257,7 +257,9 @@ public class Board {
     }
 
     private boolean showOptions(Piece piece, boolean justVerify) {
-        removePredictions();
+        if((GameHandler.getCurrentUser().getWhite() && whitesOutside == 0) || (!GameHandler.getCurrentUser().getWhite() && blackOutside == 0)) {
+            removePredictions();
+        }
         if(User.getInstance().getInRoom() && User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
             if(piece.getWhite().equals(GameHandler.getCurrentUser().getWhite())) {
                 if(piece.getWhite() && whitesOutside > 0 && piece.getPosition() != -1) {

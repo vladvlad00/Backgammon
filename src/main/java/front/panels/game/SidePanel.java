@@ -78,8 +78,6 @@ public class SidePanel extends GridPane {
         secondDice.setSize(100, 100);
         secondDice.setPosition(0, 0);
 
-        getNewDice(1, 1);
-
         rollDice = new Button("Roll dice");
         rollDice.setStyle("-fx-font: 20 arial;");
         rollDice.setOnAction(e -> {
@@ -88,6 +86,8 @@ public class SidePanel extends GridPane {
             }
         });
         GridPane.setHalignment(rollDice, HPos.CENTER);
+
+        getNewDice(1, 1);
 
         leaveGame = new Button("Leave");
         leaveGame.setStyle("-fx-font: 20 arial;");
@@ -131,6 +131,7 @@ public class SidePanel extends GridPane {
     }
 
     public void getNewDice(int d1, int d2) {
+        rollDice.setDisable(true);
         GameHandler.setRolledDice(true);
         firstDice.setDice(d1);
         firstDice.removeFromChildren(this);
@@ -200,5 +201,14 @@ public class SidePanel extends GridPane {
 
     public Boolean getSecondDiceAvailable() {
         return secondDice.isAvailable();
+    }
+
+    public void updateDice() {
+        GameHandler.setRolledDice(false);
+        if(!frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.SPECTATOR) || frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.HOST_SPECTATOR)) {
+            if(User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
+                rollDice.setDisable(false);
+            }
+        }
     }
 }
