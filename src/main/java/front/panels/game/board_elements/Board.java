@@ -666,22 +666,20 @@ public class Board {
 
     private boolean makeMove(Piece pos, int d1, int d2) {
         removePredictions();
-        int move = 0;
         if(d1 != -1) {
             if(!FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
                 return false;
             }
             FrameHandler.getMainGameFrame().getSidePanel().disableFirstDice();
-            move += d1;
+            sendMove(pos.getPosition(), d1);
         }
         if(d2 != -1) {
             if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable()) {
                 return false;
             }
             FrameHandler.getMainGameFrame().getSidePanel().disableSecondDice();
-            move += d2;
+            sendMove(pos.getPosition(), d2);
         }
-        sendMove(pos.getPosition(), move);
         if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable() && !FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
             nextTurn();
         }
@@ -700,8 +698,10 @@ public class Board {
         }
         FrameHandler.getMainGameFrame().getSidePanel().decreaseDoubleCount(count);
 
-        int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice() * count;
-        sendMove(pos.getPosition(), move);
+        int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice();
+        for(int i = 0; i < count; ++i) {
+            sendMove(pos.getPosition(), move);
+        }
         if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() == 0) {
             nextTurn();
         }
