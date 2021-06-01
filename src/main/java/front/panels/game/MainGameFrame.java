@@ -42,10 +42,10 @@ public class MainGameFrame extends BorderPane {
         });
         this.addEventHandler(BackgammonEvent.DISCONNECT, e -> {
             if(e.getOptions().get("color").equals("white")) {
-                PopUpHandler.createSomeoneWon("Black", GameHandler.getWhiteUser().getUsername(), e.getOptions().get("user"));
+                PopUpHandler.createSomeoneWon("Black", GameHandler.getBlackUser().getUsername(), e.getOptions().get("user"));
             }
             else {
-                PopUpHandler.createSomeoneWon("White", GameHandler.getBlackUser().getUsername(), e.getOptions().get("user"));
+                PopUpHandler.createSomeoneWon("White", GameHandler.getWhiteUser().getUsername(), e.getOptions().get("user"));
             }
         });
     }
@@ -59,9 +59,9 @@ public class MainGameFrame extends BorderPane {
         this.lobby = lobby;
         List<String> names = lobby.getPlayers();
         titlePanel.updateTitle(names.get(0), names.get(1));
-        titlePanel.initSpectators();
         titlePanel.updateSpectators(lobby.getSpectatorNum());
         sidePanel.setPlayerTurn();
+        boardPanel.getBoard().init();
     }
 
     public Lobby getLobby() {

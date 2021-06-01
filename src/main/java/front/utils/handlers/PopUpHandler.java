@@ -245,11 +245,12 @@ public class PopUpHandler {
         dialog.setHeight(300);
         dialog.setTitle("Winner");
 
-        Label label = new Label(won + "(" + username + ") won!\nCongratulations!");
+        Label label = new Label(username + "(" + won + ") won!\nCongratulations!");
         label.setPadding(new Insets(10, 10, 10, 10));
 
         Button ok = new Button("Back to menu");
         ok.setOnAction(e -> {
+            FrameHandler.getMainMenuFrame().goToMenu();
             NetworkManager.leaveRoom();
             SceneHandler.changeScene("menu");
             dialog.close();
@@ -286,11 +287,12 @@ public class PopUpHandler {
         dialog.setHeight(300);
         dialog.setTitle("Winner");
 
-        Label label = new Label(won + "(" + username + ") won, \n" + left + " left the game.\nCongratulations!");
+        Label label = new Label(username + "(" + won + ") won, \n" + left + " left the game.\nCongratulations!");
         label.setPadding(new Insets(10, 10, 10, 10));
 
         Button ok = new Button("Back to menu");
         ok.setOnAction(e -> {
+            FrameHandler.getMainMenuFrame().goToMenu();
             NetworkManager.leaveRoom();
             SceneHandler.changeScene("menu");
             dialog.close();

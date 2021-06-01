@@ -57,6 +57,7 @@ public class Board {
     private Integer whiteHouse;
     private Integer blackHouse;
     private String boardString;
+    private Boolean finished;
 
     private PredictionPiece show1, show2, show3, show4;
 
@@ -69,6 +70,19 @@ public class Board {
         generateTriangles();
         addPieces(STARTING_BOARD);
         generateClickable();
+    }
+
+    public void init() {
+        setBoard(STARTING_BOARD);
+        finished = false;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 
     public String getBoardString()
@@ -758,6 +772,9 @@ public class Board {
     }
 
     public void nextTurn() {
+        if(finished) {
+            return;
+        }
         WSClient.getInstance().sendMessage(new Message("turn", null));
     }
 

@@ -4,10 +4,7 @@ import front.entities.User;
 import front.entities.UserRole;
 import front.panels.game.board_elements.Board;
 import front.panels.game.board_elements.Dice;
-import front.utils.handlers.BackgammonEvent;
-import front.utils.handlers.FrameHandler;
-import front.utils.handlers.GameHandler;
-import front.utils.handlers.NetworkManager;
+import front.utils.handlers.*;
 import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 import javafx.application.Platform;
@@ -44,6 +41,9 @@ public class SidePanel extends GridPane {
             String currentUserRole = GameHandler.getCurrentUser().getRole().toString();
             if (GameHandler.isHost && currentUserRole.startsWith("AI_"))
             {
+                if(frame.getBoardPanel().getBoard().getFinished()) {
+                    return;
+                }
                 String color = GameHandler.getCurrentUser().getWhite() ? "white" : "black";
                 int die1 = firstDice.getNumber();
                 int die2 = secondDice.getNumber();
@@ -97,7 +97,10 @@ public class SidePanel extends GridPane {
             if(frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.SPECTATOR) || frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.HOST_SPECTATOR)) {
                 Map<String, String> options = new HashMap<>();
                 options.put("count", "-1");
-                WSClient.getInstance().sendMessage(new Message("spectators", options));
+                WSClient.getInstance().sendMessage(new Message("spectator", options));
+                FrameHandler.getMainMenuFrame().goToMenu();
+                NetworkManager.leaveRoom();
+                SceneHandler.changeScene("menu");
             }
             else {
                 Map<String, String> options = new HashMap<>();
@@ -226,7 +229,9 @@ public class SidePanel extends GridPane {
         GameHandler.setRolledDice(false);
         if(!frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.SPECTATOR) || frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.HOST_SPECTATOR)) {
             if(User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
-                rollDice.setDisable(false);
+                if(!frame.getBoardPanel().getBoard().getFinished()) {
+                    rollDice.setDisable(false);
+                }
             }
         }
     }

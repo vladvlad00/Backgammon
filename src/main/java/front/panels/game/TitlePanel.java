@@ -1,6 +1,8 @@
 package front.panels.game;
 
+import front.entities.User;
 import front.utils.handlers.BackgammonEvent;
+import front.utils.handlers.GameHandler;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
@@ -19,12 +21,13 @@ public class TitlePanel extends GridPane {
         this.frame = frame;
         init();
         this.addEventHandler(BackgammonEvent.UPDATE_SPECTATORS, e -> {
-            Long change = Long.parseLong(e.getOptions().get("change"));
+            Long change = Long.parseLong(e.getOptions().get("count"));
             updateSpectators(change);
         });
     }
 
     private void init() {
+        spectatorNum = 0L;
         title = new Label("ceva ceva");
         GridPane.setHalignment(title, HPos.CENTER);
         title.setStyle("-fx-font: 32 arial;");
@@ -48,11 +51,13 @@ public class TitlePanel extends GridPane {
     }
 
     public void updateTitle(String p1, String p2) {
-        title.setText(p1 + " vs " + p2 + "\nGame ID:" + frame.getLobby().getId());
-    }
+        if(GameHandler.getBlackUser().getUsername().equals(p1)) {
+            title.setText("Black -> " + p1 + (User.getInstance().getUsername().equals(p1) ? "(You)" : "") + " vs " + p2 + (User.getInstance().getUsername().equals(p2) ? "(You)" : "") + " <- White");
+        }
+        else {
+            title.setText("White -> " + p1 + (User.getInstance().getUsername().equals(p1) ? "(You)" : "") + " vs " + p2 + (User.getInstance().getUsername().equals(p2) ? "(You)" : "") + " <- Black");
+        }
 
-    public void initSpectators() {
-        spectatorNum = frame.getLobby().getSpectatorNum();
     }
 
     public void updateSpectators(Long count) {

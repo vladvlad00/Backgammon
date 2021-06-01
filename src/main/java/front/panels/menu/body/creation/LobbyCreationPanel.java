@@ -101,30 +101,32 @@ public class LobbyCreationPanel extends GridPane {
         GridPane.setHalignment(delete, HPos.RIGHT);
         delete.setDisable(true);
 
-        for(LobbyUser lobbyUser : lobby.getUsers()) {
-            if((lobbyUser.getRole().equals(UserRole.HOST) || lobbyUser.getRole().equals(UserRole.HOST_SPECTATOR)) && User.getInstance().getUsername().equals(lobbyUser.getUsername())) {
-                start.setDisable(false);
-                delete.setDisable(false);
-                break;
-            }
-        }
-
         whiteDesc = new Label("White player\n(First to move)");
         whiteDesc.setStyle("-fx-font: 16 arial;");
         whiteDesc.setPadding(new Insets(5, 5, 5, 5));
         GridPane.setHalignment(whiteDesc, HPos.RIGHT);
         whitePlayerList = FXCollections.observableArrayList();
-        whitePlayerList.addAll(players.getItems().get(0).getLobbyUser().getUsername());
+        if(players.getItems().get(0).getLobbyUser() != null) {
+            whitePlayerList.addAll(players.getItems().get(0).getLobbyUser().getUsername());
+        }
         if(players.getItems().get(1).getLobbyUser() != null) {
-            whitePlayerList.addAll(players.getItems().get(1).getLobbyUser().getUsername(), "Random");
+            whitePlayerList.addAll(players.getItems().get(1).getLobbyUser().getUsername());
         }
-        else {
-            whitePlayerList.addAll("Random");
-        }
+        whitePlayerList.addAll("Random");
         whitePlayer = new ComboBox<>(whitePlayerList);
         whitePlayer.setValue("Random");
         whitePlayer.setStyle("-fx-font: 18 arial;");
         GridPane.setHalignment(whitePlayer, HPos.LEFT);
+
+        for(LobbyUser lobbyUser : lobby.getUsers()) {
+            if((lobbyUser.getRole().equals(UserRole.HOST) || lobbyUser.getRole().equals(UserRole.HOST_SPECTATOR)) && User.getInstance().getUsername().equals(lobbyUser.getUsername())) {
+                start.setDisable(false);
+                delete.setDisable(false);
+                this.add(whiteDesc, 1, 0);
+                this.add(whitePlayer, 2, 0);
+                break;
+            }
+        }
 
         this.add(back, 0, 0);
         this.add(lobbyName, 0, 1, 3, 1);
@@ -132,8 +134,7 @@ public class LobbyCreationPanel extends GridPane {
         this.add(spectators, 1, 2, 2, 1);
         this.add(start, 0, 3);
         this.add(delete, 1, 3, 2, 1);
-        this.add(whiteDesc, 1, 0);
-        this.add(whitePlayer, 2, 0);
+
 
         ColumnConstraints half = new ColumnConstraints();
         ColumnConstraints littleHalf = new ColumnConstraints();

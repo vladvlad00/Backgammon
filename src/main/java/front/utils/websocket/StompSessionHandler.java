@@ -104,7 +104,7 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
                             new BackgammonEvent(BackgammonEvent.DISCONNECT, message.getOptions()))
             );
         }
-        else if (message.getCommand().equals("spectators"))
+        else if (message.getCommand().equals("spectator"))
         {
             Platform.runLater(
                     () -> Event.fireEvent(FrameHandler.getMainGameFrame().getTitlePanel(),
