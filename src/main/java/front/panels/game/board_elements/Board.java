@@ -260,7 +260,7 @@ public class Board {
         if((GameHandler.getCurrentUser().getWhite() && whitesOutside == 0) || (!GameHandler.getCurrentUser().getWhite() && blackOutside == 0)) {
             removePredictions();
         }
-        if(User.getInstance().getInRoom() && User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
+        if(User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
             if(piece.getWhite().equals(GameHandler.getCurrentUser().getWhite())) {
                 if(piece.getWhite() && whitesOutside > 0 && piece.getPosition() != -1) {
                     return false;
@@ -684,20 +684,26 @@ public class Board {
 
     private boolean makeMove(Piece pos, int d1, int d2) {
         removePredictions();
+        StringBuilder moveS = new StringBuilder();
         if(d1 != -1) {
             if(!FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
                 return false;
             }
             FrameHandler.getMainGameFrame().getSidePanel().disableFirstDice();
-            sendMove(pos.getPosition(), d1);
+            moveS.append(d1);
         }
         if(d2 != -1) {
             if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable()) {
                 return false;
             }
             FrameHandler.getMainGameFrame().getSidePanel().disableSecondDice();
-            sendMove(pos.getPosition(), d2);
+            if(d1 != -1) {
+                moveS.append(",");
+            }
+            moveS.append(d2);
         }
+        System.out.println(moveS.toString());
+        sendMove(pos.getPosition(), moveS.toString());
         if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable() && !FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
             nextTurn();
         }
@@ -717,9 +723,15 @@ public class Board {
         FrameHandler.getMainGameFrame().getSidePanel().decreaseDoubleCount(count);
 
         int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice();
+        StringBuilder moveS = new StringBuilder();
         for(int i = 0; i < count; ++i) {
-            sendMove(pos.getPosition(), move);
+            moveS.append(move);
+            if(i != count - 1) {
+                moveS.append(",");
+            }
         }
+        System.out.println(moveS.toString());
+        sendMove(pos.getPosition(), moveS.toString());
         if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() == 0) {
             nextTurn();
         }
@@ -731,7 +743,7 @@ public class Board {
         return true;
     }
 
-    private void sendMove(int pos, int count) {
+    private void sendMove(int pos, String move) {
         Map<String, String> options = new HashMap<>();
         if(GameHandler.getCurrentUser().getWhite()) {
             options.put("color", "white");
@@ -741,7 +753,7 @@ public class Board {
             options.put("color", "black");
             options.put("initialPosition", String.valueOf(normalToBlack.get(pos == -1 ? 24 : pos)));
         }
-        options.put("die", String.valueOf(count));
+        options.put("die", move);
         WSClient.getInstance().sendMessage(new Message("move", options));
     }
 

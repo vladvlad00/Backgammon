@@ -250,7 +250,8 @@ public class PopUpHandler {
 
         Button ok = new Button("Back to menu");
         ok.setOnAction(e -> {
-            FrameHandler.getMainMenuFrame().getLobbyCreationPanel().leaveRoom();
+            NetworkManager.leaveRoom();
+            SceneHandler.changeScene("menu");
             dialog.close();
         });
         ok.setPrefWidth(200);
@@ -290,7 +291,8 @@ public class PopUpHandler {
 
         Button ok = new Button("Back to menu");
         ok.setOnAction(e -> {
-            FrameHandler.getMainMenuFrame().getLobbyCreationPanel().leaveRoom();
+            NetworkManager.leaveRoom();
+            SceneHandler.changeScene("menu");
             dialog.close();
         });
         ok.setPrefWidth(200);

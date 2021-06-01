@@ -84,7 +84,7 @@ public class LobbyCreationPanel extends GridPane {
                     GameHandler.isHost = true;
                 Map<String, String> options = new HashMap<>();
                 options.put("starter", whitePlayer.getValue());
-                WSClient.getInstance().sendMessage(new Message("start", null));
+                WSClient.getInstance().sendMessage(new Message("start", options));
                 NetworkManager.startLobby(lobby.getId());
             }
         });
