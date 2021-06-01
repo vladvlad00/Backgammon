@@ -20,6 +20,8 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+import java.util.Comparator;
+
 import static front.panels.menu.login.MainLoginFrame.HEIGHT;
 import static front.panels.menu.login.MainLoginFrame.WIDTH;
 
@@ -130,6 +132,9 @@ public class LobbyCreationPanel extends GridPane {
                 playersListItems.add(new PlayersListItem(lobby, lobbyUser));
             }
         }
+
+        playersListItems.sort(Comparator.comparing(p -> p.getLobbyUser().getUsername()));
+        spectatorListItems.sort(Comparator.comparing(s -> s.getLobbyUser().getUsername()));
 
         spectatorListItems.add(new SpectatorListItem(lobby, null));
 

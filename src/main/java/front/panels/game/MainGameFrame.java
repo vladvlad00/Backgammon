@@ -2,6 +2,8 @@ package front.panels.game;
 
 import front.entities.Lobby;
 import front.utils.handlers.BackgammonEvent;
+import front.utils.handlers.FrameHandler;
+import front.utils.handlers.GameHandler;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -30,6 +32,14 @@ public class MainGameFrame extends BorderPane {
                 boardPanel.getBoard().setBoard(e.getOptions().get("board"));
             }
         });
+        this.addEventHandler(BackgammonEvent.NEXT_TURN, e -> {
+            nextTurn();
+        });
+    }
+
+    private void nextTurn() {
+        GameHandler.nextTurn();
+        FrameHandler.getMainGameFrame().getSidePanel().setPlayerTurn();
     }
 
     public void setLobby(Lobby lobby) {
@@ -55,5 +65,13 @@ public class MainGameFrame extends BorderPane {
 
     public SidePanel getSidePanel() {
         return sidePanel;
+    }
+
+    public TitlePanel getTitlePanel() {
+        return titlePanel;
+    }
+
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
     }
 }

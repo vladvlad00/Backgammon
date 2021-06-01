@@ -6,12 +6,14 @@ public class GameHandler {
     private static LobbyUser currentUser;
     private static LobbyUser whiteUser;
     private static LobbyUser blackUser;
+    private static boolean rolledDice;
 
     public static void init(LobbyUser u1, LobbyUser u2) {
-        u2.setWhite(true);
-        whiteUser = u2;
-        u1.setWhite(false);
-        blackUser = u1;
+        rolledDice = false;
+        u1.setWhite(true);
+        whiteUser = u1;
+        u2.setWhite(false);
+        blackUser = u2;
         currentUser = whiteUser;
     }
 
@@ -22,6 +24,7 @@ public class GameHandler {
         else {
             currentUser = whiteUser;
         }
+        rolledDice = false;
     }
 
     public static LobbyUser getCurrentUser() {
@@ -34,5 +37,13 @@ public class GameHandler {
 
     public static LobbyUser getBlackUser() {
         return blackUser;
+    }
+
+    public static boolean isRolledDice() {
+        return rolledDice;
+    }
+
+    public static void setRolledDice(boolean rolledDice) {
+        GameHandler.rolledDice = rolledDice;
     }
 }

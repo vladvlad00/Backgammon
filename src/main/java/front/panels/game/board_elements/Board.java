@@ -4,6 +4,7 @@ import back.service.game.GameManager;
 import front.entities.User;
 import front.utils.handlers.FrameHandler;
 import front.utils.handlers.GameHandler;
+import front.utils.handlers.PopUpHandler;
 import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 import javafx.geometry.HPos;
@@ -28,7 +29,9 @@ public class Board {
     public static final Long TRIANGLE_WIDTH = (WIDTH - CENTER_WIDTH - (TRIANGLES_ROW + 2L) * TRIANGLE_SPACING) / TRIANGLES_ROW;
     public static final Long TRIANGLE_HEIGHT = HEIGHT / 3L;
     public static final Long PIECE_RADIUS = TRIANGLE_WIDTH / 3L;
-    private static final String STARTING_BOARD = "[0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
+    //private static final String STARTING_BOARD = "[0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
+    //private static final String STARTING_BOARD = "[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
+    private static final String STARTING_BOARD = "[0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
     private static final List<Integer> whiteToNormal = new ArrayList<>(Arrays.asList(
             24, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
     ));
@@ -48,11 +51,12 @@ public class Board {
     private List<Polygon> triangles;
     private List<Double> positions;
     private List<Piece> pieces;
-    private List<Integer> elevation;
     private List<Integer> whites;
     private List<Integer> blacks;
     private Integer whitesOutside;
     private Integer blackOutside;
+    private Integer whiteHouse;
+    private Integer blackHouse;
 
     private PredictionPiece show1, show2, show3, show4;
 
@@ -69,6 +73,12 @@ public class Board {
     public void setBoard(String board) {
         removePieces();
         addPieces(board);
+        FrameHandler.getMainGameFrame().getTitlePanel().updateCapturedPieces(whitesOutside, blackOutside);
+        if(GameHandler.getCurrentUser().getUsername().equals(User.getInstance().getUsername())) {
+            generateHouses();
+            handleOutside();
+            //canMove();
+        }
         generateClickable();
     }
 
@@ -150,6 +160,8 @@ public class Board {
         String[] parts = convertMe.split("]\\[");
         whites = convertWtoN(convertString(parts[0]));
         blacks = convertBtoN(convertString(parts[1]));
+        whitesOutside = whites.get(24);
+        blackOutside = blacks.get(24);
         generatePieces(whites, true);
         generatePieces(blacks, false);
         pieces.forEach(p -> node.getChildren().add(p.getDrawable()));
@@ -207,7 +219,11 @@ public class Board {
                 }
             }
             if(ok) {
-                piece.getDrawable().setOnMouseClicked(e -> showOptions(piece));
+                piece.getDrawable().setOnMouseClicked(e -> {
+                    if(!piece.getWinnable()) {
+                        showOptions(piece, false);
+                    }
+                });
             }
         }
     }
@@ -233,10 +249,19 @@ public class Board {
         }
     }
 
-    private void showOptions(Piece piece) {
+    private boolean showOptions(Piece piece, boolean justVerify) {
         removePredictions();
         if(User.getInstance().getInRoom() && User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
             if(piece.getWhite().equals(GameHandler.getCurrentUser().getWhite())) {
+                if(piece.getWhite() && whitesOutside > 0 && piece.getPosition() != -1) {
+                    return false;
+                }
+                if(!piece.getWhite() && blackOutside > 0 && piece.getPosition() != -1) {
+                    return false;
+                }
+                if(!GameHandler.isRolledDice()) {
+                    return true;
+                }
                 Integer d1 = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice(); //Move using first dice
                 if(d1 == null) {
                     d1 = -1;
@@ -265,13 +290,17 @@ public class Board {
                         d1 = -1;
                     }
                 }
-
+                boolean outside = false;
                 int crtPos = piece.getPosition();
                 int p1;
                 int p2;
                 int p3;
                 int p4;
                 if(piece.getWhite()) {
+                    if(crtPos == -1) {
+                        crtPos = 11;
+                        outside = true;
+                    }
                     if(d1 < 0) {
                         p1 = -100;
                     }
@@ -318,6 +347,10 @@ public class Board {
                     }
                 }
                 else {
+                    if(crtPos == -1) {
+                        crtPos = 12;
+                        outside = true;
+                    }
                     if(d1 < 0) {
                         p1 = -100;
                     }
@@ -363,14 +396,51 @@ public class Board {
                         }
                     }
                 }
+                if(outside) {
+                    if(piece.getWhite()) {
+                        p1 = whiteToNormal.get(normalToWhite.get(p1) + 1);
+                        if(p1 < 6 || p1 > 11) {
+                            p1 = -1;
+                        }
+                        p2 = whiteToNormal.get(normalToWhite.get(p2) + 1);
+                        if(p2 < 6 || p2 > 11) {
+                            p2 = -1;
+                        }
+                        p3 = whiteToNormal.get(normalToWhite.get(p3) + 1);
+                        if(p3 < 6 || p3 > 11) {
+                            p3 = -1;
+                        }
+                        p4 = whiteToNormal.get(normalToWhite.get(p4) + 1);
+                        if(p4 < 6 || p4 > 11) {
+                            p4 = -1;
+                        }
+                    }
+                    else {
+                        p1 = blackToNormal.get(normalToBlack.get(p1) + 1);
+                        if(p1 < 12 || p1 > 17) {
+                            p1 = -1;
+                        }
+                        p2 = blackToNormal.get(normalToBlack.get(p2) + 1);
+                        if(p2 < 12 || p2 > 17) {
+                            p2 = -1;
+                        }
+                        p3 = blackToNormal.get(normalToBlack.get(p3) + 1);
+                        if(p3 < 12 || p3 > 17) {
+                            p3 = -1;
+                        }
+                        p4 = blackToNormal.get(normalToBlack.get(p4) + 1);
+                        if(p4 < 12 || p4 > 17) {
+                            p4 = -1;
+                        }
+                    }
+                }
                 boolean ok;
                 int largerOk = 2;
+                boolean canMoveSomething = false;
                 int elevation;
-                Piece capturablePiece;
                 if(p1 > -1 && p1 < 24) {
                     ok = true;
                     elevation = 0;
-                    capturablePiece = null;
                     for (Piece verify : pieces) {
                         if (verify.getPosition().equals(p1)) {
                             if(!verify.getWhite().equals(piece.getWhite())) {
@@ -380,12 +450,12 @@ public class Board {
                                         enemyElevation = getElev.getElevation();
                                     }
                                 }
-                                if(enemyElevation < 1) {
-                                    capturablePiece = verify;
-                                }
-                                else {
+                                if(enemyElevation > 0) {
                                     ok = false;
                                     --largerOk;
+                                }
+                                else {
+                                    elevation = 1;
                                 }
                             }
                             else {
@@ -401,28 +471,24 @@ public class Board {
                         }
                     }
                     if(ok) {
-                        show1 = new PredictionPiece(PieceGenerator.getOptionPiece(true, p1 <= 11, elevation, positions.get(p1)), p1, elevation, false, d1, -1);
-                        Piece finalCapturablePiece = capturablePiece;
-                        if(dblCondition) {
-                            show1.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece, 1)) {
-                                    capturePiece(finalCapturablePiece);
-                                }
-                            }); //User double, and he moved 3
+                        canMoveSomething = true;
+                        if (!justVerify) {
+                            show1 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p1 <= 11, elevation, positions.get(p1)), p1, elevation, false, d1, -1);
+                            if (dblCondition) {
+                                show1.getDrawable().setOnMouseClicked(e -> {
+                                    makeMove(piece, 1);
+                                }); //User double, and he moved 3
+                            } else {
+                                Integer finalD1 = d1;
+                                show1.getDrawable().setOnMouseClicked(e -> {
+                                    makeMove(piece, finalD1, -1);
+                                });
+                            }
+                            node.getChildren().add(show1.getDrawable());
                         }
-                        else {
-                            Integer finalD1 = d1;
-                            show1.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece, finalD1, -1)) {
-                                    capturePiece(finalCapturablePiece);
-                                }
-                            });
-                        }
-                        node.getChildren().add(show1.getDrawable());
                     }
                 }
                 if(p2 > -1 && p2 < 24 && (!dblCondition || largerOk == 2)) {
-                    capturablePiece = null;
                     ok = true;
                     elevation = 0;
                     for (Piece verify : pieces) {
@@ -434,12 +500,12 @@ public class Board {
                                         enemyElevation = getElev.getElevation();
                                     }
                                 }
-                                if(enemyElevation < 1) {
-                                    capturablePiece = verify;
-                                }
-                                else {
+                                if(enemyElevation > 0) {
                                     ok = false;
                                     --largerOk;
+                                }
+                                else {
+                                    elevation = 1;
                                 }
                             }
                             else {
@@ -455,29 +521,25 @@ public class Board {
                         }
                     }
                     if(ok) {
-                        show2 = new PredictionPiece(PieceGenerator.getOptionPiece(true, p2 <= 11, elevation, positions.get(p2)), p2, elevation, false, -1, d2);
-                        Piece finalCapturablePiece = capturablePiece;
-                        if(dblCondition) {
-                            show2.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece, 2)) {
-                                    capturePiece(finalCapturablePiece);
-                                }
-                            }); //User double, and he moved 3
+                        canMoveSomething = true;
+                        if (!justVerify) {
+                            show2 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p2 <= 11, elevation, positions.get(p2)), p2, elevation, false, -1, d2);
+                            if (dblCondition) {
+                                show2.getDrawable().setOnMouseClicked(e -> {
+                                    makeMove(piece, 2);
+                                }); //User double, and he moved 3
+                            } else {
+                                Integer finalD2 = d2;
+                                show2.getDrawable().setOnMouseClicked(e -> {
+                                    makeMove(piece, -1, finalD2);
+                                });
+                            }
+                            node.getChildren().add(show2.getDrawable());
                         }
-                        else {
-                            Integer finalD2 = d2;
-                            show2.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece, -1, finalD2)) {
-                                    capturePiece(finalCapturablePiece);
-                                }
-                            });
-                        }
-                        node.getChildren().add(show2.getDrawable());
                     }
                 }
                 if(largerOk > 0 && (!dblCondition || largerOk == 2)) {
                     if(p3 > -1 && p3 < 24) {
-                        capturablePiece = null;
                         ok = true;
                         elevation = 0;
                         for (Piece verify : pieces) {
@@ -489,12 +551,12 @@ public class Board {
                                             enemyElevation = getElev.getElevation();
                                         }
                                     }
-                                    if(enemyElevation < 1) {
-                                        capturablePiece = verify;
-                                    }
-                                    else {
+                                    if(enemyElevation > 0) {
                                         ok = false;
                                         --largerOk;
+                                    }
+                                    else {
+                                        elevation = 1;
                                     }
                                 }
                                 else {
@@ -510,31 +572,27 @@ public class Board {
                             }
                         }
                         if(ok) {
-                            show3 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p3 <= 11, elevation, positions.get(p3)), p3, elevation, false, d1, d2);
-                            Piece finalCapturablePiece = capturablePiece;
-                            if(dblCondition) {
-                                show3.getDrawable().setOnMouseClicked(e -> {
-                                    if(makeMove(piece, 3)) {
-                                        capturePiece(finalCapturablePiece);
-                                    }
-                                });
+                            canMoveSomething = true;
+                            if(!justVerify) {
+                                show3 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p3 <= 11, elevation, positions.get(p3)), p3, elevation, false, d1, d2);
+                                if (dblCondition) {
+                                    show3.getDrawable().setOnMouseClicked(e -> {
+                                        makeMove(piece, 3);
+                                    });
+                                } else {
+                                    Integer finalD1 = d1;
+                                    Integer finalD2 = d2;
+                                    show3.getDrawable().setOnMouseClicked(e -> {
+                                        makeMove(piece, finalD1, finalD2);
+                                    });
+                                }
+                                node.getChildren().add(show3.getDrawable());
                             }
-                            else {
-                                Integer finalD1 = d1;
-                                Integer finalD2 = d2;
-                                show3.getDrawable().setOnMouseClicked(e -> {
-                                    if(makeMove(piece, finalD1, finalD2)) {
-                                        capturePiece(finalCapturablePiece);
-                                    }
-                                });
-                            }
-                            node.getChildren().add(show3.getDrawable());
                         }
                     }
                 }
                 if(largerOk == 2 && dblCondition) {
                     if(p4 > -1 && p4 < 24) {
-                        capturablePiece = null;
                         ok = true;
                         elevation = 0;
                         for (Piece verify : pieces) {
@@ -546,12 +604,12 @@ public class Board {
                                             enemyElevation = getElev.getElevation();
                                         }
                                     }
-                                    if(enemyElevation < 1) {
-                                        capturablePiece = verify;
-                                    }
-                                    else {
+                                    if(enemyElevation > 0) {
                                         ok = false;
                                         --largerOk;
+                                    }
+                                    else {
+                                        elevation = 1;
                                     }
                                 }
                                 else {
@@ -567,22 +625,33 @@ public class Board {
                             }
                         }
                         if(ok) {
-                            show4 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p4 <= 11, elevation, positions.get(p4)), p4, elevation, false, d1, d1);
-                            Piece finalCapturablePiece1 = capturablePiece;
-                            show4.getDrawable().setOnMouseClicked(e -> {
-                                if(makeMove(piece, 4)) {
-                                    capturePiece(finalCapturablePiece1);
-                                }
-                            });
-                            node.getChildren().add(show4.getDrawable());
+                            canMoveSomething = true;
+                            if (!justVerify) {
+                                show4 = new PredictionPiece(PieceGenerator.getOptionPiece(false, p4 <= 11, elevation, positions.get(p4)), p4, elevation, false, d1, d1);
+                                show4.getDrawable().setOnMouseClicked(e -> {
+                                    makeMove(piece, 4);
+                                });
+                                node.getChildren().add(show4.getDrawable());
+                            }
                         }
                     }
                 }
+//                if(justVerify) {
+                if((dblCondition ? largerOk != 2 : largerOk == 0) && !canMoveSomething) {
+                    return false; //can not move
+                }
+                else {
+                    return true; //can still move
+                }
+//                }
             }
         }
+        return false;
     }
 
     private void removePieces() {
+        whites.clear();
+        blacks.clear();
         for(Piece piece : pieces) {
             node.getChildren().remove(piece.getDrawable());
         }
@@ -607,7 +676,12 @@ public class Board {
         }
         sendMove(pos.getPosition(), move);
         if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable() && !FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
-            endTurn();
+            nextTurn();
+        }
+        else {
+            generateHouses();
+            handleOutside();
+            //canMove();
         }
         return true;
     }
@@ -622,7 +696,12 @@ public class Board {
         int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice() * count;
         sendMove(pos.getPosition(), move);
         if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() == 0) {
-            endTurn();
+            nextTurn();
+        }
+        else {
+            generateHouses();
+            handleOutside();
+            //canMove();
         }
         return true;
     }
@@ -631,22 +710,382 @@ public class Board {
         Map<String, String> options = new HashMap<>();
         if(GameHandler.getCurrentUser().getWhite()) {
             options.put("color", "white");
-            options.put("initialPosition", String.valueOf(normalToWhite.get(pos)));
+            options.put("initialPosition", String.valueOf(normalToWhite.get(pos == -1 ? 24 : pos)));
         }
         else {
             options.put("color", "black");
-            options.put("initialPosition", String.valueOf(normalToBlack.get(pos)));
+            options.put("initialPosition", String.valueOf(normalToBlack.get(pos == -1 ? 24 : pos)));
         }
         options.put("die", String.valueOf(count));
         WSClient.getInstance().sendMessage(new Message("move", options));
     }
 
-    private void endTurn() {
-        GameHandler.nextTurn();
-        FrameHandler.getMainGameFrame().getSidePanel().setPlayerTurn();
+    public void nextTurn() {
+        WSClient.getInstance().sendMessage(new Message("turn", null));
     }
 
-    private void capturePiece(Piece piece) {
-        //Capture piece
+    public void generateHouses() {
+        for(Piece piece : pieces) {
+            piece.setWinnable(false);
+        }
+        blackHouse = 0;
+        whiteHouse = 0;
+        if(GameHandler.getCurrentUser().getWhite() && whitesOutside != 0) {
+            return;
+        }
+        if(!GameHandler.getCurrentUser().getWhite() && blackOutside != 0) {
+            return;
+        }
+        boolean canMove = canMove();
+        boolean isWhite = GameHandler.getCurrentUser().getWhite();
+        Integer d1 = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice();
+        Integer d2 = FrameHandler.getMainGameFrame().getSidePanel().getSecondDice();
+        boolean dbl = d1 == d2;
+        Integer d3 = (d1 == null ? null : (d2 == null ? null : d1 + d2));
+        Integer d4 = null;
+        if(dbl) {
+            d4 = d1 * 4;
+            if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() < 4) {
+                d4 = null;
+            }
+            d3 = d1 * 3;
+            if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() < 3) {
+                d3 = null;
+            }
+            d2 = d1 * 2;
+            if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() < 2) {
+                d2 = null;
+            }
+            if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() < 1) {
+                d1 = null;
+            }
+        }
+
+        int elevation = -1;
+        Piece p = null;
+        boolean step2 = false;
+        int step3 = -1;
+        if(d1 != null) {
+            for (Piece piece : pieces) {
+                int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d1) {
+                    elevation = piece.getElevation();
+                    p = piece;
+                }
+            }
+            if (p != null) {
+                if(isWhite) {
+                    ++whiteHouse;
+                }
+                else {
+                    ++blackHouse;
+                }
+                p.setWinnable(true);
+                Piece finalP = p;
+                Integer finalD1 = d1;
+                p.getDrawable().setOnMouseClicked(e -> {
+                    if(dbl) {
+                        makeMove(finalP, 1);
+                    }
+                    else {
+                        makeMove(finalP, finalD1, -1);
+                    }
+                });
+            }
+            else if(canMove) {
+                for(Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if(piece.getWhite() == isWhite && pos > d1) {
+                        step2 = true;
+                    }
+                }
+            }
+            if((!canMove || !step2) && p == null) {
+                for (Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d1 && pos > step3) {
+                        step3 = pos;
+                        if(piece.getElevation() > elevation) {
+                            elevation = piece.getElevation();
+                            p = piece;
+                        }
+                    }
+                }
+                if (p != null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
+                    Integer finalD1 = d1;
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        if(dbl) {
+                            makeMove(finalP, 1);
+                        }
+                        else {
+                            makeMove(finalP, finalD1, -1);
+                        }
+                    });
+                }
+            }
+            if(step3 == -1) {
+                System.out.println("You shouldn't be here");
+            }
+        }
+        if(d2 != null) {
+            for (Piece piece : pieces) {
+                int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d2) {
+                    elevation = piece.getElevation();
+                    p = piece;
+                }
+            }
+            if (p != null) {
+                if(isWhite) {
+                    ++whiteHouse;
+                }
+                else {
+                    ++blackHouse;
+                }
+                p.setWinnable(true);
+                Piece finalP = p;
+                Integer finalD2 = d2;
+                p.getDrawable().setOnMouseClicked(e -> {
+                    if(dbl) {
+                        makeMove(finalP, 2);
+                    }
+                    else {
+                        makeMove(finalP, -1, finalD2);
+                    }
+                });
+            }
+            else if(canMove) {
+                for(Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if(piece.getWhite() == isWhite && pos > d2) {
+                        step2 = true;
+                    }
+                }
+            }
+            if((!canMove || !step2) && p == null) {
+                for (Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d2 && pos > step3) {
+                        step3 = pos;
+                        if(piece.getElevation() > elevation) {
+                            elevation = piece.getElevation();
+                            p = piece;
+                        }
+                    }
+                }
+                if (p != null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
+                    Integer finalD2 = d2;
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        if(dbl) {
+                            makeMove(finalP, 2);
+                        }
+                        else {
+                            makeMove(finalP, -1, finalD2);
+                        }
+                    });
+                }
+            }
+            if(step3 == -1) {
+                System.out.println("You shouldn't be here");
+            }
+        }
+        if(d3 != null) {
+            for (Piece piece : pieces) {
+                int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d3) {
+                    elevation = piece.getElevation();
+                    p = piece;
+                }
+            }
+            if (p != null) {
+                if(isWhite) {
+                    ++whiteHouse;
+                }
+                else {
+                    ++blackHouse;
+                }
+                p.setWinnable(true);
+                Piece finalP = p;
+                Integer finalD1 = d1;
+                Integer finalD2 = d2;
+                p.getDrawable().setOnMouseClicked(e -> {
+                    if(dbl) {
+                        makeMove(finalP, 3);
+                    }
+                    else {
+                        makeMove(finalP, finalD1, finalD2);
+                    }
+                });
+            }
+            else if(canMove) {
+                for(Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if(piece.getWhite() == isWhite && pos > d3) {
+                        step2 = true;
+                    }
+                }
+            }
+            if((!canMove || !step2) && p == null) {
+                for (Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d3 && pos > step3) {
+                        step3 = pos;
+                        if(piece.getElevation() > elevation) {
+                            elevation = piece.getElevation();
+                            p = piece;
+                        }
+                    }
+                }
+                if (p != null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
+                    Integer finalD1 = d1;
+                    Integer finalD2 = d2;
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        if(dbl) {
+                            makeMove(finalP, 3);
+                        }
+                        else {
+                            makeMove(finalP, finalD1, finalD2);
+                        }
+                    });
+                }
+            }
+            if(step3 == -1) {
+                System.out.println("You shouldn't be here");
+            }
+        }
+        if(d4 != null) {
+            for (Piece piece : pieces) {
+                int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d4) {
+                    elevation = piece.getElevation();
+                    p = piece;
+                }
+            }
+            if (p != null) {
+                if(isWhite) {
+                    ++whiteHouse;
+                }
+                else {
+                    ++blackHouse;
+                }
+                p.setWinnable(true);
+                Piece finalP = p;
+                p.getDrawable().setOnMouseClicked(e -> {
+                    makeMove(finalP, 4);
+                });
+            }
+            else if(canMove) {
+                for(Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if(piece.getWhite() == isWhite && pos > d4) {
+                        step2 = true;
+                    }
+                }
+            }
+            if((!canMove || !step2) && p == null) {
+                for (Piece piece : pieces) {
+                    int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d4 && pos > step3) {
+                        step3 = pos;
+                        if(piece.getElevation() > elevation) {
+                            elevation = piece.getElevation();
+                            p = piece;
+                        }
+                    }
+                }
+                if (p != null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        makeMove(finalP, 4);
+                    });
+                }
+            }
+            if(step3 == -1) {
+                System.out.println("You shouldn't be here");
+            }
+        }
+        if(!canMove) {
+            if(isWhite && whiteHouse < 1) {
+                PopUpHandler.createCantMove();
+            }
+            if(!isWhite && blackHouse < 1) {
+                PopUpHandler.createCantMove();
+            }
+        }
+    }
+
+    public void handleOutside() {
+        if(GameHandler.getCurrentUser().getWhite() && whitesOutside == 0) {
+            return;
+        }
+        if(!GameHandler.getCurrentUser().getWhite() && blackOutside == 0) {
+            return;
+        }
+        boolean moveable = showOptions(new Piece(null, -1, 0, GameHandler.getCurrentUser().getWhite()), false);
+        if(!moveable) {
+            PopUpHandler.createCantMove();
+        }
+    }
+
+    public boolean canMove() {
+        if(GameHandler.getCurrentUser().getWhite() && whitesOutside != 0) {
+            return true;
+        }
+        if(!GameHandler.getCurrentUser().getWhite() && blackOutside != 0) {
+            return true;
+        }
+        boolean moveable = false;
+        for(Piece piece : pieces) {
+            if(piece instanceof PredictionPiece) {
+                continue;
+            }
+            boolean ok = true;
+            for(Piece compared : pieces) {
+                if(!compared.equals(piece) && (compared.getElevation() > piece.getElevation() && compared.getPosition().equals(piece.getPosition()))) {
+                    ok = false;
+                    break;
+                }
+            }
+            if(ok) {
+                moveable = moveable || showOptions(piece, true);
+            }
+//            moveable = moveable || ((GameHandler.getCurrentUser().getWhite() && whiteHouse > 0) || (!GameHandler.getCurrentUser().getWhite() && blackHouse > 0));
+        }
+        if(!moveable) {
+//            PopUpHandler.createCantMove();
+            return false;
+        }
+        return true;
     }
 }

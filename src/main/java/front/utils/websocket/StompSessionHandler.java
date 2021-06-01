@@ -90,6 +90,13 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
                             new BackgammonEvent(BackgammonEvent.MAKE_MOVE, message.getOptions()))
             );
         }
+        else if (message.getCommand().equals("turn"))
+        {
+            Platform.runLater(
+                    () -> Event.fireEvent(FrameHandler.getMainGameFrame(),
+                            new BackgammonEvent(BackgammonEvent.NEXT_TURN, null))
+            );
+        }
         System.out.println("Received " + message.toString());
     }
 

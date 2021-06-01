@@ -33,7 +33,7 @@ public class SpectatorListItem extends GridPane {
                     join = new Button("Join");
                     join.setOnAction(e -> {
                         var lobby2 = NetworkManager.joinThroughID(lobby.getId(), userRole.equals(UserRole.HOST) ? UserRole.HOST_SPECTATOR : UserRole.SPECTATOR);
-                        FrameHandler.getMainMenuFrame().goToCreate(lobby2);
+                        FrameHandler.getMainMenuFrame().refreshLobby(lobby.getId(), true);
                     });
                     join.setPadding(new Insets(10, 10, 10, 10));
                     GridPane.setHalignment(join, HPos.RIGHT);
@@ -54,5 +54,9 @@ public class SpectatorListItem extends GridPane {
                 }
                 this.add(userName, 0, 0);
         }
+    }
+
+    public LobbyUser getLobbyUser() {
+        return lobbyUser;
     }
 }

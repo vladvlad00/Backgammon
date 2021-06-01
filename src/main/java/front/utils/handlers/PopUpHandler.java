@@ -196,4 +196,36 @@ public class PopUpHandler {
         dialog.setScene(dialogScene);
         dialog.show();
     }
+
+    public static void createCantMove() {
+        Stage mainStage = SceneHandler.getStage();
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(mainStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setAlignment(Pos.CENTER);
+        dialog.setMinHeight(200);
+        dialog.setMaxHeight(200);
+        dialog.setMinWidth(200);
+        dialog.setMaxWidth(200);
+        dialog.setWidth(200);
+        dialog.setHeight(200);
+        dialog.setTitle("No moves available");
+
+        Label label = new Label("No moves available");
+        label.setPadding(new Insets(10, 10, 10, 10));
+
+        Button ok = new Button("Ok");
+        ok.setOnAction(e -> {
+            FrameHandler.getMainGameFrame().getBoardPanel().getBoard().nextTurn();
+            dialog.close();
+        });
+        ok.setPrefWidth(100);
+
+        dialogVbox.getChildren().add(label);
+        dialogVbox.getChildren().add(ok);
+        Scene dialogScene = new Scene(dialogVbox, 200, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
 }

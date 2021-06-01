@@ -65,7 +65,7 @@ public class MainMenuFrame extends BorderPane {
     public void goToCreate(Lobby lobby) {
         User.getInstance().setInRoom(true);
         lobbyCreationPanel.setLobby(lobby);
-        lobbyCreationPanel.init();
+//        lobbyCreationPanel.init();
         this.setCenter(lobbyCreationPanel);
         WSClient.getInstance().sendMessage(new Message("refresh", null));
     }
@@ -76,10 +76,13 @@ public class MainMenuFrame extends BorderPane {
     }
 
     public void refreshLobby(Long id, boolean shouldBroadcast) {
-        lobbyCreationPanel.setLobby(NetworkManager.getLobby(id));
-        lobbyCreationPanel.init();
-        if (shouldBroadcast)
+        if (shouldBroadcast) {
             WSClient.getInstance().sendMessage(new Message("refresh", null));
+        }
+        else {
+            lobbyCreationPanel.setLobby(NetworkManager.getLobby(id));
+            lobbyCreationPanel.init();
+        }
     }
 
     public Stage getStage() {

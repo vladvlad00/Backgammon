@@ -6,7 +6,7 @@ public class Game
 
     public Game()
     {
-        this.board = new Board();
+        this.board = new Board("[0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]");
     }
 
     public GameState makeMove(PlayerColor color, int initialPosition, int die) throws InvalidMoveException

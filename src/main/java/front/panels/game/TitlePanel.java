@@ -12,6 +12,7 @@ public class TitlePanel extends GridPane {
 
     private Label title;
     private Label spectators;
+    private Label capturedPieces;
 
     public TitlePanel(MainGameFrame frame) {
         this.frame = frame;
@@ -30,16 +31,20 @@ public class TitlePanel extends GridPane {
         spectators = new Label("ochi");
         GridPane.setHalignment(spectators, HPos.RIGHT);
         spectators.setStyle("-fx-font: 18 arial;");
+        capturedPieces = new Label("Captured pieces:\n 0 x ⬤\n 0 x ⚪");
+        capturedPieces.setStyle("-fx-font: 18 arial;");
+        GridPane.setHalignment(capturedPieces, HPos.LEFT);
 
         this.add(spectators, 0, 0);
         this.add(title, 1, 0);
+        this.add(capturedPieces, 2, 0);
 
         ColumnConstraints small = new ColumnConstraints();
         ColumnConstraints big = new ColumnConstraints();
         small.setPercentWidth(10);
-        big.setPercentWidth(90);
+        big.setPercentWidth(70);
 
-        this.getColumnConstraints().addAll(small, big);
+        this.getColumnConstraints().addAll(small, big, small, small);
     }
 
     public void updateTitle(String p1, String p2) {
@@ -48,5 +53,9 @@ public class TitlePanel extends GridPane {
 
     public void updateSpectators(Long spectatorNum) {
         spectators.setText("\uD83D\uDC41 " + spectatorNum);
+    }
+
+    public void updateCapturedPieces(Integer white, Integer black) {
+        capturedPieces.setText("Captured pieces:\n " + black + " x ⬤\n " + white + " x ⚪");
     }
 }

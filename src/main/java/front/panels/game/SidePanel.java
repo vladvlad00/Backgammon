@@ -1,8 +1,10 @@
 package front.panels.game;
 
 import front.entities.User;
+import front.panels.game.board_elements.Board;
 import front.panels.game.board_elements.Dice;
 import front.utils.handlers.BackgammonEvent;
+import front.utils.handlers.FrameHandler;
 import front.utils.handlers.GameHandler;
 import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
@@ -31,7 +33,7 @@ public class SidePanel extends GridPane {
         this.frame = frame;
         init();
         this.addEventHandler(BackgammonEvent.ROLL_DICE, e -> {
-            getNewDice(Integer.parseInt(e.getOptions().get("die1")), Integer.parseInt(e.getOptions().get("die2")));
+            getNewDice(Integer.parseInt(e.getOptions().get("die1")), Integer.parseInt(e.getOptions().get("die1")));
         });
     }
 
@@ -49,7 +51,7 @@ public class SidePanel extends GridPane {
         rollDice = new Button("Roll dice");
         rollDice.setStyle("-fx-font: 20 arial;");
         rollDice.setOnAction(e -> {
-            if(User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
+            if(User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername()) && !GameHandler.isRolledDice()) {
                 rollDiceAction();
             }
         });
@@ -97,6 +99,7 @@ public class SidePanel extends GridPane {
     }
 
     public void getNewDice(int d1, int d2) {
+        GameHandler.setRolledDice(true);
         firstDice.setDice(d1);
         firstDice.removeFromChildren(this);
         firstDice.addToChildren(this, 0);
@@ -110,6 +113,11 @@ public class SidePanel extends GridPane {
         }
         else {
             doubleCount = 0;
+        }
+        if(GameHandler.getCurrentUser() != null && GameHandler.getCurrentUser().getUsername().equals(User.getInstance().getUsername())) {
+            FrameHandler.getMainGameFrame().getBoardPanel().getBoard().generateHouses();
+            FrameHandler.getMainGameFrame().getBoardPanel().getBoard().handleOutside();
+//            FrameHandler.getMainGameFrame().getBoardPanel().getBoard().canMove();
         }
     }
 
