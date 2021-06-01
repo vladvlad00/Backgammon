@@ -18,6 +18,21 @@ public class Board
             this.die = die;
         }
 
+        @Override
+        public int hashCode()
+        {
+            return initialPosition * 25 + die;
+        }
+
+        @Override
+        public boolean equals(Object obj)
+        {
+            if (obj.getClass() != this.getClass())
+                return false;
+            Move other = (Move) obj;
+            return initialPosition == other.initialPosition && die == other.die;
+        }
+
         public int initialPosition;
         public int die;
     }
@@ -66,9 +81,18 @@ public class Board
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException
+    public int hashCode()
     {
-        return super.clone();
+        return (Arrays.toString(whiteCheckers) + Arrays.toString(blackCheckers)).hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (obj.getClass() != this.getClass())
+            return false;
+        Board other = (Board) obj;
+        return Arrays.equals(whiteCheckers, other.whiteCheckers) && Arrays.equals(blackCheckers, other.blackCheckers);
     }
 
     public PlayerColor getWinner()
@@ -146,10 +170,19 @@ public class Board
 
     public GameState makeMove(PlayerColor color, int initialPosition, int die) throws InvalidMoveException
     {
+        int prevCaptured, captured;
         if (color == PlayerColor.WHITE)
+        {
+            prevCaptured = blackCheckers[0];
             move(whiteCheckers, blackCheckers, initialPosition, die);
+            captured = blackCheckers[0];
+        }
         else
+        {
+            prevCaptured = whiteCheckers[0];
             move(blackCheckers, whiteCheckers, initialPosition, die);
+            captured = blackCheckers[0];
+        }
 
         // temporar
         updateCheckersNum();
@@ -160,6 +193,8 @@ public class Board
             return GameState.WHITE_WIN;
         if (blackCheckersNum == 0)
             return GameState.BLACK_WIN;
+        if (prevCaptured != captured)
+            return GameState.CAPTURED;
         return GameState.NOT_FINISHED;
     }
 
@@ -208,6 +243,38 @@ public class Board
             int opponentPosition = 25-targetPosition;
             if (opponentCheckers[opponentPosition] > 1)
                 throw new InvalidMoveException();
+        }
+    }
+
+    public void undoLastMove(PlayerColor color, boolean captured)
+    {
+        Move move = moveHistory.get(moveHistory.size()-1);
+        if (color == PlayerColor.WHITE)
+            undo(whiteCheckers, blackCheckers, move.initialPosition, move.die, captured);
+        else
+            undo(blackCheckers, whiteCheckers, move.initialPosition, move.die, captured);
+
+        updateCheckersNum();
+
+        moveHistory.remove(moveHistory.size()-1);
+    }
+
+    private void undo(int[] playerCheckers, int[] opponentCheckers, int initialPosition, int die, boolean captured)
+    {
+        int targetPosition;
+
+        if (initialPosition == 0)
+            targetPosition = 25-die;
+        else
+            targetPosition = initialPosition - die;
+
+        if (targetPosition > 0)
+            playerCheckers[targetPosition]--;
+        playerCheckers[initialPosition]++;
+        if (captured)
+        {
+            opponentCheckers[0]--;
+            opponentCheckers[25-targetPosition]++;
         }
     }
 
