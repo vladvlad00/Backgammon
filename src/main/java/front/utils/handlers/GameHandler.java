@@ -15,15 +15,6 @@ public class GameHandler {
     public static boolean isHost = false;
 
     public static void init(LobbyUser u1, LobbyUser u2, String starter) {
-        if(starter.equals("Random")) {
-            Random r = new Random(System.nanoTime());
-            if(r.nextBoolean()) {
-                starter = u1.getUsername();
-            }
-            else {
-                starter = u2.getUsername();
-            }
-        }
         if(starter.equals(u1.getUsername())) {
             u1.setWhite(true);
             whiteUser = u1;

@@ -18,10 +18,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static front.panels.menu.login.MainLoginFrame.HEIGHT;
 import static front.panels.menu.login.MainLoginFrame.WIDTH;
@@ -83,6 +80,15 @@ public class LobbyCreationPanel extends GridPane {
                 if (lobby.getRoleOfUser(username).equals(UserRole.HOST) || lobby.getRoleOfUser(username).equals(UserRole.HOST_SPECTATOR))
                     GameHandler.isHost = true;
                 Map<String, String> options = new HashMap<>();
+                if(whitePlayer.getValue().equals("Random")) {
+                    Random r = new Random();
+                    if(r.nextBoolean()) {
+                        whitePlayer.setValue(players.getItems().get(0).getLobbyUser().getUsername());
+                    }
+                    else {
+                        whitePlayer.setValue(players.getItems().get(1).getLobbyUser().getUsername());
+                    }
+                }
                 options.put("starter", whitePlayer.getValue());
                 WSClient.getInstance().sendMessage(new Message("start", options));
                 NetworkManager.startLobby(lobby.getId());
