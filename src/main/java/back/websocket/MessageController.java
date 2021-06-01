@@ -27,7 +27,7 @@ public class MessageController
         {
             case "start":
                 gameManager.createGame(id);
-                return new StartCommand().runCommand();
+                return new StartCommand(m.getOptions()).runCommand();
             case "dice":
                 return new DiceCommand().runCommand();
             case "move":
@@ -50,6 +50,10 @@ public class MessageController
                 return new DeleteCommand().runCommand();
             case "turn":
                 return new TurnCommand().runCommand();
+            case "spectator":
+                return new SpectatorCommand(m.getOptions()).runCommand();
+            case "disconnect":
+                return new DisconnectCommand(m.getOptions()).runCommand();
             default:
                 Map<String, String> options = new HashMap<>();
                 options.put("message", "Unknown command " + m.getCommand());

@@ -18,6 +18,6 @@ public class StartCommand extends Command
     @Override
     public Message runCommand()
     {
-        return new Message("start", null);
+        return new Message("start", options);
     }
 }
