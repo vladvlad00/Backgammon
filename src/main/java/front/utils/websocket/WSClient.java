@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 public class WSClient
 {
-    private static String URL = "ws://localhost:8081/ws";
+    private static String URL = "ws://84.117.24.129:8081/ws";
     private static WSClient instance;
 
     private WebSocketClient client;

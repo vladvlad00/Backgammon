@@ -14,8 +14,6 @@ public class GnuAiAlgorithm implements AiAlgorithm
     @Override
     public List<Message> getMove(Board board, PlayerColor color, int die1, int die2) throws IOException
     {
-        //TODO inainte sa trimit la gnubg trebuie sa vad ca stringul lor e altfel, 0 la mine e bara, la ei e 24 bara
-
         var moveString = GnuBgManager.getInstance().getMoveString(board, color, die1, die2);
         int[] positions = Arrays.stream(moveString.substring(1, moveString.length() - 1).split(", "))
                 .mapToInt(Integer::parseInt).toArray();
