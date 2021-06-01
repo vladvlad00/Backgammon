@@ -15,8 +15,16 @@ public class GnuAiAlgorithm implements AiAlgorithm
     public List<Message> getMove(Board board, PlayerColor color, int die1, int die2) throws IOException
     {
         var moveString = GnuBgManager.getInstance().getMoveString(board, color, die1, die2);
-        int[] positions = Arrays.stream(moveString.substring(1, moveString.length() - 1).split(", "))
-                .mapToInt(Integer::parseInt).toArray();
+        int[] positions;
+        try
+        {
+            positions = Arrays.stream(moveString.substring(1, moveString.length() - 1).split(", "))
+                    .mapToInt(Integer::parseInt).toArray();
+        }
+        catch (NumberFormatException e)
+        {
+            return null;
+        }
         List<Message> movesMade = new ArrayList<>();
         for (int i=0;i<positions.length;i+=2)
         {
