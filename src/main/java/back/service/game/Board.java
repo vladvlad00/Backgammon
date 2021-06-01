@@ -1,11 +1,30 @@
 package back.service.game;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Board
 {
+    public static class Move
+    {
+        public Move()
+        {
+        }
+
+        public Move(int initialPosition, int die)
+        {
+            this.initialPosition = initialPosition;
+            this.die = die;
+        }
+
+        public int initialPosition;
+        public int die;
+    }
+
     private int[] whiteCheckers;
     private int[] blackCheckers;
+    private List<Move> moveHistory = new ArrayList<>();
     int whiteCheckersNum;
     int blackCheckersNum;
 
@@ -32,6 +51,24 @@ public class Board
                 .mapToInt(Integer::parseInt).toArray();
         blackCheckers = Arrays.stream(parts[1].substring(0, parts[1].length() - 1).split(", "))
                 .mapToInt(Integer::parseInt).toArray();
+        updateCheckersNum();
+    }
+
+    public Board(Board other)
+    {
+        whiteCheckers = Arrays.copyOf(other.whiteCheckers, 25);
+        blackCheckers = Arrays.copyOf(other.blackCheckers, 25);
+        whiteCheckersNum = other.whiteCheckersNum;
+        blackCheckersNum = other.blackCheckersNum;
+        moveHistory = new ArrayList<>();
+        for (var move : other.moveHistory)
+            moveHistory.add(new Move(move.initialPosition, move.die));
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException
+    {
+        return super.clone();
     }
 
     public PlayerColor getWinner()
@@ -43,6 +80,70 @@ public class Board
         return null;
     }
 
+    public List<Move> getMoves(PlayerColor color, int[] dice, boolean[] used)
+    {
+        List<Move> moves = new ArrayList<>();
+
+        int[] playerCheckers = color == PlayerColor.WHITE ? whiteCheckers : blackCheckers;
+        int[] opponentCheckers = color == PlayerColor.BLACK ? whiteCheckers : blackCheckers;
+
+        if (playerCheckers[0] > 0)
+        {
+            for (int i=0;i<dice.length;i++)
+                if (!used[i])
+                    tryToAddMove(moves, 0, i, playerCheckers, opponentCheckers, dice);
+        }
+        else if (canBearoff(color))
+        {
+            for (int i=0;i<dice.length;i++)
+                if (!used[i])
+                    tryToBearoff(moves, color, i, dice);
+        }
+        else
+        {
+            for (int pos=1;pos<=24;pos++)
+            {
+                for (int i=0;i<dice.length;i++)
+                    if (!used[i] && pos > dice[i])
+                        tryToAddMove(moves, pos, i, playerCheckers, opponentCheckers, dice);
+            }
+        }
+
+        return moves;
+    }
+
+    void tryToAddMove(List<Move> moves, int initialPosition, int i, int[] playerCheckers, int[] opponentCheckers, int[] dice)
+    {
+        try
+        {
+            Move move = new Move(initialPosition, i);
+            if (!moves.contains(move))
+            {
+                testMove(playerCheckers, opponentCheckers, initialPosition, dice[i]);
+                moves.add(move);
+            }
+        }
+        catch (InvalidMoveException ignored)
+        {
+
+        }
+    }
+
+    void tryToBearoff(List<Move> moves, PlayerColor color, int i, int[] dice)
+    {
+        try
+        {
+            int pos = testBearoff(color, dice[i]);
+            Move move = new Move(pos, i);
+            if (!moves.contains(move))
+                moves.add(move);
+        }
+        catch (InvalidMoveException ignored)
+        {
+
+        }
+    }
+
     public GameState makeMove(PlayerColor color, int initialPosition, int die) throws InvalidMoveException
     {
         if (color == PlayerColor.WHITE)
@@ -52,6 +153,8 @@ public class Board
 
         // temporar
         updateCheckersNum();
+
+        moveHistory.add(new Move(initialPosition, die));
 
         if (whiteCheckersNum == 0)
             return GameState.WHITE_WIN;
@@ -86,6 +189,26 @@ public class Board
         }
 
         playerCheckers[initialPosition]--;
+    }
+
+    private void testMove(int[] playerCheckers, int[] opponentCheckers, int initialPosition, int die) throws InvalidMoveException
+    {
+        if (playerCheckers[initialPosition] <= 0)
+            throw new InvalidMoveException();
+
+        int targetPosition;
+
+        if (initialPosition == 0)
+            targetPosition = 25-die;
+        else
+            targetPosition = initialPosition - die;
+
+        if (targetPosition > 0)
+        {
+            int opponentPosition = 25-targetPosition;
+            if (opponentCheckers[opponentPosition] > 1)
+                throw new InvalidMoveException();
+        }
     }
 
     private void updateCheckersNum()
@@ -136,6 +259,24 @@ public class Board
         throw new InvalidMoveException();
     }
 
+    int testBearoff(PlayerColor color, int die) throws InvalidMoveException
+    {
+        var checkers = color == PlayerColor.WHITE ? whiteCheckers : blackCheckers;
+
+        if (checkers[die] > 0)
+            return die;
+
+        for (int i=die+1;i<=6;i++)
+            if (checkers[i] > 0)
+                return i;
+
+        for (int i=die-1;i>=1;i--)
+            if (checkers[i] > 0)
+                return i;
+
+        throw new InvalidMoveException();
+    }
+
     public int[] getWhiteCheckers()
     {
         return whiteCheckers;
@@ -154,6 +295,11 @@ public class Board
     public int getBlackCheckersNum()
     {
         return blackCheckersNum;
+    }
+
+    public List<Move> getMoveHistory()
+    {
+        return moveHistory;
     }
 
     @Override

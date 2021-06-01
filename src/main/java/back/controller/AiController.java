@@ -1,5 +1,6 @@
 package back.controller;
 
+import back.service.ai.ExpectiminimaxAiAlgorithm;
 import back.service.ai.GnuAiAlgorithm;
 import back.service.ai.RandomAiAlgorithm;
 import back.service.game.Board;
@@ -16,7 +17,7 @@ import java.util.Map;
 public class AiController
 {
     @PostMapping("/{difficulty}")
-    ResponseEntity<Iterable<Message>> getMove(@PathVariable String difficulty, @RequestBody Map<String, String> requestBody) throws IOException
+    ResponseEntity<Iterable<Message>> getMove(@PathVariable String difficulty, @RequestBody Map<String, String> requestBody) throws IOException, CloneNotSupportedException
     {
         String boardRepresentation = requestBody.get("board");
         String color = requestBody.get("color");
@@ -44,10 +45,15 @@ public class AiController
             return ResponseEntity.badRequest().build();
 
         Board board = new Board(boardRepresentation);
-        if (difficulty.equals("easy"))
-            return ResponseEntity.ok(new RandomAiAlgorithm().getMove(board, playerColor, die1, die2));
-        else if (difficulty.equals("hard"))
-            return ResponseEntity.ok(new GnuAiAlgorithm().getMove(board, playerColor, die1, die2));
+        switch (difficulty)
+        {
+            case "easy":
+                return ResponseEntity.ok(new RandomAiAlgorithm().getMove(board, playerColor, die1, die2));
+            case "medium":
+                return ResponseEntity.ok(new ExpectiminimaxAiAlgorithm().getMove(board, playerColor, die1, die2));
+            case "hard":
+                return ResponseEntity.ok(new GnuAiAlgorithm().getMove(board, playerColor, die1, die2));
+        }
         return ResponseEntity.badRequest().build();
     }
 }

@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface AiAlgorithm
 {
-    List<Message> getMove(Board board, PlayerColor color, int die1, int die2) throws IOException;
+    List<Message> getMove(Board board, PlayerColor color, int die1, int die2) throws IOException, CloneNotSupportedException;
 }
