@@ -74,6 +74,9 @@ public class LobbyCreationPanel extends GridPane {
                 a.show();
             }
             else {
+                String username = User.getInstance().getUsername();
+                if (lobby.getRoleOfUser(username).equals(UserRole.HOST) || lobby.getRoleOfUser(username).equals(UserRole.HOST_SPECTATOR))
+                    GameHandler.isHost = true;
                 WSClient.getInstance().sendMessage(new Message("start", null));
             }
         });

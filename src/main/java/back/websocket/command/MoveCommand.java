@@ -7,6 +7,7 @@ import back.service.game.PlayerColor;
 import back.websocket.Message;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class MoveCommand extends Command
@@ -37,9 +38,9 @@ public class MoveCommand extends Command
             throw new InvalidMoveException();
 
         PlayerColor playerColor;
-        if (color.equals("white"))
+        if (color.toLowerCase(Locale.ROOT).equals("white"))
             playerColor = PlayerColor.WHITE;
-        else if (color.equals("black"))
+        else if (color.toLowerCase(Locale.ROOT).equals("black"))
             playerColor = PlayerColor.BLACK;
         else
             throw new InvalidMoveException();

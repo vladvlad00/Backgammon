@@ -56,10 +56,12 @@ public class Board {
     private Integer blackOutside;
     private Integer whiteHouse;
     private Integer blackHouse;
+    private String boardString;
 
     private PredictionPiece show1, show2, show3, show4;
 
     public Board() {
+        boardString = STARTING_BOARD;
         node = new Group();
         generateBackground();
         generateCenter();
@@ -69,7 +71,13 @@ public class Board {
         generateClickable();
     }
 
+    public String getBoardString()
+    {
+        return boardString;
+    }
+
     public void setBoard(String board) {
+        boardString = board;
         removePieces();
         addPieces(board);
         FrameHandler.getMainGameFrame().getTitlePanel().updateCapturedPieces(whitesOutside, blackOutside);

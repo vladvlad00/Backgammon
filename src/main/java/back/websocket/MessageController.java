@@ -22,6 +22,7 @@ public class MessageController
     @SendTo("/game_info/{id}")
     public Message message(Message m, @DestinationVariable Long id)
     {
+        System.out.println("Received message: " + m);
         switch (m.getCommand())
         {
             case "start":

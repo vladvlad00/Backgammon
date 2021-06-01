@@ -7,6 +7,7 @@ import front.entities.Lobby;
 import front.entities.LobbyUser;
 import front.entities.User;
 import front.entities.UserRole;
+import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -134,6 +135,28 @@ public class NetworkManager {
         HttpHeaders headers = getHeaders();
         HttpEntity entity = new HttpEntity(headers);
         restTemplate.exchange(URL + "/room/" + id, HttpMethod.DELETE, entity, String.class);
+    }
+
+    public static List<Message> getAiMoves(String board, String color, int die1, int die2, String difficulty)
+    {
+        HttpHeaders headers = getHeaders();
+        Map<String, String> requestJson = new HashMap<>();
+        requestJson.put("board", board);
+        requestJson.put("color", color);
+        requestJson.put("die1", String.valueOf(die1));
+        requestJson.put("die2", String.valueOf(die2));
+
+        HttpEntity<Map<String, String>> request = new HttpEntity<>(requestJson, headers);
+        ResponseEntity<String> response = restTemplate.postForEntity(URL + "/ai/" + difficulty, request, String.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try
+        {
+            return objectMapper.readValue(response.getBody(), new TypeReference<List<Message>>(){});
+        } catch (JsonProcessingException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private static HttpHeaders getHeaders()

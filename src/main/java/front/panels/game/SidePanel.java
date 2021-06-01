@@ -1,13 +1,16 @@
 package front.panels.game;
 
 import front.entities.User;
+import front.entities.UserRole;
 import front.panels.game.board_elements.Board;
 import front.panels.game.board_elements.Dice;
 import front.utils.handlers.BackgammonEvent;
 import front.utils.handlers.FrameHandler;
 import front.utils.handlers.GameHandler;
+import front.utils.handlers.NetworkManager;
 import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
+import javafx.application.Platform;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -16,7 +19,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class SidePanel extends GridPane {
@@ -34,6 +39,33 @@ public class SidePanel extends GridPane {
         init();
         this.addEventHandler(BackgammonEvent.ROLL_DICE, e -> {
             getNewDice(Integer.parseInt(e.getOptions().get("die1")), Integer.parseInt(e.getOptions().get("die2")));
+            String currentUserRole = GameHandler.getCurrentUser().getRole().toString();
+            if (GameHandler.isHost && currentUserRole.startsWith("AI_"))
+            {
+                String color = GameHandler.getCurrentUser().getWhite() ? "white" : "black";
+                int die1 = firstDice.getNumber();
+                int die2 = secondDice.getNumber();
+                String board = frame.getBoardPanel().getBoard().getBoardString();
+                String difficulty = currentUserRole.split("_")[1].toLowerCase(Locale.ROOT);
+
+                var moves = NetworkManager.getAiMoves(board, color, die1, die2, difficulty);
+                Thread thread = new Thread(() -> {
+                    try
+                    {
+                        for (var move : moves)
+                        {
+                            WSClient.getInstance().sendMessage(move);
+                                Thread.sleep(1000);
+                        }
+                    }
+                    catch (InterruptedException interruptedException)
+                    {
+                        interruptedException.printStackTrace();
+                    }
+                    WSClient.getInstance().sendMessage(new Message("turn", null));
+                });
+                thread.start();
+            }
         });
     }
 
