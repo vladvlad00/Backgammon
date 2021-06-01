@@ -34,6 +34,15 @@ public class Board
                 .mapToInt(Integer::parseInt).toArray();
     }
 
+    public PlayerColor getWinner()
+    {
+        if (whiteCheckersNum == 0)
+            return PlayerColor.WHITE;
+        if (blackCheckersNum == 0)
+            return PlayerColor.BLACK;
+        return null;
+    }
+
     public GameState makeMove(PlayerColor color, int initialPosition, int die) throws InvalidMoveException
     {
         if (color == PlayerColor.WHITE)
@@ -70,7 +79,7 @@ public class Board
                 throw new InvalidMoveException();
             if (opponentCheckers[opponentPosition] == 1)
             {
-                opponentCheckers[die] = 0;
+                opponentCheckers[opponentPosition] = 0;
                 opponentCheckers[0]++;
             }
             playerCheckers[targetPosition]++;
