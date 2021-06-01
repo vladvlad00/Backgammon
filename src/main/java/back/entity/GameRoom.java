@@ -12,6 +12,8 @@ public class GameRoom
 
     String name;
 
+    String state;
+
     @OneToMany(mappedBy = "gameRoom")
     Set<User> users;
 
@@ -43,5 +45,15 @@ public class GameRoom
     public void setUsers(Set<User> users)
     {
         this.users = users;
+    }
+
+    public String getState()
+    {
+        return state;
+    }
+
+    public void setState(String state)
+    {
+        this.state = state;
     }
 }

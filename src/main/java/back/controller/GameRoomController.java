@@ -14,8 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +31,8 @@ public class GameRoomController
     {
         if (room.getId() != null && roomRepository.findById(room.getId()).isPresent())
             return ResponseEntity.badRequest().build();
+
+        room.setState("not started");
 
         var createdRoom = roomRepository.save(room);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -70,6 +70,22 @@ public class GameRoomController
         }
 
         return ResponseEntity.ok(room);
+    }
+
+    @PutMapping("/{id}/start")
+    private ResponseEntity<GameRoom> startGame(@PathVariable Long id)
+    {
+        var roomOpt = roomRepository.findById(id);
+        if (roomOpt.isEmpty())
+            return ResponseEntity.notFound().build();
+
+        var room = roomOpt.get();
+
+        room.setState("running");
+
+        var updatedRoom = roomRepository.save(room);
+
+        return ResponseEntity.ok(updatedRoom);
     }
 
     @DeleteMapping("/{id}")
