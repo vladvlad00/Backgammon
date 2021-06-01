@@ -4,6 +4,7 @@ import front.entities.Lobby;
 import front.utils.handlers.BackgammonEvent;
 import front.utils.handlers.FrameHandler;
 import front.utils.handlers.GameHandler;
+import front.utils.handlers.PopUpHandler;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -25,8 +26,11 @@ public class MainGameFrame extends BorderPane {
         init();
         this.addEventHandler(BackgammonEvent.MAKE_MOVE, e -> {
             String gameState = e.getOptions().get("state");
-            if(gameState.equals("finished")) {
-                //TODO: e gata
+            if(gameState.equals("BLACK_WIN")) {
+                PopUpHandler.createSomeoneWon("Black", GameHandler.getBlackUser().getUsername());
+            }
+            else if(gameState.equals("WHITE_WIN")) {
+                PopUpHandler.createSomeoneWon("White", GameHandler.getBlackUser().getUsername());
             }
             else {
                 boardPanel.getBoard().setBoard(e.getOptions().get("board"));

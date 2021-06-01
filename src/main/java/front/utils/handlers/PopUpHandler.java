@@ -5,6 +5,7 @@ import front.entities.LobbyUser;
 import front.entities.UserRole;
 import front.panels.menu.body.MainMenuFrame;
 import front.utils.websocket.WSClient;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -210,7 +211,7 @@ public class PopUpHandler {
         dialog.setMaxWidth(200);
         dialog.setWidth(200);
         dialog.setHeight(200);
-        dialog.setTitle("No moves available");
+        dialog.setTitle(":(");
 
         Label label = new Label("No moves available");
         label.setPadding(new Insets(10, 10, 10, 10));
@@ -225,6 +226,46 @@ public class PopUpHandler {
         dialogVbox.getChildren().add(label);
         dialogVbox.getChildren().add(ok);
         Scene dialogScene = new Scene(dialogVbox, 200, 200);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    public static void createSomeoneWon(String won, String username) {
+        Stage mainStage = SceneHandler.getStage();
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(mainStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setAlignment(Pos.CENTER);
+        dialog.setMinHeight(300);
+        dialog.setMaxHeight(300);
+        dialog.setMinWidth(300);
+        dialog.setMaxWidth(300);
+        dialog.setWidth(300);
+        dialog.setHeight(300);
+        dialog.setTitle("Winner");
+
+        Label label = new Label(won + "(" + username + ") won! Congratulations!");
+        label.setPadding(new Insets(10, 10, 10, 10));
+
+        Button ok = new Button("Back to menu");
+        ok.setOnAction(e -> {
+            FrameHandler.getMainMenuFrame().getLobbyCreationPanel().leaveRoom();
+            dialog.close();
+        });
+        ok.setPrefWidth(200);
+
+        Button exit = new Button("Exit game");
+        exit.setOnAction(e -> {
+            Platform.exit();
+            dialog.close();
+        });
+        exit.setPrefWidth(150);
+
+        dialogVbox.getChildren().add(label);
+        dialogVbox.getChildren().add(ok);
+        dialogVbox.getChildren().add(exit);
+        Scene dialogScene = new Scene(dialogVbox, 300, 300);
         dialog.setScene(dialogScene);
         dialog.show();
     }

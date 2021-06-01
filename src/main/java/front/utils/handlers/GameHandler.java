@@ -13,7 +13,6 @@ public class GameHandler {
     public static boolean isHost = false;
 
     public static void init(LobbyUser u1, LobbyUser u2) {
-        rolledDice = false;
         u1.setWhite(true);
         whiteUser = u1;
         u2.setWhite(false);
@@ -32,7 +31,7 @@ public class GameHandler {
         else {
             currentUser = whiteUser;
         }
-        rolledDice = false;
+        FrameHandler.getMainGameFrame().getSidePanel().updateDice();
         if (isHost)
         {
             checkAiTurn(currentUser);

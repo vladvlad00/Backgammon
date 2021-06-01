@@ -257,7 +257,9 @@ public class Board {
     }
 
     private boolean showOptions(Piece piece, boolean justVerify) {
-        removePredictions();
+        if((GameHandler.getCurrentUser().getWhite() && whitesOutside == 0) || (!GameHandler.getCurrentUser().getWhite() && blackOutside == 0)) {
+            removePredictions();
+        }
         if(User.getInstance().getInRoom() && User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
             if(piece.getWhite().equals(GameHandler.getCurrentUser().getWhite())) {
                 if(piece.getWhite() && whitesOutside > 0 && piece.getPosition() != -1) {
@@ -405,39 +407,55 @@ public class Board {
                 }
                 if(outside) {
                     if(piece.getWhite()) {
-                        p1 = whiteToNormal.get(normalToWhite.get(p1) + 1);
-                        if(p1 < 6 || p1 > 11) {
-                            p1 = -1;
+                        if(p1 > 0) {
+                            p1 = whiteToNormal.get(normalToWhite.get(p1) + 1);
+                            if (p1 < 6 || p1 > 11) {
+                                p1 = -1;
+                            }
                         }
-                        p2 = whiteToNormal.get(normalToWhite.get(p2) + 1);
-                        if(p2 < 6 || p2 > 11) {
-                            p2 = -1;
+                        if(p2 > 0) {
+                            p2 = whiteToNormal.get(normalToWhite.get(p2) + 1);
+                            if (p2 < 6 || p2 > 11) {
+                                p2 = -1;
+                            }
                         }
-                        p3 = whiteToNormal.get(normalToWhite.get(p3) + 1);
-                        if(p3 < 6 || p3 > 11) {
-                            p3 = -1;
+                        if(p3 > 0) {
+                            p3 = whiteToNormal.get(normalToWhite.get(p3) + 1);
+                            if (p3 < 6 || p3 > 11) {
+                                p3 = -1;
+                            }
                         }
-                        p4 = whiteToNormal.get(normalToWhite.get(p4) + 1);
-                        if(p4 < 6 || p4 > 11) {
-                            p4 = -1;
+                        if(p4 > 0) {
+                            p4 = whiteToNormal.get(normalToWhite.get(p4) + 1);
+                            if (p4 < 6 || p4 > 11) {
+                                p4 = -1;
+                            }
                         }
                     }
                     else {
-                        p1 = blackToNormal.get(normalToBlack.get(p1) + 1);
-                        if(p1 < 12 || p1 > 17) {
-                            p1 = -1;
+                        if(p1 > 0) {
+                            p1 = blackToNormal.get(normalToBlack.get(p1) + 1);
+                            if (p1 < 12 || p1 > 17) {
+                                p1 = -1;
+                            }
                         }
-                        p2 = blackToNormal.get(normalToBlack.get(p2) + 1);
-                        if(p2 < 12 || p2 > 17) {
-                            p2 = -1;
+                        if(p2 > 0) {
+                            p2 = blackToNormal.get(normalToBlack.get(p2) + 1);
+                            if (p2 < 12 || p2 > 17) {
+                                p2 = -1;
+                            }
                         }
-                        p3 = blackToNormal.get(normalToBlack.get(p3) + 1);
-                        if(p3 < 12 || p3 > 17) {
-                            p3 = -1;
+                        if(p3 > 0) {
+                            p3 = blackToNormal.get(normalToBlack.get(p3) + 1);
+                            if (p3 < 12 || p3 > 17) {
+                                p3 = -1;
+                            }
                         }
-                        p4 = blackToNormal.get(normalToBlack.get(p4) + 1);
-                        if(p4 < 12 || p4 > 17) {
-                            p4 = -1;
+                        if(p4 > 0) {
+                            p4 = blackToNormal.get(normalToBlack.get(p4) + 1);
+                            if (p4 < 12 || p4 > 17) {
+                                p4 = -1;
+                            }
                         }
                     }
                 }
@@ -666,22 +684,20 @@ public class Board {
 
     private boolean makeMove(Piece pos, int d1, int d2) {
         removePredictions();
-        int move = 0;
         if(d1 != -1) {
             if(!FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
                 return false;
             }
             FrameHandler.getMainGameFrame().getSidePanel().disableFirstDice();
-            move += d1;
+            sendMove(pos.getPosition(), d1);
         }
         if(d2 != -1) {
             if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable()) {
                 return false;
             }
             FrameHandler.getMainGameFrame().getSidePanel().disableSecondDice();
-            move += d2;
+            sendMove(pos.getPosition(), d2);
         }
-        sendMove(pos.getPosition(), move);
         if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable() && !FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
             nextTurn();
         }
@@ -700,8 +716,10 @@ public class Board {
         }
         FrameHandler.getMainGameFrame().getSidePanel().decreaseDoubleCount(count);
 
-        int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice() * count;
-        sendMove(pos.getPosition(), move);
+        int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice();
+        for(int i = 0; i < count; ++i) {
+            sendMove(pos.getPosition(), move);
+        }
         if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() == 0) {
             nextTurn();
         }
@@ -823,7 +841,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d1 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d1 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();
@@ -895,7 +913,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d2 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d2 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();
@@ -968,7 +986,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d3 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d3 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();
@@ -1035,7 +1053,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d4 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d4 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();

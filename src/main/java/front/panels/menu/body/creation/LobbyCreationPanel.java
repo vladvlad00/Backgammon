@@ -158,10 +158,11 @@ public class LobbyCreationPanel extends GridPane {
     private void startGame() {
         GameHandler.init(players.getItems().get(0).getLobbyUser(), players.getItems().get(1).getLobbyUser());
         FrameHandler.getMainGameFrame().setLobby(lobby);
+        FrameHandler.getMainGameFrame().getSidePanel().updateDice();
         SceneHandler.changeScene("game");
     }
 
-    private void leaveRoom() {
+    public void leaveRoom() {
         NetworkManager.leaveRoom();
         frame.goToMenu();
     }
