@@ -438,7 +438,7 @@ public class Board {
                             if (p3 < 6 || p3 > 11) {
                                 p3 = -1;
                             }
-                            if(normalToWhite.get(p3) > 6) {
+                            else if(normalToWhite.get(p3) > 6) {
                                 p3 = -1;
                             }
                         }
@@ -447,7 +447,7 @@ public class Board {
                             if (p4 < 6 || p4 > 11) {
                                 p4 = -1;
                             }
-                            if(normalToWhite.get(p4) > 6) {
+                            else if(normalToWhite.get(p4) > 6) {
                                 p4 = -1;
                             }
                         }
@@ -470,7 +470,7 @@ public class Board {
                             if (p3 < 12 || p3 > 17) {
                                 p3 = -1;
                             }
-                            if(normalToBlack.get(p3) > 6) {
+                            else if(normalToBlack.get(p3) > 6) {
                                 p3 = -1;
                             }
                         }
@@ -479,7 +479,7 @@ public class Board {
                             if (p4 < 12 || p4 > 17) {
                                 p4 = -1;
                             }
-                            if(normalToBlack.get(p4) > 6) {
+                            else if(normalToBlack.get(p4) > 6) {
                                 p4 = -1;
                             }
                         }
