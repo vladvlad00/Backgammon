@@ -862,14 +862,15 @@ public class Board {
                 p.setWinnable(true);
                 Piece finalP = p;
                 Integer finalD1 = d1;
-                p.getDrawable().setOnMouseClicked(e -> {
-                    if(dbl) {
-                        makeMove(finalP, 1);
-                    }
-                    else {
-                        makeMove(finalP, finalD1, -1);
-                    }
-                });
+                if(p.getDrawable().getOnMouseClicked() != null) {
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        if (dbl) {
+                            makeMove(finalP, 1);
+                        } else {
+                            makeMove(finalP, finalD1, -1);
+                        }
+                    });
+                }
             }
             else if(canMove) {
                 for(Piece piece : pieces) {
@@ -934,14 +935,15 @@ public class Board {
                 p.setWinnable(true);
                 Piece finalP = p;
                 Integer finalD2 = d2;
-                p.getDrawable().setOnMouseClicked(e -> {
-                    if(dbl) {
-                        makeMove(finalP, 2);
-                    }
-                    else {
-                        makeMove(finalP, -1, finalD2);
-                    }
-                });
+                if(p.getDrawable().getOnMouseClicked() != null) {
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        if (dbl) {
+                            makeMove(finalP, 2);
+                        } else {
+                            makeMove(finalP, -1, finalD2);
+                        }
+                    });
+                }
             }
             else if(canMove) {
                 for(Piece piece : pieces) {
@@ -972,21 +974,22 @@ public class Board {
                     p.setWinnable(true);
                     Piece finalP = p;
                     Integer finalD2 = d2;
-                    p.getDrawable().setOnMouseClicked(e -> {
-                        if(dbl) {
-                            makeMove(finalP, 2);
-                        }
-                        else {
-                            makeMove(finalP, -1, finalD2);
-                        }
-                    });
+                    if(p.getDrawable().getOnMouseClicked() != null) {
+                        p.getDrawable().setOnMouseClicked(e -> {
+                            if (dbl) {
+                                makeMove(finalP, 2);
+                            } else {
+                                makeMove(finalP, -1, finalD2);
+                            }
+                        });
+                    }
                 }
             }
             if(step3 == -1 && (!canMove || !step2) && p == null) {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d3 != null && d3 < 7 && d2 > 0) {
+        if(d3 != null && d3 < 7 && d3 > 0) {
             elevation = -1;
             p = null;
             for (Piece piece : pieces) {
@@ -1007,14 +1010,15 @@ public class Board {
                 Piece finalP = p;
                 Integer finalD1 = d1;
                 Integer finalD2 = d2;
-                p.getDrawable().setOnMouseClicked(e -> {
-                    if(dbl) {
-                        makeMove(finalP, 3);
-                    }
-                    else {
-                        makeMove(finalP, finalD1, finalD2);
-                    }
-                });
+                if(p.getDrawable().getOnMouseClicked() != null) {
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        if (dbl) {
+                            makeMove(finalP, 3);
+                        } else {
+                            makeMove(finalP, finalD1, finalD2);
+                        }
+                    });
+                }
             }
             else if(canMove) {
                 for(Piece piece : pieces) {
@@ -1046,21 +1050,22 @@ public class Board {
                     Piece finalP = p;
                     Integer finalD1 = d1;
                     Integer finalD2 = d2;
-                    p.getDrawable().setOnMouseClicked(e -> {
-                        if(dbl) {
-                            makeMove(finalP, 3);
-                        }
-                        else {
-                            makeMove(finalP, finalD1, finalD2);
-                        }
-                    });
+                    if(p.getDrawable().getOnMouseClicked() != null) {
+                        p.getDrawable().setOnMouseClicked(e -> {
+                            if (dbl) {
+                                makeMove(finalP, 3);
+                            } else {
+                                makeMove(finalP, finalD1, finalD2);
+                            }
+                        });
+                    }
                 }
             }
             if(step3 == -1 && (!canMove || !step2) && p == null) {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d4 != null && d4 < 7 && d2 > 0) {
+        if(d4 != null && d4 < 7 && d4 > 0) {
             elevation = -1;
             p = null;
             for (Piece piece : pieces) {
@@ -1079,9 +1084,11 @@ public class Board {
                 }
                 p.setWinnable(true);
                 Piece finalP = p;
-                p.getDrawable().setOnMouseClicked(e -> {
-                    makeMove(finalP, 4);
-                });
+                if(p.getDrawable().getOnMouseClicked() != null) {
+                    p.getDrawable().setOnMouseClicked(e -> {
+                        makeMove(finalP, 4);
+                    });
+                }
             }
             else if(canMove) {
                 for(Piece piece : pieces) {
@@ -1111,9 +1118,11 @@ public class Board {
                     }
                     p.setWinnable(true);
                     Piece finalP = p;
-                    p.getDrawable().setOnMouseClicked(e -> {
-                        makeMove(finalP, 4);
-                    });
+                    if(p.getDrawable().getOnMouseClicked() != null) {
+                        p.getDrawable().setOnMouseClicked(e -> {
+                            makeMove(finalP, 4);
+                        });
+                    }
                 }
             }
             if(step3 == -1 && (!canMove || !step2) && p == null) {
