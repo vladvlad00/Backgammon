@@ -229,7 +229,7 @@ public class Dice {
     public void addToChildren(GridPane gridPane, int col) {
         GridPane.setHalignment(group, HPos.CENTER);
         GridPane.setValignment(group, VPos.CENTER);
-        gridPane.add(group, col, 1);
+        gridPane.add(group, col, 2);
     }
 
     public void removeFromChildren(GridPane gridPane) {

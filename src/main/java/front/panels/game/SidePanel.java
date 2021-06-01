@@ -1,11 +1,14 @@
 package front.panels.game;
 
+import front.entities.User;
 import front.panels.game.board_elements.Dice;
 import front.utils.handlers.BackgammonEvent;
+import front.utils.handlers.GameHandler;
 import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 import javafx.geometry.HPos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -17,6 +20,7 @@ import java.util.Random;
 public class SidePanel extends GridPane {
     private MainGameFrame frame;
 
+    private Label turn;
     private Button rollDice;
     private Button leaveGame;
     private Dice firstDice;
@@ -45,7 +49,9 @@ public class SidePanel extends GridPane {
         rollDice = new Button("Roll dice");
         rollDice.setStyle("-fx-font: 20 arial;");
         rollDice.setOnAction(e -> {
-            rollDiceAction();
+            if(User.getInstance().getUsername().equals(GameHandler.getCurrentUser().getUsername())) {
+                rollDiceAction();
+            }
         });
         GridPane.setHalignment(rollDice, HPos.CENTER);
 
@@ -56,19 +62,28 @@ public class SidePanel extends GridPane {
         });
         GridPane.setHalignment(leaveGame, HPos.CENTER);
 
-        this.add(rollDice, 0, 0, 2, 1);
-        this.add(leaveGame, 0, 2, 2, 1);
+        turn = new Label();
+        turn.setStyle("-fx-font: 20 arial;");
+        GridPane.setHalignment(turn, HPos.CENTER);
+
+        this.add(turn, 0, 0, 2, 1);
+        this.add(rollDice, 0, 1, 2, 1);
+        this.add(leaveGame, 0, 3, 2, 1);
 
         RowConstraints small = new RowConstraints();
         small.setPercentHeight(10);
         RowConstraints big = new RowConstraints();
-        big.setPercentHeight(80);
+        big.setPercentHeight(70);
 
         ColumnConstraints eq = new ColumnConstraints();
         eq.setPercentWidth(50);
 
         this.getColumnConstraints().addAll(eq, eq);
-        this.getRowConstraints().addAll(small, big, small);
+        this.getRowConstraints().addAll(small, small, big, small);
+    }
+
+    public void setPlayerTurn() {
+        turn.setText(GameHandler.getCurrentUser().getUsername() + "'s turn");
     }
 
     public void rollDiceAction() {

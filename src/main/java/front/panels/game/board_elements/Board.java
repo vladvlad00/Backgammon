@@ -606,6 +606,9 @@ public class Board {
             move += d2;
         }
         sendMove(pos.getPosition(), move);
+        if(!FrameHandler.getMainGameFrame().getSidePanel().getSecondDiceAvailable() && !FrameHandler.getMainGameFrame().getSidePanel().getFirstDiceAvailable()) {
+            endTurn();
+        }
         return true;
     }
 
@@ -618,6 +621,9 @@ public class Board {
 
         int move = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice() * count;
         sendMove(pos.getPosition(), move);
+        if(FrameHandler.getMainGameFrame().getSidePanel().getDoubleCount() == 0) {
+            endTurn();
+        }
         return true;
     }
 
@@ -633,6 +639,11 @@ public class Board {
         }
         options.put("die", String.valueOf(count));
         WSClient.getInstance().sendMessage(new Message("move", options));
+    }
+
+    private void endTurn() {
+        GameHandler.nextTurn();
+        FrameHandler.getMainGameFrame().getSidePanel().setPlayerTurn();
     }
 
     private void capturePiece(Piece piece) {
