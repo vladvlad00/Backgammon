@@ -5,6 +5,8 @@ import front.entities.UserRole;
 import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 
+import java.util.Random;
+
 public class GameHandler {
     private static LobbyUser currentUser;
     private static LobbyUser whiteUser;
@@ -13,10 +15,28 @@ public class GameHandler {
     public static boolean isHost = false;
 
     public static void init(LobbyUser u1, LobbyUser u2, String starter) {
-        u1.setWhite(true);
-        whiteUser = u1;
-        u2.setWhite(false);
-        blackUser = u2;
+        if(starter.equals("Random")) {
+            Random r = new Random(System.nanoTime());
+            if(r.nextBoolean()) {
+                starter = u1.getUsername();
+            }
+            else {
+                starter = u2.getUsername();
+            }
+        }
+        if(starter.equals(u1.getUsername())) {
+            u1.setWhite(true);
+            whiteUser = u1;
+            u2.setWhite(false);
+            blackUser = u2;
+        }
+        else {
+            u2.setWhite(true);
+            whiteUser = u2;
+            u1.setWhite(false);
+            blackUser = u1;
+        }
+
         currentUser = whiteUser;
         if (isHost)
         {

@@ -19,7 +19,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static front.panels.menu.login.MainLoginFrame.HEIGHT;
 import static front.panels.menu.login.MainLoginFrame.WIDTH;
@@ -44,7 +46,7 @@ public class LobbyCreationPanel extends GridPane {
     public LobbyCreationPanel(MainMenuFrame frame) {
         this.frame = frame;
         this.addEventHandler(BackgammonEvent.REFRESH_LOBBY, e -> frame.refreshLobby(lobby.getId(), false));
-        this.addEventHandler(BackgammonEvent.START_GAME, e -> startGame());
+        this.addEventHandler(BackgammonEvent.START_GAME, e -> startGame(e.getOptions().get("starter")));
         this.addEventHandler(BackgammonEvent.DELETE_LOBBY, e -> leaveRoom());
     }
 
@@ -80,6 +82,8 @@ public class LobbyCreationPanel extends GridPane {
                 String username = User.getInstance().getUsername();
                 if (lobby.getRoleOfUser(username).equals(UserRole.HOST) || lobby.getRoleOfUser(username).equals(UserRole.HOST_SPECTATOR))
                     GameHandler.isHost = true;
+                Map<String, String> options = new HashMap<>();
+                options.put("starter", whitePlayer.getValue());
                 WSClient.getInstance().sendMessage(new Message("start", null));
                 NetworkManager.startLobby(lobby.getId());
             }
@@ -105,24 +109,29 @@ public class LobbyCreationPanel extends GridPane {
             }
         }
 
-
         whiteDesc = new Label("White player\n(First to move)");
         whiteDesc.setStyle("-fx-font: 16 arial;");
         whiteDesc.setPadding(new Insets(5, 5, 5, 5));
         GridPane.setHalignment(whiteDesc, HPos.RIGHT);
         whitePlayerList = FXCollections.observableArrayList();
-        whitePlayerList.addAll("Player 1", "Player 2", "Random");
+        whitePlayerList.addAll(players.getItems().get(0).getLobbyUser().getUsername());
+        if(players.getItems().get(1).getLobbyUser() != null) {
+            whitePlayerList.addAll(players.getItems().get(1).getLobbyUser().getUsername(), "Random");
+        }
+        else {
+            whitePlayerList.addAll("Random");
+        }
         whitePlayer = new ComboBox<>(whitePlayerList);
-        whitePlayer.setPromptText("Who starts");
+        whitePlayer.setValue("Random");
         whitePlayer.setStyle("-fx-font: 18 arial;");
         GridPane.setHalignment(whitePlayer, HPos.LEFT);
 
         this.add(back, 0, 0);
         this.add(lobbyName, 0, 1, 3, 1);
-        this.add(players, 0, 2, 2, 1);
+        this.add(players, 0, 2, 1, 1);
         this.add(spectators, 1, 2, 2, 1);
         this.add(start, 0, 3);
-        this.add(delete, 1, 3);
+        this.add(delete, 1, 3, 2, 1);
         this.add(whiteDesc, 1, 0);
         this.add(whitePlayer, 2, 0);
 
@@ -177,8 +186,8 @@ public class LobbyCreationPanel extends GridPane {
         lobbyName.setStyle("-fx-font: 28 arial;");
     }
 
-    private void startGame() {
-        GameHandler.init(players.getItems().get(0).getLobbyUser(), players.getItems().get(1).getLobbyUser(), whitePlayer.getValue());
+    private void startGame(String starter) {
+        GameHandler.init(players.getItems().get(0).getLobbyUser(), players.getItems().get(1).getLobbyUser(), starter);
         FrameHandler.getMainGameFrame().setLobby(lobby);
         FrameHandler.getMainGameFrame().getSidePanel().updateDice();
         SceneHandler.changeScene("game");
