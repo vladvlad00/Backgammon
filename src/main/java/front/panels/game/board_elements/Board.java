@@ -405,39 +405,55 @@ public class Board {
                 }
                 if(outside) {
                     if(piece.getWhite()) {
-                        p1 = whiteToNormal.get(normalToWhite.get(p1) + 1);
-                        if(p1 < 6 || p1 > 11) {
-                            p1 = -1;
+                        if(p1 > 0) {
+                            p1 = whiteToNormal.get(normalToWhite.get(p1) + 1);
+                            if (p1 < 6 || p1 > 11) {
+                                p1 = -1;
+                            }
                         }
-                        p2 = whiteToNormal.get(normalToWhite.get(p2) + 1);
-                        if(p2 < 6 || p2 > 11) {
-                            p2 = -1;
+                        if(p2 > 0) {
+                            p2 = whiteToNormal.get(normalToWhite.get(p2) + 1);
+                            if (p2 < 6 || p2 > 11) {
+                                p2 = -1;
+                            }
                         }
-                        p3 = whiteToNormal.get(normalToWhite.get(p3) + 1);
-                        if(p3 < 6 || p3 > 11) {
-                            p3 = -1;
+                        if(p3 > 0) {
+                            p3 = whiteToNormal.get(normalToWhite.get(p3) + 1);
+                            if (p3 < 6 || p3 > 11) {
+                                p3 = -1;
+                            }
                         }
-                        p4 = whiteToNormal.get(normalToWhite.get(p4) + 1);
-                        if(p4 < 6 || p4 > 11) {
-                            p4 = -1;
+                        if(p4 > 0) {
+                            p4 = whiteToNormal.get(normalToWhite.get(p4) + 1);
+                            if (p4 < 6 || p4 > 11) {
+                                p4 = -1;
+                            }
                         }
                     }
                     else {
-                        p1 = blackToNormal.get(normalToBlack.get(p1) + 1);
-                        if(p1 < 12 || p1 > 17) {
-                            p1 = -1;
+                        if(p1 > 0) {
+                            p1 = blackToNormal.get(normalToBlack.get(p1) + 1);
+                            if (p1 < 12 || p1 > 17) {
+                                p1 = -1;
+                            }
                         }
-                        p2 = blackToNormal.get(normalToBlack.get(p2) + 1);
-                        if(p2 < 12 || p2 > 17) {
-                            p2 = -1;
+                        if(p2 > 0) {
+                            p2 = blackToNormal.get(normalToBlack.get(p2) + 1);
+                            if (p2 < 12 || p2 > 17) {
+                                p2 = -1;
+                            }
                         }
-                        p3 = blackToNormal.get(normalToBlack.get(p3) + 1);
-                        if(p3 < 12 || p3 > 17) {
-                            p3 = -1;
+                        if(p3 > 0) {
+                            p3 = blackToNormal.get(normalToBlack.get(p3) + 1);
+                            if (p3 < 12 || p3 > 17) {
+                                p3 = -1;
+                            }
                         }
-                        p4 = blackToNormal.get(normalToBlack.get(p4) + 1);
-                        if(p4 < 12 || p4 > 17) {
-                            p4 = -1;
+                        if(p4 > 0) {
+                            p4 = blackToNormal.get(normalToBlack.get(p4) + 1);
+                            if (p4 < 12 || p4 > 17) {
+                                p4 = -1;
+                            }
                         }
                     }
                 }
