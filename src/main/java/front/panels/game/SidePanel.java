@@ -33,7 +33,7 @@ public class SidePanel extends GridPane {
         this.frame = frame;
         init();
         this.addEventHandler(BackgammonEvent.ROLL_DICE, e -> {
-            getNewDice(Integer.parseInt(e.getOptions().get("die1")), Integer.parseInt(e.getOptions().get("die1")));
+            getNewDice(Integer.parseInt(e.getOptions().get("die1")), Integer.parseInt(e.getOptions().get("die2")));
         });
     }
 

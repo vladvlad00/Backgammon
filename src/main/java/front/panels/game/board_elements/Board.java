@@ -29,9 +29,8 @@ public class Board {
     public static final Long TRIANGLE_WIDTH = (WIDTH - CENTER_WIDTH - (TRIANGLES_ROW + 2L) * TRIANGLE_SPACING) / TRIANGLES_ROW;
     public static final Long TRIANGLE_HEIGHT = HEIGHT / 3L;
     public static final Long PIECE_RADIUS = TRIANGLE_WIDTH / 3L;
-    //private static final String STARTING_BOARD = "[0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
-    //private static final String STARTING_BOARD = "[0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
-    private static final String STARTING_BOARD = "[0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
+    private static final String STARTING_BOARD = "[0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
+    //private static final String STARTING_BOARD = "[0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
     private static final List<Integer> whiteToNormal = new ArrayList<>(Arrays.asList(
             24, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
     ));
@@ -219,11 +218,11 @@ public class Board {
                 }
             }
             if(ok) {
-                piece.getDrawable().setOnMouseClicked(e -> {
-                    if(!piece.getWinnable()) {
+                if(!piece.getWinnable()) {
+                    piece.getDrawable().setOnMouseClicked(e -> {
                         showOptions(piece, false);
-                    }
-                });
+                    });
+                }
             }
         }
     }
@@ -679,8 +678,8 @@ public class Board {
             nextTurn();
         }
         else {
-            generateHouses();
-            handleOutside();
+//            generateHouses();
+//            handleOutside();
             //canMove();
         }
         return true;
@@ -699,8 +698,8 @@ public class Board {
             nextTurn();
         }
         else {
-            generateHouses();
-            handleOutside();
+//            generateHouses();
+//            handleOutside();
             //canMove();
         }
         return true;
@@ -738,9 +737,20 @@ public class Board {
         }
         boolean canMove = canMove();
         boolean isWhite = GameHandler.getCurrentUser().getWhite();
+        for(Piece piece : pieces) {
+            int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
+            if (piece.getWhite().equals(isWhite) && (pos > 6 || pos < 1)) {
+                if(canMove) {
+                    return;
+                }
+                else {
+                    PopUpHandler.createCantMove();
+                }
+            }
+        }
         Integer d1 = FrameHandler.getMainGameFrame().getSidePanel().getFirstDice();
         Integer d2 = FrameHandler.getMainGameFrame().getSidePanel().getSecondDice();
-        boolean dbl = d1 == d2;
+        boolean dbl = d1 != null && (d1.equals(d2));
         Integer d3 = (d1 == null ? null : (d2 == null ? null : d1 + d2));
         Integer d4 = null;
         if(dbl) {
@@ -761,11 +771,13 @@ public class Board {
             }
         }
 
-        int elevation = -1;
-        Piece p = null;
+        int elevation;
+        Piece p;
         boolean step2 = false;
         int step3 = -1;
         if(d1 != null) {
+            elevation = -1;
+            p = null;
             for (Piece piece : pieces) {
                 int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
                 if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d1) {
@@ -831,11 +843,13 @@ public class Board {
                     });
                 }
             }
-            if(step3 == -1) {
+            if(step3 == -1 && (!canMove || !step2) && p == null) {
                 System.out.println("You shouldn't be here");
             }
         }
         if(d2 != null) {
+            elevation = -1;
+            p = null;
             for (Piece piece : pieces) {
                 int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
                 if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d2) {
@@ -901,11 +915,13 @@ public class Board {
                     });
                 }
             }
-            if(step3 == -1) {
+            if(step3 == -1 && (!canMove || !step2) && p == null) {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d3 != null) {
+        if(d3 != null && d3 < 6) {
+            elevation = -1;
+            p = null;
             for (Piece piece : pieces) {
                 int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
                 if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d3) {
@@ -973,11 +989,13 @@ public class Board {
                     });
                 }
             }
-            if(step3 == -1) {
+            if(step3 == -1 && (!canMove || !step2) && p == null) {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d4 != null) {
+        if(d4 != null && d4 < 6) {
+            elevation = -1;
+            p = null;
             for (Piece piece : pieces) {
                 int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
                 if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && piece.getElevation() > elevation && pos == d4) {
@@ -1031,7 +1049,7 @@ public class Board {
                     });
                 }
             }
-            if(step3 == -1) {
+            if(step3 == -1 && (!canMove || !step2) && p == null) {
                 System.out.println("You shouldn't be here");
             }
         }
