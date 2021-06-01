@@ -41,9 +41,6 @@ public class MessageController
                     options.put("message", "Invalid move command");
                     return new ErrorCommand(options).runCommand();
                 }
-            case "ai":
-                // TODO call catre API-ul de AI, conform dificultatii alese
-                return null;
             case "refresh":
                 return new RefreshCommand().runCommand();
             case "delete":

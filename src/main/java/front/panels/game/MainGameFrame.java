@@ -29,9 +29,11 @@ public class MainGameFrame extends BorderPane {
             String gameState = e.getOptions().get("state");
             if(gameState.equals("BLACK_WIN")) {
                 PopUpHandler.createSomeoneWon("Black", GameHandler.getBlackUser().getUsername());
+                boardPanel.getBoard().setFinished(true);
             }
             else if(gameState.equals("WHITE_WIN")) {
                 PopUpHandler.createSomeoneWon("White", GameHandler.getWhiteUser().getUsername());
+                boardPanel.getBoard().setFinished(true);
             }
             else {
                 boardPanel.getBoard().setBoard(e.getOptions().get("board"));
@@ -47,6 +49,7 @@ public class MainGameFrame extends BorderPane {
             else {
                 PopUpHandler.createSomeoneWon("White", GameHandler.getWhiteUser().getUsername(), e.getOptions().get("user"));
             }
+            boardPanel.getBoard().setFinished(true);
         });
     }
 
@@ -59,7 +62,7 @@ public class MainGameFrame extends BorderPane {
         this.lobby = lobby;
         List<String> names = lobby.getPlayers();
         titlePanel.updateTitle(names.get(0), names.get(1));
-        titlePanel.initSpectators(lobby.getSpectatorNum());
+        titlePanel.updateSpectators(lobby.getSpectatorNum());
         sidePanel.setPlayerTurn();
         boardPanel.getBoard().init();
     }

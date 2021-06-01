@@ -2,7 +2,6 @@ package front.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-// TODO -> de facut singleton
 public class User {
     private String username;
     private String password;

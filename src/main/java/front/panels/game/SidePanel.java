@@ -50,8 +50,8 @@ public class SidePanel extends GridPane {
                 String board = frame.getBoardPanel().getBoard().getBoardString();
                 String difficulty = currentUserRole.split("_")[1].toLowerCase(Locale.ROOT);
 
-                var moves = NetworkManager.getAiMoves(board, color, die1, die2, difficulty);
                 Thread thread = new Thread(() -> {
+                    var moves = NetworkManager.getAiMoves(board, color, die1, die2, difficulty);
                     try
                     {
                         for (var move : moves)

@@ -174,18 +174,15 @@ public class Board
         if (color == PlayerColor.WHITE)
         {
             prevCaptured = blackCheckers[0];
-            move(whiteCheckers, blackCheckers, initialPosition, die);
+            move(whiteCheckers, blackCheckers, initialPosition, die, color);
             captured = blackCheckers[0];
         }
         else
         {
             prevCaptured = whiteCheckers[0];
-            move(blackCheckers, whiteCheckers, initialPosition, die);
+            move(blackCheckers, whiteCheckers, initialPosition, die, color);
             captured = blackCheckers[0];
         }
-
-        // temporar
-        updateCheckersNum();
 
         moveHistory.add(new Move(initialPosition, die));
 
@@ -198,7 +195,7 @@ public class Board
         return GameState.NOT_FINISHED;
     }
 
-    private void move(int[] playerCheckers, int[] opponentCheckers, int initialPosition, int die) throws InvalidMoveException
+    private void move(int[] playerCheckers, int[] opponentCheckers, int initialPosition, int die, PlayerColor color) throws InvalidMoveException
     {
         if (playerCheckers[initialPosition] <= 0)
             throw new InvalidMoveException();
@@ -221,6 +218,13 @@ public class Board
                 opponentCheckers[0]++;
             }
             playerCheckers[targetPosition]++;
+        }
+        else
+        {
+            if (color == PlayerColor.WHITE)
+                whiteCheckersNum--;
+            else
+                blackCheckersNum--;
         }
 
         playerCheckers[initialPosition]--;
@@ -250,16 +254,14 @@ public class Board
     {
         Move move = moveHistory.get(moveHistory.size()-1);
         if (color == PlayerColor.WHITE)
-            undo(whiteCheckers, blackCheckers, move.initialPosition, move.die, captured);
+            undo(whiteCheckers, blackCheckers, move.initialPosition, move.die, captured, color);
         else
-            undo(blackCheckers, whiteCheckers, move.initialPosition, move.die, captured);
-
-        updateCheckersNum();
+            undo(blackCheckers, whiteCheckers, move.initialPosition, move.die, captured, color);
 
         moveHistory.remove(moveHistory.size()-1);
     }
 
-    private void undo(int[] playerCheckers, int[] opponentCheckers, int initialPosition, int die, boolean captured)
+    private void undo(int[] playerCheckers, int[] opponentCheckers, int initialPosition, int die, boolean captured, PlayerColor color)
     {
         int targetPosition;
 
@@ -270,6 +272,13 @@ public class Board
 
         if (targetPosition > 0)
             playerCheckers[targetPosition]--;
+        else
+        {
+            if (color == PlayerColor.WHITE)
+                whiteCheckersNum++;
+            else
+                blackCheckersNum++;
+        }
         playerCheckers[initialPosition]++;
         if (captured)
         {
@@ -313,7 +322,7 @@ public class Board
         for (int i=die+1;i<=6;i++)
             if (checkers[i] > 0)
             {
-                move(checkers, opponentCheckers, i, die);
+                move(checkers, opponentCheckers, i, die, color);
                 return i;
             }
 

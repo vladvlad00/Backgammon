@@ -6,6 +6,7 @@ import back.service.game.InvalidMoveException;
 import back.service.game.PlayerColor;
 import back.websocket.Message;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -46,18 +47,31 @@ public class MoveCommand extends Command
             throw new InvalidMoveException();
 
         int initialPosition;
-        int die;
+        int[] dice;
         try
         {
             initialPosition = Integer.parseInt(options.get("initialPosition"));
-            die = Integer.parseInt(options.get("die"));
+            dice = Arrays.stream(options.get("die").split(",")).mapToInt(Integer::parseInt).toArray();
         }
         catch (Exception e)
         {
             throw new InvalidMoveException();
         }
 
-        GameState state = game.makeMove(playerColor, initialPosition, die);
+        GameState state = GameState.NOT_FINISHED;
+
+        for (int die : dice)
+        {
+            state = game.makeMove(playerColor, initialPosition, die);
+            if (initialPosition == 0)
+                initialPosition = 25-die;
+            else
+                initialPosition -= die;
+            if (initialPosition < 0)
+                throw new InvalidMoveException();
+            if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
+                break;
+        }
 
         Map<String, String> responseOptions = new HashMap<>();
         responseOptions.put("board", game.getBoard().toString());
