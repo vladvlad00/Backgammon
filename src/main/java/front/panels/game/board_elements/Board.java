@@ -914,7 +914,7 @@ public class Board {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d2 != null) {
+        if(d2 != null && d2 < 6) {
             elevation = -1;
             p = null;
             for (Piece piece : pieces) {
