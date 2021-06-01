@@ -914,7 +914,7 @@ public class Board {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d2 != null && d2 < 6) {
+        if(d2 != null && d2 < 7 && d2 > 0) {
             elevation = -1;
             p = null;
             for (Piece piece : pieces) {
@@ -986,7 +986,7 @@ public class Board {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d3 != null && d3 < 6) {
+        if(d3 != null && d3 < 7 && d2 > 0) {
             elevation = -1;
             p = null;
             for (Piece piece : pieces) {
@@ -1060,7 +1060,7 @@ public class Board {
                 System.out.println("You shouldn't be here");
             }
         }
-        if(d4 != null && d4 < 6) {
+        if(d4 != null && d4 < 7 && d2 > 0) {
             elevation = -1;
             p = null;
             for (Piece piece : pieces) {
