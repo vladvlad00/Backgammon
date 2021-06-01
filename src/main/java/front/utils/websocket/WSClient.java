@@ -37,6 +37,9 @@ public class WSClient
 
     public void disconnect()
     {
+        if (session == null)
+            return;
+
         session.disconnect();
         session = null;
         sessionHandler = null;
