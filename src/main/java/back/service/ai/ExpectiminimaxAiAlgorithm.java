@@ -1,6 +1,7 @@
 package back.service.ai;
 
 import back.service.game.Board;
+import back.service.game.GameState;
 import back.service.game.InvalidMoveException;
 import back.service.game.PlayerColor;
 import back.websocket.Message;
@@ -14,6 +15,7 @@ public class ExpectiminimaxAiAlgorithm implements AiAlgorithm
 {
     private static final int MAX_DEPTH = 3;
     private List<Board.Move> movesToMake;
+    private static int nrCalls = 0;
 
     enum NodeType
     {
@@ -26,6 +28,7 @@ public class ExpectiminimaxAiAlgorithm implements AiAlgorithm
     public List<Message> getMove(Board board, PlayerColor color, int die1, int die2) throws CloneNotSupportedException
     {
         expectiMiniMax(NodeType.MAX, board, color, die1, die2, 0);
+        System.out.println(nrCalls + " AI calls");
         List<Message> messages = new ArrayList<>();
         for (var move : movesToMake)
             messages.add(Message.getMoveMessage(color, move.initialPosition, move.die));
@@ -34,6 +37,7 @@ public class ExpectiminimaxAiAlgorithm implements AiAlgorithm
 
     float expectiMiniMax(NodeType type, Board board, PlayerColor color, int die1, int die2, int depth) throws CloneNotSupportedException
     {
+        nrCalls++;
         if (depth == MAX_DEPTH || board.getWinner() != null)
             return eval(board, color);
         if (type == NodeType.MIN)
@@ -112,20 +116,20 @@ public class ExpectiminimaxAiAlgorithm implements AiAlgorithm
         Set<Board> possibleBoards = new HashSet<>();
         if (done || board.getWinner() != null)
         {
-            possibleBoards.add(board);
+            possibleBoards.add(new Board(board));
             return possibleBoards;
         }
 
         List<Board.Move> possibleMoves = board.getMoves(color, dice, used);
         for (var move : possibleMoves)
         {
-            Board newBoard = new Board(board);
             try
             {
-                newBoard.makeMove(color, move.initialPosition, dice[move.die]);
+                var state = board.makeMove(color, move.initialPosition, dice[move.die]);
                 used[move.die] = true;
-                possibleBoards.addAll(getBoards(newBoard, color, dice, used));
+                possibleBoards.addAll(getBoards(board, color, dice, used));
                 used[move.die] = false;
+                board.undoLastMove(color, state == GameState.CAPTURED);
             } catch (InvalidMoveException ignored)
             {
 
@@ -133,7 +137,7 @@ public class ExpectiminimaxAiAlgorithm implements AiAlgorithm
         }
 
         if (possibleBoards.isEmpty())
-            possibleBoards.add(board);
+            possibleBoards.add(new Board(board));
 
         return possibleBoards;
     }
