@@ -862,7 +862,7 @@ public class Board {
                 p.setWinnable(true);
                 Piece finalP = p;
                 Integer finalD1 = d1;
-                if(p.getDrawable().getOnMouseClicked() != null) {
+                if(p.getDrawable().getOnMouseClicked() == null) {
                     p.getDrawable().setOnMouseClicked(e -> {
                         if (dbl) {
                             makeMove(finalP, 1);
@@ -935,7 +935,7 @@ public class Board {
                 p.setWinnable(true);
                 Piece finalP = p;
                 Integer finalD2 = d2;
-                if(p.getDrawable().getOnMouseClicked() != null) {
+                if(p.getDrawable().getOnMouseClicked() == null) {
                     p.getDrawable().setOnMouseClicked(e -> {
                         if (dbl) {
                             makeMove(finalP, 2);
@@ -974,7 +974,7 @@ public class Board {
                     p.setWinnable(true);
                     Piece finalP = p;
                     Integer finalD2 = d2;
-                    if(p.getDrawable().getOnMouseClicked() != null) {
+                    if(p.getDrawable().getOnMouseClicked() == null) {
                         p.getDrawable().setOnMouseClicked(e -> {
                             if (dbl) {
                                 makeMove(finalP, 2);
@@ -1010,7 +1010,7 @@ public class Board {
                 Piece finalP = p;
                 Integer finalD1 = d1;
                 Integer finalD2 = d2;
-                if(p.getDrawable().getOnMouseClicked() != null) {
+                if(p.getDrawable().getOnMouseClicked() == null) {
                     p.getDrawable().setOnMouseClicked(e -> {
                         if (dbl) {
                             makeMove(finalP, 3);
@@ -1050,7 +1050,7 @@ public class Board {
                     Piece finalP = p;
                     Integer finalD1 = d1;
                     Integer finalD2 = d2;
-                    if(p.getDrawable().getOnMouseClicked() != null) {
+                    if(p.getDrawable().getOnMouseClicked() == null) {
                         p.getDrawable().setOnMouseClicked(e -> {
                             if (dbl) {
                                 makeMove(finalP, 3);
@@ -1084,7 +1084,7 @@ public class Board {
                 }
                 p.setWinnable(true);
                 Piece finalP = p;
-                if(p.getDrawable().getOnMouseClicked() != null) {
+                if(p.getDrawable().getOnMouseClicked() == null) {
                     p.getDrawable().setOnMouseClicked(e -> {
                         makeMove(finalP, 4);
                     });
@@ -1118,7 +1118,7 @@ public class Board {
                     }
                     p.setWinnable(true);
                     Piece finalP = p;
-                    if(p.getDrawable().getOnMouseClicked() != null) {
+                    if(p.getDrawable().getOnMouseClicked() == null) {
                         p.getDrawable().setOnMouseClicked(e -> {
                             makeMove(finalP, 4);
                         });
