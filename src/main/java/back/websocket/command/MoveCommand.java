@@ -64,14 +64,15 @@ public class MoveCommand extends Command
         {
             try
             {
-                for (int die : dice)
+                for (int i=0;i<dice.length;i++)
                 {
+                    int die = dice[i];
                     state = game.makeMove(playerColor, initialPosition, die);
                     if (initialPosition == 0)
                         initialPosition = 25-die;
                     else
                         initialPosition -= die;
-                    if (initialPosition < 0)
+                    if (initialPosition < 0 && i != dice.length-1)
                         throw new InvalidMoveException();
                     if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
                         break;
@@ -82,14 +83,15 @@ public class MoveCommand extends Command
                 int aux = dice[0];
                 dice[0] = dice[1];
                 dice[1] = aux;
-                for (int die : dice)
+                for (int i=0;i<dice.length;i++)
                 {
+                    int die = dice[i];
                     state = game.makeMove(playerColor, initialPosition, die);
                     if (initialPosition == 0)
                         initialPosition = 25-die;
                     else
                         initialPosition -= die;
-                    if (initialPosition < 0)
+                    if (initialPosition < 0 && i != dice.length-1)
                         throw new InvalidMoveException();
                     if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
                         break;
@@ -98,14 +100,15 @@ public class MoveCommand extends Command
         }
         else
         {
-            for (int die : dice)
+            for (int i=0;i<dice.length;i++)
             {
+                int die = dice[i];
                 state = game.makeMove(playerColor, initialPosition, die);
                 if (initialPosition == 0)
                     initialPosition = 25-die;
                 else
                     initialPosition -= die;
-                if (initialPosition < 0)
+                if (initialPosition < 0 && i != dice.length-1)
                     throw new InvalidMoveException();
                 if (state == GameState.BLACK_WIN || state == GameState.WHITE_WIN)
                     break;
