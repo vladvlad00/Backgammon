@@ -29,8 +29,8 @@ public class Board {
     public static final Long TRIANGLE_WIDTH = (WIDTH - CENTER_WIDTH - (TRIANGLES_ROW + 2L) * TRIANGLE_SPACING) / TRIANGLES_ROW;
     public static final Long TRIANGLE_HEIGHT = HEIGHT / 3L;
     public static final Long PIECE_RADIUS = TRIANGLE_WIDTH / 3L;
-    private static final String STARTING_BOARD = "[0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
-    //private static final String STARTING_BOARD = "[0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
+    //private static final String STARTING_BOARD = "[0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2][0, 0, 0, 0, 0, 0, 5, 0, 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]";
+    private static final String STARTING_BOARD = "[0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0][0, 5, 2, 1, 2, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]";
     private static final List<Integer> whiteToNormal = new ArrayList<>(Arrays.asList(
             24, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
     ));
@@ -269,6 +269,12 @@ public class Board {
         }
         if(show4 != null) {
             node.getChildren().remove(show4.getDrawable());
+        }
+    }
+
+    private void removeOnClick() {
+        for(Piece piece : pieces) {
+            piece.getDrawable().setOnMouseClicked(null);
         }
     }
 
@@ -793,6 +799,7 @@ public class Board {
     }
 
     public void generateHouses() {
+        removeOnClick();
         for(Piece piece : pieces) {
             piece.setWinnable(false);
         }
