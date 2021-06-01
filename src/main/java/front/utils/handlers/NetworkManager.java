@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class NetworkManager {
-    private static final String URL = "http://localhost:8081";
+    private static final String URL = "http://84.117.24.129:8081";
     private static final RestTemplate restTemplate = new RestTemplate();
 
     public static String login(User user) {

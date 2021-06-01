@@ -31,7 +31,7 @@ public class MainGameFrame extends BorderPane {
                 PopUpHandler.createSomeoneWon("Black", GameHandler.getBlackUser().getUsername());
             }
             else if(gameState.equals("WHITE_WIN")) {
-                PopUpHandler.createSomeoneWon("White", GameHandler.getBlackUser().getUsername());
+                PopUpHandler.createSomeoneWon("White", GameHandler.getWhiteUser().getUsername());
             }
             else {
                 boardPanel.getBoard().setBoard(e.getOptions().get("board"));
