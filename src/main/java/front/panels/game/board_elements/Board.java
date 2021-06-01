@@ -241,9 +241,11 @@ public class Board {
             }
             if(ok) {
                 if(!piece.getWinnable()) {
-                    piece.getDrawable().setOnMouseClicked(e -> {
-                        showOptions(piece, false);
-                    });
+                    if(piece.getDrawable().getOnMouseClicked() == null) {
+                        piece.getDrawable().setOnMouseClicked(e -> {
+                            showOptions(piece, false);
+                        });
+                    }
                 }
             }
         }
@@ -853,16 +855,16 @@ public class Board {
                 }
             }
             if (p != null) {
-                if(isWhite) {
-                    ++whiteHouse;
-                }
-                else {
-                    ++blackHouse;
-                }
-                p.setWinnable(true);
-                Piece finalP = p;
-                Integer finalD1 = d1;
                 if(p.getDrawable().getOnMouseClicked() == null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
+                    Integer finalD1 = d1;
                     p.getDrawable().setOnMouseClicked(e -> {
                         if (dbl) {
                             makeMove(finalP, 1);
@@ -892,23 +894,24 @@ public class Board {
                     }
                 }
                 if (p != null) {
-                    if(isWhite) {
-                        ++whiteHouse;
-                    }
-                    else {
-                        ++blackHouse;
-                    }
-                    p.setWinnable(true);
-                    Piece finalP = p;
-                    Integer finalD1 = d1;
-                    p.getDrawable().setOnMouseClicked(e -> {
-                        if(dbl) {
-                            makeMove(finalP, 1);
+                    if(p.getDrawable().getOnMouseClicked() == null) {
+                        if(isWhite) {
+                            ++whiteHouse;
                         }
                         else {
-                            makeMove(finalP, finalD1, -1);
+                            ++blackHouse;
                         }
-                    });
+                        p.setWinnable(true);
+                        Piece finalP = p;
+                        Integer finalD1 = d1;
+                        p.getDrawable().setOnMouseClicked(e -> {
+                            if (dbl) {
+                                makeMove(finalP, 1);
+                            } else {
+                                makeMove(finalP, finalD1, -1);
+                            }
+                        });
+                    }
                 }
             }
             if(step3 == -1 && (!canMove || !step2) && p == null) {
@@ -926,16 +929,16 @@ public class Board {
                 }
             }
             if (p != null) {
-                if(isWhite) {
-                    ++whiteHouse;
-                }
-                else {
-                    ++blackHouse;
-                }
-                p.setWinnable(true);
-                Piece finalP = p;
-                Integer finalD2 = d2;
                 if(p.getDrawable().getOnMouseClicked() == null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
+                    Integer finalD2 = d2;
                     p.getDrawable().setOnMouseClicked(e -> {
                         if (dbl) {
                             makeMove(finalP, 2);
@@ -965,16 +968,16 @@ public class Board {
                     }
                 }
                 if (p != null) {
-                    if(isWhite) {
-                        ++whiteHouse;
-                    }
-                    else {
-                        ++blackHouse;
-                    }
-                    p.setWinnable(true);
-                    Piece finalP = p;
-                    Integer finalD2 = d2;
                     if(p.getDrawable().getOnMouseClicked() == null) {
+                        if(isWhite) {
+                            ++whiteHouse;
+                        }
+                        else {
+                            ++blackHouse;
+                        }
+                        p.setWinnable(true);
+                        Piece finalP = p;
+                        Integer finalD2 = d2;
                         p.getDrawable().setOnMouseClicked(e -> {
                             if (dbl) {
                                 makeMove(finalP, 2);
@@ -1000,17 +1003,17 @@ public class Board {
                 }
             }
             if (p != null) {
-                if(isWhite) {
-                    ++whiteHouse;
-                }
-                else {
-                    ++blackHouse;
-                }
-                p.setWinnable(true);
-                Piece finalP = p;
-                Integer finalD1 = d1;
-                Integer finalD2 = d2;
                 if(p.getDrawable().getOnMouseClicked() == null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
+                    Integer finalD1 = d1;
+                    Integer finalD2 = d2;
                     p.getDrawable().setOnMouseClicked(e -> {
                         if (dbl) {
                             makeMove(finalP, 3);
@@ -1040,17 +1043,17 @@ public class Board {
                     }
                 }
                 if (p != null) {
-                    if(isWhite) {
-                        ++whiteHouse;
-                    }
-                    else {
-                        ++blackHouse;
-                    }
-                    p.setWinnable(true);
-                    Piece finalP = p;
-                    Integer finalD1 = d1;
-                    Integer finalD2 = d2;
                     if(p.getDrawable().getOnMouseClicked() == null) {
+                        if(isWhite) {
+                            ++whiteHouse;
+                        }
+                        else {
+                            ++blackHouse;
+                        }
+                        p.setWinnable(true);
+                        Piece finalP = p;
+                        Integer finalD1 = d1;
+                        Integer finalD2 = d2;
                         p.getDrawable().setOnMouseClicked(e -> {
                             if (dbl) {
                                 makeMove(finalP, 3);
@@ -1076,15 +1079,15 @@ public class Board {
                 }
             }
             if (p != null) {
-                if(isWhite) {
-                    ++whiteHouse;
-                }
-                else {
-                    ++blackHouse;
-                }
-                p.setWinnable(true);
-                Piece finalP = p;
                 if(p.getDrawable().getOnMouseClicked() == null) {
+                    if(isWhite) {
+                        ++whiteHouse;
+                    }
+                    else {
+                        ++blackHouse;
+                    }
+                    p.setWinnable(true);
+                    Piece finalP = p;
                     p.getDrawable().setOnMouseClicked(e -> {
                         makeMove(finalP, 4);
                     });
@@ -1110,15 +1113,15 @@ public class Board {
                     }
                 }
                 if (p != null) {
-                    if(isWhite) {
-                        ++whiteHouse;
-                    }
-                    else {
-                        ++blackHouse;
-                    }
-                    p.setWinnable(true);
-                    Piece finalP = p;
                     if(p.getDrawable().getOnMouseClicked() == null) {
+                        if(isWhite) {
+                            ++whiteHouse;
+                        }
+                        else {
+                            ++blackHouse;
+                        }
+                        p.setWinnable(true);
+                        Piece finalP = p;
                         p.getDrawable().setOnMouseClicked(e -> {
                             makeMove(finalP, 4);
                         });
