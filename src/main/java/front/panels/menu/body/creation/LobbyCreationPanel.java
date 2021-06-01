@@ -125,7 +125,7 @@ public class LobbyCreationPanel extends GridPane {
         GridPane.setHalignment(whitePlayer, HPos.LEFT);
 
         for(LobbyUser lobbyUser : lobby.getUsers()) {
-            if((lobbyUser.getRole().equals(UserRole.HOST) || lobbyUser.getRole().equals(UserRole.HOST_SPECTATOR)) && User.getInstance().getUsername().equals(lobbyUser.getUsername())) {
+            if(User.getInstance().getUsername().equals(lobbyUser.getUsername()) && (lobbyUser.getRole().equals(UserRole.HOST) || lobbyUser.getRole().equals(UserRole.HOST_SPECTATOR))) {
                 start.setDisable(false);
                 delete.setDisable(false);
                 this.add(whiteDesc, 1, 0);
