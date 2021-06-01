@@ -174,6 +174,7 @@ public class SidePanel extends GridPane {
         if(GameHandler.getCurrentUser() != null && GameHandler.getCurrentUser().getUsername().equals(User.getInstance().getUsername())) {
             FrameHandler.getMainGameFrame().getBoardPanel().getBoard().generateHouses();
             FrameHandler.getMainGameFrame().getBoardPanel().getBoard().handleOutside();
+            FrameHandler.getMainGameFrame().getBoardPanel().getBoard().generateClickable();
 //            FrameHandler.getMainGameFrame().getBoardPanel().getBoard().canMove();
         }
     }

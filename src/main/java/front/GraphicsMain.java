@@ -32,9 +32,6 @@ public class GraphicsMain extends Application {
 
     @Override
     public void stop() {
-        if(User.getInstance().getInRoom() != null && User.getInstance().getInRoom()) {
-            NetworkManager.leaveRoom();
-        }
         if(FrameHandler.getMainGameFrame().getLobby() != null) {
             for(LobbyUser lobbyUser : FrameHandler.getMainGameFrame().getLobby().getUsers()) {
                 if(lobbyUser.getUsername().equals(User.getInstance().getUsername())) {
@@ -61,6 +58,9 @@ public class GraphicsMain extends Application {
                     }
                 }
             }
+        }
+        else if(User.getInstance().getInRoom() != null && User.getInstance().getInRoom()) {
+            NetworkManager.leaveRoom();
         }
     }
 }

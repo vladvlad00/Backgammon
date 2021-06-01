@@ -98,9 +98,9 @@ public class Board {
         if(GameHandler.getCurrentUser().getUsername().equals(User.getInstance().getUsername())) {
             generateHouses();
             handleOutside();
+            generateClickable();
             //canMove();
         }
-        generateClickable();
     }
 
     private void generateBackground() {
@@ -227,7 +227,7 @@ public class Board {
         }
     }
 
-    private void generateClickable() {
+    public void generateClickable() {
         for(Piece piece : pieces) {
             if(piece instanceof PredictionPiece) {
                 continue;
