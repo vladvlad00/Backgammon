@@ -245,7 +245,47 @@ public class PopUpHandler {
         dialog.setHeight(300);
         dialog.setTitle("Winner");
 
-        Label label = new Label(won + "(" + username + ") won! Congratulations!");
+        Label label = new Label(won + "(" + username + ") won!\nCongratulations!");
+        label.setPadding(new Insets(10, 10, 10, 10));
+
+        Button ok = new Button("Back to menu");
+        ok.setOnAction(e -> {
+            FrameHandler.getMainMenuFrame().getLobbyCreationPanel().leaveRoom();
+            dialog.close();
+        });
+        ok.setPrefWidth(200);
+
+        Button exit = new Button("Exit game");
+        exit.setOnAction(e -> {
+            Platform.exit();
+            dialog.close();
+        });
+        exit.setPrefWidth(150);
+
+        dialogVbox.getChildren().add(label);
+        dialogVbox.getChildren().add(ok);
+        dialogVbox.getChildren().add(exit);
+        Scene dialogScene = new Scene(dialogVbox, 300, 300);
+        dialog.setScene(dialogScene);
+        dialog.show();
+    }
+
+    public static void createSomeoneWon(String won, String username, String left) {
+        Stage mainStage = SceneHandler.getStage();
+        final Stage dialog = new Stage();
+        dialog.initModality(Modality.APPLICATION_MODAL);
+        dialog.initOwner(mainStage);
+        VBox dialogVbox = new VBox(20);
+        dialogVbox.setAlignment(Pos.CENTER);
+        dialog.setMinHeight(300);
+        dialog.setMaxHeight(300);
+        dialog.setMinWidth(300);
+        dialog.setMaxWidth(300);
+        dialog.setWidth(300);
+        dialog.setHeight(300);
+        dialog.setTitle("Winner");
+
+        Label label = new Label(won + "(" + username + ") won, \n" + left + " left the game.\nCongratulations!");
         label.setPadding(new Insets(10, 10, 10, 10));
 
         Button ok = new Button("Back to menu");

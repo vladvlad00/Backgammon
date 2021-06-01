@@ -97,6 +97,20 @@ public class StompSessionHandler extends StompSessionHandlerAdapter
                             new BackgammonEvent(BackgammonEvent.NEXT_TURN, null))
             );
         }
+        else if (message.getCommand().equals("disconnect"))
+        {
+            Platform.runLater(
+                    () -> Event.fireEvent(FrameHandler.getMainGameFrame(),
+                            new BackgammonEvent(BackgammonEvent.DISCONNECT, message.getOptions()))
+            );
+        }
+        else if (message.getCommand().equals("spectators"))
+        {
+            Platform.runLater(
+                    () -> Event.fireEvent(FrameHandler.getMainGameFrame().getTitlePanel(),
+                            new BackgammonEvent(BackgammonEvent.UPDATE_SPECTATORS, message.getOptions()))
+            );
+        }
         System.out.println("Received " + message.toString());
     }
 

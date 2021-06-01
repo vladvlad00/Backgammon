@@ -12,15 +12,15 @@ public class TitlePanel extends GridPane {
 
     private Label title;
     private Label spectators;
+    private Long spectatorNum;
     private Label capturedPieces;
 
     public TitlePanel(MainGameFrame frame) {
         this.frame = frame;
         init();
         this.addEventHandler(BackgammonEvent.UPDATE_SPECTATORS, e -> {
-//            Update spectators number;
-//            Lobby lobby = e.response(); sau ceva
-//            frame.setLobby(newLobby);
+            Long change = Long.parseLong(e.getOptions().get("change"));
+            updateSpectators(change);
         });
     }
 
@@ -48,10 +48,15 @@ public class TitlePanel extends GridPane {
     }
 
     public void updateTitle(String p1, String p2) {
-        title.setText(p1 + " vs " + p2);
+        title.setText(p1 + " vs " + p2 + "\nGame ID:" + frame.getLobby().getId());
     }
 
-    public void updateSpectators(Long spectatorNum) {
+    public void initSpectators() {
+        spectatorNum = frame.getLobby().getSpectatorNum();
+    }
+
+    public void updateSpectators(Long count) {
+        spectatorNum += count;
         spectators.setText("\uD83D\uDC41 " + spectatorNum);
     }
 

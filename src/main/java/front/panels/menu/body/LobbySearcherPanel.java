@@ -50,7 +50,9 @@ public class LobbySearcherPanel extends GridPane {
     public void refresh() {
         items.clear();
         for(Lobby lobby : LobbyHandler.getAll()) {
-            items.add(new LobbyListItemPanel(lobby));
+            if(lobby.getState().equals("not started")) {
+                items.add(new LobbyListItemPanel(lobby));
+            }
         }
         list.setItems(items);
     }

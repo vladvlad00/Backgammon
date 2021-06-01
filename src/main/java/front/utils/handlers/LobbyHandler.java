@@ -2,9 +2,12 @@ package front.utils.handlers;
 
 import front.entities.Lobby;
 import front.entities.UserRole;
+import front.utils.websocket.Message;
 import front.utils.websocket.WSClient;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class LobbyHandler {
@@ -36,8 +39,7 @@ public class LobbyHandler {
         if(lobby == null) {
             throw new NullPointerException();
         }
-
-        Lobby response = NetworkManager.joinThroughID(id, (lobby.getPlayerNum() - lobby.getAINum() == 0 && lobby.getSpectatorNum() == 0) ? (lobby.getAINum() == 2 ? UserRole.HOST_SPECTATOR : UserRole.HOST) : (lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR));
+        Lobby response = NetworkManager.joinThroughID(id, (lobby.getState().equals("started") ? UserRole.SPECTATOR : (lobby.getPlayerNum() - lobby.getAINum() == 0 && lobby.getSpectatorNum() == 0) ? (lobby.getAINum() == 2 ? UserRole.HOST_SPECTATOR : UserRole.HOST) : (lobby.getPlayerNum() < 2 ? UserRole.PLAYER : UserRole.SPECTATOR)));
         if(response == null) {
             throw new NullPointerException();
         }
@@ -48,6 +50,11 @@ public class LobbyHandler {
                 executionException.printStackTrace();
             }
             FrameHandler.getMainMenuFrame().goToCreate(response);
+            if(lobby.getState().equals("started")) {
+                Map<String, String> options = new HashMap<>();
+                options.put("count", "1");
+                WSClient.getInstance().sendMessage(new Message("spectators", options));
+            }
             return "succ";
         }
     }

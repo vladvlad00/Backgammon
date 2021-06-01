@@ -10,6 +10,7 @@ public class Lobby {
     private Long spectatorNum;
     private Long aiNum;
     private List<LobbyUser> users;
+    private String state;
 
     public Lobby()
     {
@@ -89,5 +90,13 @@ public class Lobby {
     public void setUsers(List<LobbyUser> users)
     {
         this.users = users;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

@@ -7,6 +7,7 @@ import front.utils.handlers.GameHandler;
 import front.utils.handlers.PopUpHandler;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -39,6 +40,14 @@ public class MainGameFrame extends BorderPane {
         this.addEventHandler(BackgammonEvent.NEXT_TURN, e -> {
             nextTurn();
         });
+        this.addEventHandler(BackgammonEvent.DISCONNECT, e -> {
+            if(e.getOptions().get("color").equals("white")) {
+                PopUpHandler.createSomeoneWon("Black", GameHandler.getWhiteUser().getUsername(), e.getOptions().get("user"));
+            }
+            else {
+                PopUpHandler.createSomeoneWon("White", GameHandler.getBlackUser().getUsername(), e.getOptions().get("user"));
+            }
+        });
     }
 
     private void nextTurn() {
@@ -50,6 +59,7 @@ public class MainGameFrame extends BorderPane {
         this.lobby = lobby;
         List<String> names = lobby.getPlayers();
         titlePanel.updateTitle(names.get(0), names.get(1));
+        titlePanel.initSpectators();
         titlePanel.updateSpectators(lobby.getSpectatorNum());
         sidePanel.setPlayerTurn();
     }

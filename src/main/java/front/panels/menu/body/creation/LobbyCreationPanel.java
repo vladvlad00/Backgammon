@@ -11,16 +11,15 @@ import front.utils.websocket.WSClient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.VPos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
 import java.util.Comparator;
+import java.util.List;
 
 import static front.panels.menu.login.MainLoginFrame.HEIGHT;
 import static front.panels.menu.login.MainLoginFrame.WIDTH;
@@ -33,8 +32,11 @@ public class LobbyCreationPanel extends GridPane {
     //Switch intre private / public
     private ObservableList<PlayersListItem> playersListItems;
     private ObservableList<SpectatorListItem> spectatorListItems;
+    private ObservableList<String> whitePlayerList;
     private ListView<PlayersListItem> players;
     private ListView<SpectatorListItem> spectators;
+    private ComboBox<String> whitePlayer;
+    private Label whiteDesc;
     private Button back;
     private Button start;
     private Button delete;
@@ -55,6 +57,7 @@ public class LobbyCreationPanel extends GridPane {
         this.getChildren().remove(lobbyName);
         this.getChildren().remove(players);
         this.getChildren().remove(spectators);
+        this.getChildren().remove(whitePlayer);
         this.getColumnConstraints().clear();
         this.getRowConstraints().clear();
 
@@ -78,6 +81,7 @@ public class LobbyCreationPanel extends GridPane {
                 if (lobby.getRoleOfUser(username).equals(UserRole.HOST) || lobby.getRoleOfUser(username).equals(UserRole.HOST_SPECTATOR))
                     GameHandler.isHost = true;
                 WSClient.getInstance().sendMessage(new Message("start", null));
+                NetworkManager.startLobby(lobby.getId());
             }
         });
         start.setPrefSize(0.25 * WIDTH, 0.1 * HEIGHT);
@@ -101,25 +105,43 @@ public class LobbyCreationPanel extends GridPane {
             }
         }
 
+
+        whiteDesc = new Label("White player\n(First to move)");
+        whiteDesc.setStyle("-fx-font: 16 arial;");
+        whiteDesc.setPadding(new Insets(5, 5, 5, 5));
+        GridPane.setHalignment(whiteDesc, HPos.RIGHT);
+        whitePlayerList = FXCollections.observableArrayList();
+        whitePlayerList.addAll("Player 1", "Player 2", "Random");
+        whitePlayer = new ComboBox<>(whitePlayerList);
+        whitePlayer.setPromptText("Who starts");
+        whitePlayer.setStyle("-fx-font: 18 arial;");
+        GridPane.setHalignment(whitePlayer, HPos.LEFT);
+
         this.add(back, 0, 0);
-        this.add(lobbyName, 0, 1, 2, 1);
-        this.add(players, 0, 2);
-        this.add(spectators, 1, 2);
+        this.add(lobbyName, 0, 1, 3, 1);
+        this.add(players, 0, 2, 2, 1);
+        this.add(spectators, 1, 2, 2, 1);
         this.add(start, 0, 3);
         this.add(delete, 1, 3);
+        this.add(whiteDesc, 1, 0);
+        this.add(whitePlayer, 2, 0);
 
         ColumnConstraints half = new ColumnConstraints();
+        ColumnConstraints littleHalf = new ColumnConstraints();
+        ColumnConstraints little = new ColumnConstraints();
         half.setPercentWidth(50);
+        littleHalf.setPercentWidth(30);
+        little.setPercentWidth(20);
         RowConstraints backC = new RowConstraints();
-        backC.setPercentHeight(5);
+        backC.setPercentHeight(10);
         RowConstraints small = new RowConstraints();
         small.setPercentHeight(10);
         RowConstraints big = new RowConstraints();
-        big.setPercentHeight(75);
+        big.setPercentHeight(70);
         RowConstraints buttons = new RowConstraints();
         buttons.setPercentHeight(10);
 
-        this.getColumnConstraints().addAll(half, half);
+        this.getColumnConstraints().addAll(half, little, littleHalf);
         this.getRowConstraints().addAll(backC, small, big, buttons);
     }
 
@@ -150,13 +172,13 @@ public class LobbyCreationPanel extends GridPane {
         spectators = new ListView<>();
         spectators.setItems(spectatorListItems);
 
-        lobbyName = new Label(lobby.getName());
+        lobbyName = new Label(lobby.getName() + "\n" + "Game ID: " + lobby.getId());
         GridPane.setHalignment(lobbyName, HPos.CENTER);
         lobbyName.setStyle("-fx-font: 28 arial;");
     }
 
     private void startGame() {
-        GameHandler.init(players.getItems().get(0).getLobbyUser(), players.getItems().get(1).getLobbyUser());
+        GameHandler.init(players.getItems().get(0).getLobbyUser(), players.getItems().get(1).getLobbyUser(), whitePlayer.getValue());
         FrameHandler.getMainGameFrame().setLobby(lobby);
         FrameHandler.getMainGameFrame().getSidePanel().updateDice();
         SceneHandler.changeScene("game");

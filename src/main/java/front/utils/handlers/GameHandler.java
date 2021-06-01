@@ -12,7 +12,7 @@ public class GameHandler {
     private static boolean rolledDice;
     public static boolean isHost = false;
 
-    public static void init(LobbyUser u1, LobbyUser u2) {
+    public static void init(LobbyUser u1, LobbyUser u2, String starter) {
         u1.setWhite(true);
         whiteUser = u1;
         u2.setWhite(false);

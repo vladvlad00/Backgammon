@@ -21,7 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 public class SidePanel extends GridPane {
@@ -92,7 +94,24 @@ public class SidePanel extends GridPane {
         leaveGame = new Button("Leave");
         leaveGame.setStyle("-fx-font: 20 arial;");
         leaveGame.setOnAction(e -> {
-            //leave game
+            if(frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.SPECTATOR) || frame.getLobby().getRoleOfUser(User.getInstance().getUsername()).equals(UserRole.HOST_SPECTATOR)) {
+                Map<String, String> options = new HashMap<>();
+                options.put("count", "-1");
+                WSClient.getInstance().sendMessage(new Message("spectators", options));
+            }
+            else {
+                Map<String, String> options = new HashMap<>();
+                String color;
+                if(GameHandler.getBlackUser().getUsername().equals(User.getInstance().getUsername())) {
+                    color = "black";
+                }
+                else {
+                    color = "white";
+                }
+                options.put("color", color);
+                options.put("user", User.getInstance().getUsername());
+                WSClient.getInstance().sendMessage(new Message("disconnect", options));
+            }
         });
         GridPane.setHalignment(leaveGame, HPos.CENTER);
 

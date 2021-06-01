@@ -11,7 +11,8 @@ public class BackgammonEvent extends Event {
     public static final EventType<BackgammonEvent> ROLL_DICE = new EventType<>("ROLL_DICE");
     public static final EventType<BackgammonEvent> MAKE_MOVE = new EventType<>("MAKE_MOVE");
     public static final EventType<BackgammonEvent> NEXT_TURN = new EventType<>("NEXT_TURN");
-    public static final EventType<BackgammonEvent> UPDATE_SPECTATORS = new EventType<>("UPDATE_SPECTATORS"); //TODO: use
+    public static final EventType<BackgammonEvent> UPDATE_SPECTATORS = new EventType<>("UPDATE_SPECTATORS");
+    public static final EventType<BackgammonEvent> DISCONNECT = new EventType<>("DISCONNECT");
     public static final EventType<BackgammonEvent> DELETE_LOBBY = new EventType<>("DELETE_LOBBY");
 
     private Map<String, String> options;

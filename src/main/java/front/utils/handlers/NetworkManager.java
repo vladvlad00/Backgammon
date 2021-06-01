@@ -107,6 +107,13 @@ public class NetworkManager {
         return response.getBody();
     }
 
+    public static void startLobby(Long roomID) {
+        User.getInstance().setInRoom(false);
+        HttpHeaders headers = getHeaders();
+        HttpEntity entity = new HttpEntity(headers);
+        restTemplate.exchange(URL + "/room/" + roomID + "/start", HttpMethod.PUT, entity, Lobby.class);
+    }
+
     public static void leaveRoom() {
         User.getInstance().setInRoom(false);
         HttpHeaders headers = getHeaders();
