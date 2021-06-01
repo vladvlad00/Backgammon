@@ -839,7 +839,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d1 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d1 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();
@@ -911,7 +911,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d2 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d2 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();
@@ -984,7 +984,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d3 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d3 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();
@@ -1051,7 +1051,7 @@ public class Board {
             if((!canMove || !step2) && p == null) {
                 for (Piece piece : pieces) {
                     int pos = (isWhite ? normalToWhite : normalToBlack).get(piece.getPosition());
-                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d4 && pos > step3) {
+                    if (piece.getWhite() == isWhite && pos > 0 && pos < 7 && pos < d4 && pos >= step3) {
                         step3 = pos;
                         if(piece.getElevation() > elevation) {
                             elevation = piece.getElevation();
