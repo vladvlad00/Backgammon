@@ -65,6 +65,11 @@ public class TitlePanel extends GridPane {
         spectators.setText("\uD83D\uDC41 " + spectatorNum);
     }
 
+    public void initSpectators(Long count) {
+        spectatorNum = count;
+        spectators.setText("\uD83D\uDC41 " + spectatorNum);
+    }
+
     public void updateCapturedPieces(Integer white, Integer black) {
         capturedPieces.setText("Captured pieces:\n " + black + " x ⬤\n " + white + " x ⚪");
     }

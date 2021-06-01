@@ -59,7 +59,7 @@ public class MainGameFrame extends BorderPane {
         this.lobby = lobby;
         List<String> names = lobby.getPlayers();
         titlePanel.updateTitle(names.get(0), names.get(1));
-        titlePanel.updateSpectators(lobby.getSpectatorNum());
+        titlePanel.initSpectators(lobby.getSpectatorNum());
         sidePanel.setPlayerTurn();
         boardPanel.getBoard().init();
     }
