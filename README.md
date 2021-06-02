@@ -66,7 +66,7 @@ The board screen has multiple elements:
 
   <center><img src="images/endgame.png" alt="endgame" width="700"></center>
 
-  Lastly, when a player managed to move all of their pieces into their house, they can start removing them. Removable pieces have a think yellow-green border, and will be removed when clicked. A piece is removable according to [the rules](https://www.bkgm.com/rules.html).
+  Lastly, when a player managed to move all of their pieces into their house, they can start removing them. Removable pieces have a thick yellow-green border, and will be removed when clicked. A piece is removable according to [the rules](https://www.bkgm.com/rules.html).
 
   When one of the players removes their last piece from the game, they win, and this popup appears on all the other players' screens. The game ends after this.
 
@@ -101,7 +101,7 @@ public class Message
 }
 ```
 
-  The usual flow is of this kind: The user sends a message to the server, the server then broadcasts the message to all the users currently connected to the same lobby as the first user.
+  The usual flow is of this kind: The user sends a message to the server, the server interprets the message and then broadcasts it to all the users currently connected to the same lobby as the first user.
 
 ## The AI
 
@@ -118,7 +118,7 @@ public class Message
   This AI uses [GNU Backgammon](https://www.gnu.org/software/gnubg/). GNU Backgammon evaluation functionality is driven by 3 separate neural networks. The neural nets evaluates each position statically, and returns the outcome probabilities of the game at the given position. This opponent is meant to be able to defeat almost any regular player, and can only be beaten by very experienced ones.
 
 ## Contribution
-  We worked together on the project, communicating thorugh [Discord](https://discord.com/) thorughout the whole implementation process and using [Girhub](https://github.com/) to seamlessly work on different parts of the code.
+  We worked together on the project, communicating thorugh [Discord](https://discord.com/) thorughout the whole implementation process and using [Github](https://github.com/) to seamlessly work on different parts of the code.
   
   Andrei's main objective was the implementation of the client, while Vlad's was the implementation of the server.
 
