@@ -148,8 +148,8 @@ public class ExpectiminimaxAiAlgorithm implements AiAlgorithm
         if (winner != null)
         {
             if (winner == color)
-                return Float.MAX_VALUE;
-            return Float.MIN_VALUE;
+                return Float.POSITIVE_INFINITY;
+            return Float.NEGATIVE_INFINITY;
         }
 
         int[] playerCheckers = color == PlayerColor.WHITE ? board.getWhiteCheckers() : board.getBlackCheckers();
@@ -185,11 +185,11 @@ public class ExpectiminimaxAiAlgorithm implements AiAlgorithm
         float penalty = 0;
 
         for (int i=1;i<=6;i++)
-            for (int j=1;j<=6;j++)
+            for (int j=i;j<=6;j++)
             {
                 float chance = getDiceChance(i, j);
                 for (int pos=1;pos<=24;pos++)
-                    if (playerCheckers[i] == 1 && canReach(opponentCheckers, 25-pos, i, j))
+                    if (playerCheckers[pos] == 1 && canReach(opponentCheckers, 25-pos, i, j))
                         penalty += positionExposedPenalty(pos) * 2 * chance;
 
             }
