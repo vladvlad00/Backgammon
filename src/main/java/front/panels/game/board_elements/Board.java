@@ -494,7 +494,8 @@ public class Board {
                     }
                 }
                 boolean ok;
-                int largerOk = 2;
+                //int largerOk = 2;
+                int largerOk = 2 - ((p1 < 0 || p2 < 0) && !dblCondition ? 1 : 0);
                 boolean canMoveSomething = false;
                 int elevation;
                 if(p1 > -1 && p1 < 24) {
