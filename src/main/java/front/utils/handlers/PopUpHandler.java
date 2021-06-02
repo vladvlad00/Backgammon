@@ -254,6 +254,7 @@ public class PopUpHandler {
             FrameHandler.getMainMenuFrame().goToMenu();
             NetworkManager.leaveRoom();
             SceneHandler.changeScene("menu");
+            FrameHandler.getMainGameFrame().setLobby(null);
             dialog.close();
         });
         ok.setPrefWidth(200);
@@ -297,6 +298,7 @@ public class PopUpHandler {
             FrameHandler.getMainMenuFrame().goToMenu();
             NetworkManager.leaveRoom();
             SceneHandler.changeScene("menu");
+            FrameHandler.getMainGameFrame().setLobby(null);
             dialog.close();
         });
         ok.setPrefWidth(200);
