@@ -111,11 +111,11 @@ public class Message
 
 ### Medium
 
-  This AI uses an [Expectiminimax Algorithm](https://en.wikipedia.org/wiki/Expectiminimax). This is a variation of the normal [Minimax Algorithm](https://en.wikipedia.org/wiki/Minimax), with the notable change that Expectiminimax doesn't expect the adversary to play optimally. When presented with a choice between two nodes, instead of choosing the one which would bring the biggest benefit if the adversary was playing optimally, it will calculate an average of expected utility of each child. This algorithm takes advantage of non-optimal players, and is therefore better suited for our application.
+  This AI uses an [Expectiminimax Algorithm](https://en.wikipedia.org/wiki/Expectiminimax). This is a variation of the normal [Minimax Algorithm](https://en.wikipedia.org/wiki/Minimax), with the notable change that Expectiminimax also takes into random events (like dice throws) by using an additional type of node, a chance node. The value of a chance node is the expected value of the position, taking into account any dice roll possible (it is represented by the weighted sum of the min/max nodes corresponding to each dice roll). The evaluation function used to calculate the value of leaf nodes if an heuristic based on multiple factors: the number of removed pieces, the num of captured pieces, the position of the pieces still in the game and the number of exposed pieces (which could be captured by the opponent in his turn), for both players.
 
 ### Hard
 
-  This AI uses [GNU Backgammon](https://www.gnu.org/software/gnubg/). GNU Backgammon evaluation functionality is driven by 3 separate neural networks. The neural nets evaluates each position statically, and returns the outcome probabilities of the game at the given position. This opponent is meant to be able to defeat almost any regular player, and can only be beaten by very experienced ones.
+  This AI uses [GNU Backgammon](https://www.gnu.org/software/gnubg/). GNU Backgammon evaluation functionality is driven by 3 separate neural networks. The neural nets evaluate each position statically, and returns the outcome probabilities of the game at the given position. This opponent is meant to be able to defeat almost any regular player, and can only be beaten by very experienced ones.
 
 ## Contribution
   We worked together on the project, communicating thorugh [Discord](https://discord.com/) thorughout the whole implementation process and using [Github](https://github.com/) to seamlessly work on different parts of the code.
